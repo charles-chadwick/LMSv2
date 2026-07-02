@@ -30,24 +30,14 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(RolePermissionSeeder::class);
 
-        // Well-known accounts for signing in during development.
-        User::factory()->admin()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-        ]);
+        // Named admins, 20 instructors and 250 students drawn from the Rick and
+        // Morty character pool, each with their character avatar attached.
+        $this->call(UserSeeder::class);
 
-        $primaryInstructor = User::factory()->instructor()->create([
-            'name' => 'Instructor User',
-            'email' => 'instructor@example.com',
-        ]);
-
-        $primaryStudent = User::factory()->student()->create([
-            'name' => 'Student User',
-            'email' => 'student@example.com',
-        ]);
-
-        $instructors = User::factory()->instructor()->count(3)->create()->push($primaryInstructor);
-        $students = User::factory()->student()->count(20)->create()->push($primaryStudent);
+        /** @var Collection<int, User> $instructors */
+        $instructors = app('seed.instructors');
+        /** @var Collection<int, User> $students */
+        $students = app('seed.students');
 
         $instructors->each(function (User $instructor) use ($students): void {
             Course::factory()
