@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 /**
  * @extends Factory<User>
@@ -41,5 +42,39 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    /**
+     * Assign the given role to the created user.
+     */
+    public function withRole(string $role): static
+    {
+        return $this->afterCreating(function (User $user) use ($role): void {
+            $user->assignRole(Role::findOrCreate($role, 'web'));
+        });
+    }
+
+    /**
+     * Create the user as an administrator.
+     */
+    public function admin(): static
+    {
+        return $this->withRole('admin');
+    }
+
+    /**
+     * Create the user as an instructor.
+     */
+    public function instructor(): static
+    {
+        return $this->withRole('instructor');
+    }
+
+    /**
+     * Create the user as a student.
+     */
+    public function student(): static
+    {
+        return $this->withRole('student');
     }
 }
