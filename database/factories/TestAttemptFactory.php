@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\TestAttemptStatus;
 use App\Models\Test;
 use App\Models\TestAttempt;
 use App\Models\User;
@@ -18,19 +19,15 @@ class TestAttemptFactory extends Factory
             'test_id' => Test::factory(),
             'user_id' => User::factory()->student(),
             'attempt_number' => 1,
-            'status' => 'in_progress',
-            'score' => null,
-            'graded_by' => null,
+            'status' => TestAttemptStatus::InProgress,
             'started_at' => now(),
-            'submitted_at' => null,
-            'graded_at' => null,
         ];
     }
 
     public function submitted(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => 'submitted',
+            'status' => TestAttemptStatus::Submitted,
             'submitted_at' => now(),
         ]);
     }
@@ -38,7 +35,7 @@ class TestAttemptFactory extends Factory
     public function graded(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => 'graded',
+            'status' => TestAttemptStatus::Graded,
             'score' => fake()->randomFloat(2, 0, 100),
             'graded_by' => User::factory()->instructor(),
             'submitted_at' => now(),

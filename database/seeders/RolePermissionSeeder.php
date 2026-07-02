@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\UserRole;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -15,7 +16,7 @@ class RolePermissionSeeder extends Seeder
      * @var array<string, list<string>>
      */
     protected array $rolePermissions = [
-        'instructor' => [
+        UserRole::Instructor->value => [
             'create courses',
             'update courses',
             'delete courses',
@@ -29,7 +30,7 @@ class RolePermissionSeeder extends Seeder
             'participate in discussions',
             'moderate discussions',
         ],
-        'student' => [
+        UserRole::Student->value => [
             'enroll in courses',
             'submit assignments',
             'submit tests',
@@ -52,7 +53,7 @@ class RolePermissionSeeder extends Seeder
         }
 
         // Admin implicitly receives every permission via Gate::before (see AppServiceProvider).
-        Role::findOrCreate('admin', 'web');
+        Role::findOrCreate(UserRole::Admin->value, 'web');
 
         foreach ($this->rolePermissions as $role => $grantedPermissions) {
             Role::findOrCreate($role, 'web')->syncPermissions($grantedPermissions);

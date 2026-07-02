@@ -15,7 +15,6 @@ class TestFactory extends Factory
     {
         return [
             'course_id' => Course::factory(),
-            'lesson_id' => null,
             'title' => fake()->sentence(3),
             'description' => fake()->paragraph(),
             'time_limit_minutes' => fake()->randomElement([null, 15, 30, 60]),

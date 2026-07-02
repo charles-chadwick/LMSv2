@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\CourseStatus;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -16,8 +17,8 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('summary')->nullable();
             $table->longText('description')->nullable();
-            $table->string('status')->default('draft'); // draft, published, archived
-            $table->string('level')->nullable(); // beginner, intermediate, advanced
+            $table->string('status')->default(CourseStatus::Draft->value);
+            $table->string('level')->nullable();
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
             $table->softDeletes();

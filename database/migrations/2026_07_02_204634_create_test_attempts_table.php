@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\TestAttemptStatus;
 use App\Models\Test;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
@@ -15,7 +16,7 @@ return new class extends Migration
             $table->foreignIdFor(Test::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->unsignedTinyInteger('attempt_number')->default(1);
-            $table->string('status')->default('in_progress'); // in_progress, submitted, graded
+            $table->string('status')->default(TestAttemptStatus::InProgress->value);
             $table->decimal('score', 5, 2)->nullable();
             $table->foreignIdFor(User::class, 'graded_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamp('started_at')->useCurrent();

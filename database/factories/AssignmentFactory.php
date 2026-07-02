@@ -15,7 +15,6 @@ class AssignmentFactory extends Factory
     {
         return [
             'course_id' => Course::factory(),
-            'lesson_id' => null,
             'title' => fake()->sentence(4),
             'instructions' => fake()->paragraphs(2, true),
             'points_possible' => fake()->randomElement([50, 100, 150, 200]),

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\QuestionType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,6 +20,13 @@ class Question extends Model
         'points',
         'position',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'type' => QuestionType::class,
+        ];
+    }
 
     public function test(): BelongsTo
     {

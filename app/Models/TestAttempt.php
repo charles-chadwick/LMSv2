@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TestAttemptStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -27,6 +28,7 @@ class TestAttempt extends Model
     protected function casts(): array
     {
         return [
+            'status' => TestAttemptStatus::class,
             'score' => 'decimal:2',
             'started_at' => 'datetime',
             'submitted_at' => 'datetime',

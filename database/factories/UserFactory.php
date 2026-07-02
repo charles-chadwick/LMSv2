@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -47,10 +48,10 @@ class UserFactory extends Factory
     /**
      * Assign the given role to the created user.
      */
-    public function withRole(string $role): static
+    public function withRole(UserRole $role): static
     {
         return $this->afterCreating(function (User $user) use ($role): void {
-            $user->assignRole(Role::findOrCreate($role, 'web'));
+            $user->assignRole(Role::findOrCreate($role->value, 'web'));
         });
     }
 
@@ -59,7 +60,7 @@ class UserFactory extends Factory
      */
     public function admin(): static
     {
-        return $this->withRole('admin');
+        return $this->withRole(UserRole::Admin);
     }
 
     /**
@@ -67,7 +68,7 @@ class UserFactory extends Factory
      */
     public function instructor(): static
     {
-        return $this->withRole('instructor');
+        return $this->withRole(UserRole::Instructor);
     }
 
     /**
@@ -75,6 +76,6 @@ class UserFactory extends Factory
      */
     public function student(): static
     {
-        return $this->withRole('student');
+        return $this->withRole(UserRole::Student);
     }
 }

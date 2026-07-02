@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\EnrollmentStatus;
 use App\Models\Course;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
@@ -14,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Course::class)->constrained()->cascadeOnDelete();
-            $table->string('status')->default('active'); // active, completed, dropped
+            $table->string('status')->default(EnrollmentStatus::Active->value);
             $table->unsignedTinyInteger('progress_percentage')->default(0);
             $table->decimal('final_grade', 5, 2)->nullable();
             $table->json('content_snapshot')->nullable(); // frozen course tree captured on completion

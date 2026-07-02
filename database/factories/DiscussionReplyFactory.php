@@ -17,7 +17,6 @@ class DiscussionReplyFactory extends Factory
         return [
             'discussion_id' => Discussion::factory(),
             'user_id' => User::factory()->student(),
-            'parent_id' => null,
             'body' => fake()->paragraph(),
         ];
     }

@@ -2,12 +2,16 @@
 
 namespace Database\Seeders;
 
+use App\Actions\CompleteCourse;
+use App\Actions\CompleteLesson;
+use App\Actions\EnrollStudent;
+use App\Actions\GradeAssignmentSubmission;
+use App\Actions\ScoreTestAttempt;
 use App\Models\Assignment;
 use App\Models\AssignmentSubmission;
 use App\Models\Course;
 use App\Models\Discussion;
 use App\Models\DiscussionReply;
-use App\Models\Enrollment;
 use App\Models\Lesson;
 use App\Models\Module;
 use App\Models\Question;
@@ -16,6 +20,7 @@ use App\Models\Test;
 use App\Models\TestAnswer;
 use App\Models\TestAttempt;
 use App\Models\User;
+use Closure;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Collection;
 
@@ -61,42 +66,42 @@ class DatabaseSeeder extends Seeder
      */
     protected function buildCourse(Course $course, Collection $students): void
     {
-        // Modules -> lessons.
+        // Modules -> lessons (keep the created lessons in memory rather than re-querying).
         $modules = Module::factory()
             ->count(3)
             ->for($course)
-            ->sequence(fn ($sequence) => ['position' => $sequence->index])
+            ->sequence($this->positionSequence())
             ->create();
 
-        $modules->each(function (Module $module): void {
-            Lesson::factory()
-                ->count(3)
-                ->for($module)
-                ->sequence(fn ($sequence) => ['position' => $sequence->index])
-                ->create();
-        });
-
-        $lessons = $course->lessons()->get();
+        $lessons = $modules->flatMap(fn (Module $module) => Lesson::factory()
+            ->count(3)
+            ->for($module)
+            ->sequence($this->positionSequence())
+            ->create());
 
         // Assignments.
         $assignments = Assignment::factory()->count(2)->for($course)->create();
 
-        // A test with graded multiple-choice questions.
+        // A test with graded multiple-choice questions; keep questions and options in memory.
         $test = Test::factory()->for($course)->create();
 
-        Question::factory()
+        $questions = Question::factory()
             ->count(5)
             ->for($test)
-            ->sequence(fn ($sequence) => ['position' => $sequence->index])
+            ->sequence($this->positionSequence())
             ->create()
             ->each(function (Question $question): void {
-                QuestionOption::factory()->correct()->for($question)->create(['position' => 0]);
-                QuestionOption::factory()
+                $correct = QuestionOption::factory()->correct()->for($question)->create(['position' => 0]);
+                $others = QuestionOption::factory()
                     ->count(3)
                     ->for($question)
                     ->sequence(fn ($sequence) => ['position' => $sequence->index + 1])
                     ->create();
+
+                $question->setRelation('options', $others->prepend($correct));
             });
+
+        $test->setRelation('questions', $questions);
 
         // Discussions with a few replies each.
         Discussion::factory()
@@ -112,54 +117,23 @@ class DatabaseSeeder extends Seeder
                     ->create();
             });
 
-        // Enroll a slice of students; mix of completed and in-progress.
+        // Enroll a slice of students; mix of completed and in-progress, driven by the domain Actions.
         $enrolled = $students->random(8)->values();
 
         $enrolled->each(function (User $student, int $index) use ($course, $lessons): void {
-            $enrollment = Enrollment::factory()
-                ->for($student, 'student')
-                ->for($course)
-                ->when($index < 3, fn ($factory) => $factory->completed())
-                ->create();
+            $enrollment = EnrollStudent::run($student, $course);
 
-            if ($enrollment->status === 'completed') {
-                // Freeze the course content the student originally learned.
-                $enrollment->update([
-                    'content_snapshot' => $course->load('modules.lessons')->toArray(),
-                ]);
-
-                $enrollment->lessonCompletions()->createMany(
-                    $lessons->map(fn (Lesson $lesson) => [
-                        'lesson_id' => $lesson->id,
-                        'completed_at' => now(),
-                    ])->all()
-                );
-
-                $enrollment->certificate()->create([
-                    'user_id' => $student->id,
-                    'course_id' => $course->id,
-                    'final_grade' => $enrollment->final_grade,
-                    'issued_at' => now(),
-                ]);
+            if ($index < 3) {
+                // Finish every lesson, then complete the course (freezes snapshot + issues certificate).
+                $lessons->each(fn (Lesson $lesson) => CompleteLesson::run($enrollment, $lesson));
+                CompleteCourse::run($enrollment, fake()->randomFloat(2, 60, 100));
 
                 return;
             }
 
             // Partial progress for active students.
-            $done = $lessons->take(fake()->numberBetween(0, max(0, $lessons->count() - 1)));
-
-            $enrollment->lessonCompletions()->createMany(
-                $done->map(fn (Lesson $lesson) => [
-                    'lesson_id' => $lesson->id,
-                    'completed_at' => now(),
-                ])->all()
-            );
-
-            $enrollment->update([
-                'progress_percentage' => $lessons->count() > 0
-                    ? (int) round($done->count() / $lessons->count() * 100)
-                    : 0,
-            ]);
+            $lessons->take(fake()->numberBetween(0, max(0, $lessons->count() - 1)))
+                ->each(fn (Lesson $lesson) => CompleteLesson::run($enrollment, $lesson));
         });
 
         $this->buildAssessmentActivity($course, $assignments, $test, $enrolled);
@@ -174,39 +148,38 @@ class DatabaseSeeder extends Seeder
     protected function buildAssessmentActivity(Course $course, Collection $assignments, Test $test, Collection $enrolled): void
     {
         $instructor = $course->instructor;
-        $questions = $test->questions()->with('options')->get();
+        $questions = $test->questions; // Built in-memory by buildCourse, options already attached.
 
-        // Roughly half the class submits each assignment; some are graded.
+        // Roughly half the class submits each assignment; grade every other submission.
         $assignments->each(function (Assignment $assignment) use ($enrolled, $instructor): void {
             $enrolled->random((int) ceil($enrolled->count() / 2))->each(function (User $student, int $index) use ($assignment, $instructor): void {
-                AssignmentSubmission::factory()
+                $submission = AssignmentSubmission::factory()
                     ->for($assignment)
                     ->for($student, 'student')
-                    ->when($index % 2 === 0, fn ($factory) => $factory->graded()->state([
-                        'graded_by' => $instructor->id,
-                        'score' => fake()->randomFloat(2, 0, $assignment->points_possible),
-                    ]))
                     ->create();
+
+                if ($index % 2 === 0) {
+                    GradeAssignmentSubmission::run(
+                        $submission,
+                        fake()->randomFloat(2, 0, $assignment->points_possible),
+                        fake()->sentence(),
+                        $instructor,
+                    );
+                }
             });
         });
 
-        // Roughly half the class attempts the test; grade each answer against the correct option.
+        // Roughly half the class attempts the test; the Action auto-grades each attempt.
         $enrolled->random((int) ceil($enrolled->count() / 2))->each(function (User $student) use ($test, $questions, $instructor): void {
             $attempt = TestAttempt::factory()
                 ->for($test)
                 ->for($student, 'student')
-                ->graded()
-                ->state(['graded_by' => $instructor->id])
+                ->submitted()
                 ->create();
 
-            $earned = 0;
-
-            $questions->each(function (Question $question) use ($attempt, &$earned): void {
+            $questions->each(function (Question $question) use ($attempt): void {
                 $correct = $question->options->firstWhere('is_correct', true);
                 $chosen = fake()->boolean(65) ? $correct : $question->options->random();
-                $isCorrect = $chosen?->is($correct) ?? false;
-                $points = $isCorrect ? $question->points : 0;
-                $earned += $points;
 
                 TestAnswer::factory()
                     ->for($attempt, 'attempt')
@@ -214,12 +187,18 @@ class DatabaseSeeder extends Seeder
                     ->create([
                         'question_option_id' => $chosen?->id,
                         'answer_text' => null,
-                        'is_correct' => $isCorrect,
-                        'points_awarded' => $points,
                     ]);
             });
 
-            $attempt->update(['score' => $earned]);
+            ScoreTestAttempt::run($attempt, $instructor);
         });
+    }
+
+    /**
+     * A factory sequence that numbers rows by their creation order.
+     */
+    protected function positionSequence(): Closure
+    {
+        return fn ($sequence) => ['position' => $sequence->index];
     }
 }

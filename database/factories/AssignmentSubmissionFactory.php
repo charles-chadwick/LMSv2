@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\SubmissionStatus;
 use App\Models\Assignment;
 use App\Models\AssignmentSubmission;
 use App\Models\User;
@@ -18,20 +19,16 @@ class AssignmentSubmissionFactory extends Factory
             'assignment_id' => Assignment::factory(),
             'user_id' => User::factory()->student(),
             'content' => fake()->paragraphs(2, true),
-            'status' => 'submitted',
+            'status' => SubmissionStatus::Submitted,
             'attempt' => 1,
-            'score' => null,
-            'feedback' => null,
-            'graded_by' => null,
             'submitted_at' => now(),
-            'graded_at' => null,
         ];
     }
 
     public function graded(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => 'graded',
+            'status' => SubmissionStatus::Graded,
             'score' => fake()->randomFloat(2, 0, 100),
             'feedback' => fake()->sentence(),
             'graded_by' => User::factory()->instructor(),

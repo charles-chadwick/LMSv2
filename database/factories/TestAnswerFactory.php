@@ -17,10 +17,7 @@ class TestAnswerFactory extends Factory
         return [
             'test_attempt_id' => TestAttempt::factory(),
             'question_id' => Question::factory(),
-            'question_option_id' => null,
             'answer_text' => fake()->sentence(),
-            'points_awarded' => null,
-            'is_correct' => null,
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -23,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Grant admins every ability without explicitly assigning each permission.
         Gate::before(function (User $user, string $ability): ?bool {
-            return $user->hasRole('admin') ? true : null;
+            return $user->hasRole(UserRole::Admin->value) ? true : null;
         });
     }
 }

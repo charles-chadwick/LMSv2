@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\SubmissionStatus;
 use App\Models\Assignment;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
@@ -15,7 +16,7 @@ return new class extends Migration
             $table->foreignIdFor(Assignment::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->longText('content')->nullable(); // text response; files handled via Media Library
-            $table->string('status')->default('submitted'); // submitted, graded, returned
+            $table->string('status')->default(SubmissionStatus::Submitted->value);
             $table->unsignedInteger('attempt')->default(1);
             $table->decimal('score', 5, 2)->nullable();
             $table->longText('feedback')->nullable();

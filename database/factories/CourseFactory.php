@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enums\CourseLevel;
+use App\Enums\CourseStatus;
 use App\Models\Course;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -22,16 +24,15 @@ class CourseFactory extends Factory
             'slug' => Str::slug($title).'-'.fake()->unique()->numberBetween(1, 99999),
             'summary' => fake()->sentence(),
             'description' => fake()->paragraphs(3, true),
-            'status' => 'draft',
-            'level' => fake()->randomElement(['beginner', 'intermediate', 'advanced']),
-            'published_at' => null,
+            'status' => CourseStatus::Draft,
+            'level' => fake()->randomElement(CourseLevel::cases()),
         ];
     }
 
     public function published(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => 'published',
+            'status' => CourseStatus::Published,
             'published_at' => now(),
         ]);
     }
@@ -39,7 +40,7 @@ class CourseFactory extends Factory
     public function archived(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => 'archived',
+            'status' => CourseStatus::Archived,
         ]);
     }
 }

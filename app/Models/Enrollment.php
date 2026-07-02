@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\EnrollmentStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -27,6 +28,7 @@ class Enrollment extends Model
     protected function casts(): array
     {
         return [
+            'status' => EnrollmentStatus::class,
             'content_snapshot' => 'array',
             'progress_percentage' => 'integer',
             'final_grade' => 'decimal:2',
