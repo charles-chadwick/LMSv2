@@ -21,7 +21,7 @@ const canCreateCourses = computed(() => user.value.can?.create_courses ?? false)
                 >
                     Courses
                 </Link>
-            </div>
+                </div>
 
                 <div class="flex items-center gap-4">
                     <span class="text-sm text-gray-600">{{ user.name }}</span>
