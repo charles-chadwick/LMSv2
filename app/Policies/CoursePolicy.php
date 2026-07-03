@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\CourseStatus;
 use App\Models\Course;
 use App\Models\User;
 
@@ -40,5 +41,10 @@ class CoursePolicy
     public function archive(User $user, Course $course): bool
     {
         return $user->can('publish courses') && $course->instructor_id === $user->id;
+    }
+
+    public function enroll(User $user, Course $course): bool
+    {
+        return $course->status === CourseStatus::Published;
     }
 }
