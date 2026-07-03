@@ -1,7 +1,10 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import LevelBadge from '@/Components/LevelBadge.vue';
+import { Button } from '@/Components/ui/button';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import { CircleCheck, Circle, Play, BookOpen } from 'lucide-vue-next';
 
 const props = defineProps({
     course: { type: Object, required: true },
@@ -44,72 +47,122 @@ const isComplete = (lesson) => props.completed_lesson_ids.includes(lesson.id);
     <AuthenticatedLayout>
         <Head :title="course.title" />
 
-        <div class="mb-6 flex items-start justify-between gap-4">
-            <div>
-                <h1 class="text-2xl font-semibold">{{ course.title }}</h1>
-                <p class="mt-1 text-sm text-gray-500">
-                    {{ course.instructor }} · <span class="capitalize">{{ course.level }}</span>
-                </p>
-            </div>
-            <div class="flex items-center gap-2">
-                <Link
-                    v-if="can_learn && first_incomplete_lesson_slug"
-                    :href="route('lessons.show', [course.slug, first_incomplete_lesson_slug])"
-                    class="rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white"
-                >
-                    Continue learning
-                </Link>
-                <template v-if="enrollment_status && enrollment_status !== 'Dropped'">
-                    <span class="rounded bg-green-100 px-4 py-2 text-sm font-medium text-green-700">
-                        Enrolled
-                    </span>
-                    <button
+        <!-- Course hero -->
+        <section
+            class="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 via-emerald-500 to-teal-500 px-6 py-8 text-white shadow-lg sm:px-10 sm:py-10"
+        >
+            <div class="pointer-events-none absolute -right-16 -top-20 size-64 rounded-full bg-white/10 blur-2xl" />
+
+            <div class="relative flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+                <div class="min-w-0">
+                    <div class="mb-3 flex items-center gap-2">
+                        <span class="inline-flex items-center rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-semibold capitalize backdrop-blur">
+                            {{ course.level }}
+                        </span>
+                        <span
+                            v-if="enrollment_status && enrollment_status !== 'Dropped'"
+                            class="inline-flex items-center rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-semibold backdrop-blur"
+                        >
+                            Enrolled
+                        </span>
+                    </div>
+                    <h1 class="font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">
+                        {{ course.title }}
+                    </h1>
+                    <p class="mt-2 text-sm text-white/85">{{ course.instructor }}</p>
+                </div>
+
+                <div class="flex shrink-0 flex-wrap items-center gap-2.5">
+                    <Button
+                        v-if="can_learn && first_incomplete_lesson_slug"
+                        as-child
+                        class="bg-white text-emerald-700 shadow-sm hover:bg-white/90"
+                    >
+                        <Link :href="route('lessons.show', [course.slug, first_incomplete_lesson_slug])">
+                            <Play class="size-4" />
+                            Continue learning
+                        </Link>
+                    </Button>
+                    <Button
                         v-if="enrollment_status === 'Active'"
                         type="button"
+                        variant="outline"
                         :disabled="busy"
-                        class="rounded border border-red-300 px-4 py-2 text-sm font-medium text-red-600 disabled:opacity-50"
+                        class="border-white/40 bg-white/10 text-white hover:bg-white/20 hover:text-white"
                         @click="drop"
                     >
                         Drop course
-                    </button>
-                </template>
-                <button
-                    v-if="! enrollment_status || enrollment_status === 'Dropped'"
-                    type="button"
-                    :disabled="busy"
-                    class="rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
-                    @click="enroll"
-                >
-                    {{ enrollment_status === 'Dropped' ? 'Re-enroll' : 'Enroll' }}
-                </button>
+                    </Button>
+                    <Button
+                        v-if="! enrollment_status || enrollment_status === 'Dropped'"
+                        type="button"
+                        :disabled="busy"
+                        class="bg-white text-emerald-700 shadow-sm hover:bg-white/90"
+                        @click="enroll"
+                    >
+                        {{ enrollment_status === 'Dropped' ? 'Re-enroll' : 'Enroll' }}
+                    </Button>
+                </div>
+            </div>
+        </section>
+
+        <div class="grid gap-6 lg:grid-cols-3">
+            <!-- Overview -->
+            <div class="lg:col-span-1">
+                <div class="rounded-2xl border bg-card p-5 shadow-sm">
+                    <h2 class="font-display text-base font-bold tracking-tight">About this course</h2>
+                    <LevelBadge :level="course.level" class="mt-3" />
+                    <p v-if="course.summary" class="mt-3 text-sm font-medium text-foreground">{{ course.summary }}</p>
+                    <p v-if="course.description" class="mt-2 whitespace-pre-line text-sm text-muted-foreground">
+                        {{ course.description }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Syllabus -->
+            <div class="lg:col-span-2">
+                <div class="mb-3 flex items-center gap-2">
+                    <BookOpen class="size-5 text-emerald-600" />
+                    <h2 class="font-display text-lg font-bold tracking-tight">Syllabus</h2>
+                </div>
+
+                <div v-if="course.modules.length === 0" class="rounded-2xl border border-dashed bg-card p-8 text-center text-sm text-muted-foreground">
+                    No modules yet.
+                </div>
+
+                <ol v-else class="space-y-4">
+                    <li
+                        v-for="(module, index) in course.modules"
+                        :key="index"
+                        class="overflow-hidden rounded-2xl border bg-card shadow-sm"
+                    >
+                        <div class="flex items-center gap-3 border-b bg-muted/40 px-5 py-3">
+                            <span class="flex size-7 items-center justify-center rounded-lg bg-emerald-500/15 text-xs font-bold text-emerald-600">
+                                {{ index + 1 }}
+                            </span>
+                            <h3 class="font-semibold text-foreground">{{ module.title }}</h3>
+                        </div>
+                        <ul class="divide-y">
+                            <li
+                                v-for="lesson in module.lessons"
+                                :key="lesson.id"
+                                class="flex items-center gap-3 px-5 py-2.5 text-sm"
+                            >
+                                <CircleCheck v-if="isComplete(lesson)" class="size-4 shrink-0 text-emerald-600" />
+                                <Circle v-else class="size-4 shrink-0 text-muted-foreground/40" />
+                                <Link
+                                    v-if="can_learn"
+                                    :href="route('lessons.show', [course.slug, lesson.slug])"
+                                    class="font-medium text-foreground hover:text-emerald-600 hover:underline"
+                                >
+                                    {{ lesson.title }}
+                                </Link>
+                                <span v-else class="text-muted-foreground">{{ lesson.title }}</span>
+                            </li>
+                        </ul>
+                    </li>
+                </ol>
             </div>
         </div>
-
-        <p v-if="course.summary" class="mb-4 text-gray-700">{{ course.summary }}</p>
-        <p v-if="course.description" class="mb-8 whitespace-pre-line text-gray-600">{{ course.description }}</p>
-
-        <h2 class="mb-3 text-lg font-semibold">Syllabus</h2>
-        <div v-if="course.modules.length === 0" class="text-sm text-gray-500">
-            No modules yet.
-        </div>
-        <ol v-else class="space-y-4">
-            <li v-for="(module, index) in course.modules" :key="index" class="rounded border p-4">
-                <h3 class="font-medium">{{ module.title }}</h3>
-                <ul class="mt-2 space-y-1 pl-1 text-sm text-gray-600">
-                    <li v-for="lesson in module.lessons" :key="lesson.id" class="flex items-center gap-2">
-                        <span v-if="isComplete(lesson)" class="text-green-600">&check;</span>
-                        <span v-else class="text-gray-300">&bull;</span>
-                        <Link
-                            v-if="can_learn"
-                            :href="route('lessons.show', [course.slug, lesson.slug])"
-                            class="text-blue-600 hover:underline"
-                        >
-                            {{ lesson.title }}
-                        </Link>
-                        <span v-else>{{ lesson.title }}</span>
-                    </li>
-                </ul>
-            </li>
-        </ol>
     </AuthenticatedLayout>
 </template>

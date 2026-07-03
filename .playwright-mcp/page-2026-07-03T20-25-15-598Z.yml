@@ -1,0 +1,92 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e3]:
+    - navigation [ref=f1e4]:
+      - generic [ref=f1e5]:
+        - generic [ref=f1e6]:
+          - link "L LMS" [ref=f1e7] [cursor=pointer]:
+            - /url: http://127.0.0.1:8123/dashboard
+            - generic [ref=f1e8]: L
+            - generic [ref=f1e9]: LMS
+          - generic [ref=f1e10]:
+            - link "Dashboard" [ref=f1e11] [cursor=pointer]:
+              - /url: http://127.0.0.1:8123/dashboard
+              - img [ref=f1e12]
+              - generic [ref=f1e17]: Dashboard
+            - link "Browse" [ref=f1e18] [cursor=pointer]:
+              - /url: http://127.0.0.1:8123/catalog
+              - img [ref=f1e19]
+              - generic [ref=f1e22]: Browse
+            - link "My Courses" [ref=f1e23] [cursor=pointer]:
+              - /url: http://127.0.0.1:8123/my-courses
+              - img [ref=f1e24]
+              - generic [ref=f1e27]: My Courses
+            - link "Courses" [ref=f1e28] [cursor=pointer]:
+              - /url: http://127.0.0.1:8123/courses
+              - img [ref=f1e29]
+              - generic [ref=f1e32]: Courses
+        - button "RR Redhead Rick" [ref=f1e33]:
+          - generic [ref=f1e35]: RR
+          - generic [ref=f1e36]: Redhead Rick
+          - img [ref=f1e37]
+    - main [ref=f1e40]:
+      - generic [ref=f1e42]:
+        - paragraph [ref=f1e43]: Dashboard
+        - heading "Welcome back, Redhead 👋" [level=1] [ref=f1e44]
+        - paragraph [ref=f1e45]: You're signed in as Instructor. Here's where to head next.
+      - generic [ref=f1e46]:
+        - link "Browse courses Explore the catalog and enroll in something new. Go" [ref=f1e47] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog
+          - img [ref=f1e49]
+          - heading "Browse courses" [level=2] [ref=f1e52]
+          - paragraph [ref=f1e53]: Explore the catalog and enroll in something new.
+          - generic [ref=f1e54]:
+            - text: Go
+            - img [ref=f1e55]
+        - link "My courses Pick up where you left off and track progress. Go" [ref=f1e57] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/my-courses
+          - img [ref=f1e59]
+          - heading "My courses" [level=2] [ref=f1e62]
+          - paragraph [ref=f1e63]: Pick up where you left off and track progress.
+          - generic [ref=f1e64]:
+            - text: Go
+            - img [ref=f1e65]
+        - link "Manage courses Author curriculum, publish, and review rosters. Go" [ref=f1e67] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/courses
+          - img [ref=f1e69]
+          - heading "Manage courses" [level=2] [ref=f1e72]
+          - paragraph [ref=f1e73]: Author curriculum, publish, and review rosters.
+          - generic [ref=f1e74]:
+            - text: Go
+            - img [ref=f1e75]
+  - generic [ref=f1e79]:
+    - generic [ref=f1e81]:
+      - generic [ref=f1e82] [cursor=pointer]:
+        - generic: Request
+      - generic [ref=f1e83] [cursor=pointer]:
+        - generic: Timeline
+      - generic [ref=f1e84] [cursor=pointer]:
+        - generic: Views
+        - generic [ref=f1e85]: "3"
+      - generic [ref=f1e86] [cursor=pointer]:
+        - generic: Queries
+        - generic [ref=f1e87]: "6"
+      - generic [ref=f1e88] [cursor=pointer]:
+        - generic: Models
+        - generic [ref=f1e89]: "2"
+      - generic [ref=f1e90] [cursor=pointer]:
+        - generic: Inertia
+        - generic [ref=f1e91]: "1"
+      - generic [ref=f1e92] [cursor=pointer]:
+        - generic: Gate
+        - generic [ref=f1e93]: "1"
+      - generic [ref=f1e94] [cursor=pointer]:
+        - generic: Cache
+        - generic [ref=f1e95]: "1"
+    - generic [ref=f1e96]:
+      - generic [ref=f1e104] [cursor=pointer]: GET /dashboard
+      - generic [ref=f1e105] [cursor=pointer]:
+        - generic: 17.62ms
+      - generic [ref=f1e107] [cursor=pointer]:
+        - generic: 2MB
+      - generic [ref=f1e109] [cursor=pointer]:
+        - generic: 13.x

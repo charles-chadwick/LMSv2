@@ -9,7 +9,7 @@ test('authenticated user has roles shared to inertia', function (): void {
     $user = User::factory()->student()->create();
 
     $this->actingAs($user)
-        ->get('/')
+        ->get('/dashboard')
         ->assertInertia(fn ($page) => $page
             ->where('auth.user.email', $user->email)
             ->where('auth.user.roles', ['Student'])

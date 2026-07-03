@@ -47,7 +47,7 @@ test('instructors have the create_courses ability shared to inertia', function (
     $instructor = User::factory()->instructor()->create();
 
     $this->actingAs($instructor)
-        ->get('/')
+        ->get('/dashboard')
         ->assertInertia(fn ($page) => $page->where('auth.user.can.create_courses', true));
 });
 
@@ -55,6 +55,6 @@ test('students do not have the create_courses ability', function (): void {
     $student = User::factory()->student()->create();
 
     $this->actingAs($student)
-        ->get('/')
+        ->get('/dashboard')
         ->assertInertia(fn ($page) => $page->where('auth.user.can.create_courses', false));
 });

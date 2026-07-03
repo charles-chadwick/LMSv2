@@ -1,7 +1,20 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import PageHeader from '@/Components/PageHeader.vue';
+import StatusBadge from '@/Components/StatusBadge.vue';
+import LevelBadge from '@/Components/LevelBadge.vue';
+import { Button } from '@/Components/ui/button';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/Components/ui/dropdown-menu';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import { Plus, MoreHorizontal, ListTree, Users, Pencil, Send, Archive, Trash2, GraduationCap } from 'lucide-vue-next';
 
 defineProps({
     courses: {
@@ -31,49 +44,97 @@ const archive = (course) => {
     <AuthenticatedLayout>
         <Head title="Courses" />
 
-        <div class="mb-6 flex items-center justify-between">
-            <h1 class="text-2xl font-semibold">Courses</h1>
-            <Link
-                v-if="canCreate"
-                :href="route('courses.create')"
-                class="rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white"
-            >
-                New course
-            </Link>
+        <PageHeader
+            title="Courses"
+            subtitle="Author curriculum, publish, and manage your rosters."
+        >
+            <template #actions>
+                <Button v-if="canCreate" as-child class="bg-amber-500 text-white hover:bg-amber-600">
+                    <Link :href="route('courses.create')">
+                        <Plus class="size-4" />
+                        New course
+                    </Link>
+                </Button>
+            </template>
+        </PageHeader>
+
+        <div
+            v-if="courses.length === 0"
+            class="rounded-2xl border border-dashed bg-card p-12 text-center"
+        >
+            <div class="mx-auto flex size-12 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600">
+                <GraduationCap class="size-6" />
+            </div>
+            <p class="mt-4 font-medium text-foreground">No courses yet</p>
+            <p class="mt-1 text-sm text-muted-foreground">Create your first course to get started.</p>
         </div>
 
-        <div v-if="courses.length === 0" class="rounded border border-dashed p-8 text-center text-gray-500">
-            No courses yet.
+        <div v-else class="overflow-hidden rounded-2xl border bg-card shadow-sm">
+            <Table>
+                <TableHeader>
+                    <TableRow class="bg-muted/40 hover:bg-muted/40">
+                        <TableHead>Title</TableHead>
+                        <TableHead class="w-40">Level</TableHead>
+                        <TableHead class="w-32">Status</TableHead>
+                        <TableHead class="w-20 text-right">Actions</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    <TableRow v-for="course in courses" :key="course.id">
+                        <TableCell class="font-semibold text-foreground">{{ course.title }}</TableCell>
+                        <TableCell>
+                            <LevelBadge :level="course.level" />
+                        </TableCell>
+                        <TableCell>
+                            <StatusBadge :status="course.status" />
+                        </TableCell>
+                        <TableCell class="text-right">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger as-child>
+                                    <Button variant="ghost" size="icon" class="size-8">
+                                        <MoreHorizontal class="size-4" />
+                                        <span class="sr-only">Course actions</span>
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" class="w-44">
+                                    <DropdownMenuItem as-child>
+                                        <Link :href="route('curriculum.show', course.slug)" class="cursor-pointer">
+                                            <ListTree class="size-4" />
+                                            Curriculum
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem as-child>
+                                        <Link :href="route('courses.roster', course.slug)" class="cursor-pointer">
+                                            <Users class="size-4" />
+                                            Roster
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem as-child>
+                                        <Link :href="route('courses.edit', course.slug)" class="cursor-pointer">
+                                            <Pencil class="size-4" />
+                                            Edit
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem class="cursor-pointer" @select="publish(course)">
+                                        <Send class="size-4" />
+                                        Publish
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem class="cursor-pointer" @select="archive(course)">
+                                        <Archive class="size-4" />
+                                        Archive
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem variant="destructive" class="cursor-pointer" @select="destroy(course)">
+                                        <Trash2 class="size-4" />
+                                        Delete
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
         </div>
-
-        <table v-else class="w-full border-collapse text-left text-sm">
-            <thead>
-                <tr class="border-b text-gray-500">
-                    <th class="py-2">Title</th>
-                    <th class="py-2">Level</th>
-                    <th class="py-2">Status</th>
-                    <th class="py-2 text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="course in courses" :key="course.id" class="border-b">
-                    <td class="py-3 font-medium">{{ course.title }}</td>
-                    <td class="py-3">{{ course.level }}</td>
-                    <td class="py-3">
-                        <span class="rounded-full bg-gray-100 px-2 py-1 text-xs">{{ course.status }}</span>
-                    </td>
-                    <td class="py-3">
-                        <div class="flex justify-end gap-3">
-                            <Link :href="route('curriculum.show', course.slug)" class="text-indigo-600 hover:underline">Curriculum</Link>
-                            <Link :href="route('courses.roster', course.slug)" class="text-purple-600 hover:underline">Roster</Link>
-                            <Link :href="route('courses.edit', course.slug)" class="text-blue-600 hover:underline">Edit</Link>
-                            <button type="button" class="text-green-600 hover:underline" @click="publish(course)">Publish</button>
-                            <button type="button" class="text-amber-600 hover:underline" @click="archive(course)">Archive</button>
-                            <button type="button" class="text-red-600 hover:underline" @click="destroy(course)">Delete</button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
     </AuthenticatedLayout>
 </template>

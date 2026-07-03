@@ -15,6 +15,9 @@ export default defineConfig({
                 bunny('Instrument Sans', {
                     weights: [400, 500, 600],
                 }),
+                bunny('Bricolage Grotesque', {
+                    weights: [500, 600, 700, 800],
+                }),
             ],
         }),
         inertia({
@@ -33,6 +36,7 @@ export default defineConfig({
     resolve: {
         alias: {
             'ziggy-js': fileURLToPath(new URL('./vendor/tightenco/ziggy', import.meta.url)),
+            '@': fileURLToPath(new URL('./resources/js', import.meta.url)),
         },
     },
     server: {

@@ -1,0 +1,46 @@
+- generic [ref=f1e1]:
+  - generic [ref=f1e3]:
+    - link "LMS" [ref=f1e4] [cursor=pointer]:
+      - /url: /
+    - generic [ref=f1e5]:
+      - heading "Log in" [level=1] [ref=f1e6]
+      - generic [ref=f1e7]:
+        - generic [ref=f1e8]:
+          - generic [ref=f1e9]: Email
+          - textbox "Email" [active] [ref=f1e10]
+        - generic [ref=f1e11]:
+          - generic [ref=f1e12]: Password
+          - textbox "Password" [ref=f1e13]
+        - generic [ref=f1e14]:
+          - checkbox "Remember me" [ref=f1e15]
+          - text: Remember me
+        - generic [ref=f1e16]:
+          - link "Forgot password?" [ref=f1e17] [cursor=pointer]:
+            - /url: http://localhost:8000/forgot-password
+          - button "Log in" [ref=f1e18]
+  - generic [ref=f1e21]:
+    - generic [ref=f1e23]:
+      - generic [ref=f1e24] [cursor=pointer]:
+        - generic: Request
+      - generic [ref=f1e25] [cursor=pointer]:
+        - generic: Timeline
+      - generic [ref=f1e26] [cursor=pointer]:
+        - generic: Views
+        - generic [ref=f1e27]: "3"
+      - generic [ref=f1e28] [cursor=pointer]:
+        - generic: Queries
+        - generic [ref=f1e29]: "3"
+      - generic [ref=f1e30] [cursor=pointer]:
+        - generic: Inertia
+        - generic [ref=f1e31]: "1"
+      - generic [ref=f1e32] [cursor=pointer]:
+        - generic: Http client
+        - generic [ref=f1e33]: "1"
+    - generic [ref=f1e34]:
+      - generic [ref=f1e42] [cursor=pointer]: GET /login
+      - generic [ref=f1e43] [cursor=pointer]:
+        - generic: 14.13ms
+      - generic [ref=f1e45] [cursor=pointer]:
+        - generic: 2MB
+      - generic [ref=f1e47] [cursor=pointer]:
+        - generic: 13.x

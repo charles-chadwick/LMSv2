@@ -1,43 +1,117 @@
 <script setup>
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import { LayoutDashboard, Compass, GraduationCap, BookMarked, LogOut, ChevronDown } from 'lucide-vue-next';
+import { useSectionTheme, THEMES } from '@/composables/useSectionTheme';
+import { Avatar, AvatarFallback } from '@/Components/ui/avatar';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/Components/ui/dropdown-menu';
 
-const user = computed(() => usePage().props.auth.user);
+const page = usePage();
+const user = computed(() => page.props.auth.user);
 const canCreateCourses = computed(() => user.value.can?.create_courses ?? false);
+const primaryRole = computed(() => user.value.roles?.[0] ?? 'member');
+
+const { section, theme } = useSectionTheme();
+
+const initials = computed(() => {
+    return (user.value.name || '?')
+        .split(' ')
+        .map((part) => part[0])
+        .filter(Boolean)
+        .slice(0, 2)
+        .join('')
+        .toUpperCase();
+});
+
+const navItems = computed(() => {
+    const items = [
+        { label: 'Dashboard', routeName: 'dashboard', icon: LayoutDashboard, key: 'home' },
+        { label: 'Browse', routeName: 'catalog.index', icon: Compass, key: 'browse' },
+        { label: 'My Courses', routeName: 'enrollments.index', icon: BookMarked, key: 'my' },
+    ];
+
+    if (canCreateCourses.value) {
+        items.push({ label: 'Courses', routeName: 'courses.index', icon: GraduationCap, key: 'manage' });
+    }
+
+    return items;
+});
 </script>
 
 <template>
-    <div class="min-h-screen bg-gray-50 text-gray-900">
-        <nav class="border-b bg-white">
-            <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-                <div class="flex items-center gap-4">
-                <Link :href="route('dashboard')" class="font-semibold">LMS</Link>
-                <Link :href="route('catalog.index')" class="text-sm text-gray-600 hover:underline">Browse Courses</Link>
-                <Link :href="route('enrollments.index')" class="text-sm text-gray-600 hover:underline">My Courses</Link>
-                <Link
-                    v-if="canCreateCourses"
-                    :href="route('courses.index')"
-                    class="text-sm text-gray-600 hover:underline"
-                >
-                    Courses
-                </Link>
+    <div class="min-h-screen bg-muted/30 text-foreground">
+        <nav class="sticky top-0 z-40 border-b bg-card/85 backdrop-blur-md">
+            <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+                <!-- Brand + primary nav -->
+                <div class="flex items-center gap-1.5 sm:gap-6">
+                    <Link :href="route('dashboard')" class="group flex items-center gap-2.5">
+                        <span
+                            class="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 via-sky-500 to-emerald-500 text-sm font-bold text-white shadow-sm transition-transform group-hover:scale-105"
+                        >
+                            L
+                        </span>
+                        <span class="hidden font-display text-lg font-bold tracking-tight sm:block">LMS</span>
+                    </Link>
+
+                    <div class="flex items-center gap-1">
+                        <Link
+                            v-for="item in navItems"
+                            :key="item.routeName"
+                            :href="route(item.routeName)"
+                            class="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors"
+                            :class="
+                                section === item.key
+                                    ? THEMES[item.key].soft
+                                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                            "
+                        >
+                            <component :is="item.icon" class="size-4" :stroke-width="2.25" />
+                            <span class="hidden sm:inline">{{ item.label }}</span>
+                        </Link>
+                    </div>
                 </div>
 
-                <div class="flex items-center gap-4">
-                    <span class="text-sm text-gray-600">{{ user.name }}</span>
-                    <Link
-                        :href="route('logout')"
-                        method="post"
-                        as="button"
-                        class="text-sm text-red-600 hover:underline"
+                <!-- User menu -->
+                <DropdownMenu>
+                    <DropdownMenuTrigger
+                        class="flex items-center gap-2 rounded-full py-1 pl-1 pr-2 outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
                     >
-                        Log out
-                    </Link>
-                </div>
+                        <Avatar class="size-8">
+                            <AvatarFallback :class="theme.soft" class="text-xs font-bold">
+                                {{ initials }}
+                            </AvatarFallback>
+                        </Avatar>
+                        <span class="hidden text-sm font-medium sm:block">{{ user.name }}</span>
+                        <ChevronDown class="size-4 text-muted-foreground" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" class="w-56">
+                        <DropdownMenuLabel class="flex flex-col gap-0.5">
+                            <span class="font-semibold">{{ user.name }}</span>
+                            <span class="text-xs font-normal capitalize text-muted-foreground">{{ primaryRole }}</span>
+                        </DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem as-child variant="destructive">
+                            <Link :href="route('logout')" method="post" as="button" class="w-full cursor-pointer">
+                                <LogOut class="size-4" />
+                                Log out
+                            </Link>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
+
+            <!-- Section accent line -->
+            <div class="h-0.5 w-full" :class="theme.accent" />
         </nav>
 
-        <main class="mx-auto max-w-6xl px-4 py-8">
+        <main class="mx-auto max-w-6xl px-4 py-8 sm:px-6">
             <slot />
         </main>
     </div>

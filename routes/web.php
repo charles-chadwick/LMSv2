@@ -19,12 +19,9 @@ use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\PublishCourseController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'name' => 'Charles',
-    ]);
+    return redirect()->route(auth()->check() ? 'dashboard' : 'login');
 })->name('home');
 
 Route::middleware('guest')->group(function (): void {

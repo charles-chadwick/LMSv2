@@ -1,0 +1,176 @@
+- generic [active] [ref=f3e1]:
+  - generic [ref=f3e3]:
+    - navigation [ref=f3e4]:
+      - generic [ref=f3e5]:
+        - generic [ref=f3e6]:
+          - link "L LMS" [ref=f3e7] [cursor=pointer]:
+            - /url: http://127.0.0.1:8123/dashboard
+            - generic [ref=f3e8]: L
+            - generic [ref=f3e9]: LMS
+          - generic [ref=f3e10]:
+            - link "Dashboard" [ref=f3e11] [cursor=pointer]:
+              - /url: http://127.0.0.1:8123/dashboard
+              - img [ref=f3e12]
+              - generic [ref=f3e17]: Dashboard
+            - link "Browse" [ref=f3e18] [cursor=pointer]:
+              - /url: http://127.0.0.1:8123/catalog
+              - img [ref=f3e19]
+              - generic [ref=f3e22]: Browse
+            - link "My Courses" [ref=f3e23] [cursor=pointer]:
+              - /url: http://127.0.0.1:8123/my-courses
+              - img [ref=f3e24]
+              - generic [ref=f3e27]: My Courses
+            - link "Courses" [ref=f3e28] [cursor=pointer]:
+              - /url: http://127.0.0.1:8123/courses
+              - img [ref=f3e29]
+              - generic [ref=f3e32]: Courses
+        - button "RR Redhead Rick" [ref=f3e33]:
+          - generic [ref=f3e35]: RR
+          - generic [ref=f3e36]: Redhead Rick
+          - img [ref=f3e37]
+    - main [ref=f3e40]:
+      - generic [ref=f3e42]:
+        - generic [ref=f3e43]:
+          - paragraph [ref=f3e44]: Courses
+          - heading "Courses" [level=1] [ref=f3e45]
+          - paragraph [ref=f3e46]: Author curriculum, publish, and manage your rosters.
+        - link "New course" [ref=f3e48] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/courses/create
+          - img
+          - text: New course
+      - table [ref=f3e51]:
+        - rowgroup [ref=f3e52]:
+          - row "Title Level Status Actions" [ref=f3e53]:
+            - columnheader "Title" [ref=f3e54]
+            - columnheader "Level" [ref=f3e55]
+            - columnheader "Status" [ref=f3e56]
+            - columnheader "Actions" [ref=f3e57]
+        - rowgroup [ref=f3e58]:
+          - row "Secured neutral alliance Intermediate Published Course actions" [ref=f3e59]:
+            - cell "Secured neutral alliance" [ref=f3e60]
+            - cell "Intermediate" [ref=f3e61]:
+              - generic [ref=f3e62]: Intermediate
+            - cell "Published" [ref=f3e64]:
+              - generic [ref=f3e65]: Published
+            - cell "Course actions" [ref=f3e66]:
+              - button "Course actions" [ref=f3e67]:
+                - img
+                - generic [ref=f3e68]: Course actions
+          - row "Fully-configurable object-oriented policy Beginner Published Course actions" [ref=f3e69]:
+            - cell "Fully-configurable object-oriented policy" [ref=f3e70]
+            - cell "Beginner" [ref=f3e71]:
+              - generic [ref=f3e72]: Beginner
+            - cell "Published" [ref=f3e74]:
+              - generic [ref=f3e75]: Published
+            - cell "Course actions" [ref=f3e76]:
+              - button "Course actions" [ref=f3e77]:
+                - img
+                - generic [ref=f3e78]: Course actions
+  - generic [ref=f3e79]:
+    - generic [ref=f3e81]:
+      - generic [ref=f3e83]:
+        - generic [ref=f3e84] [cursor=pointer]:
+          - generic: Request
+        - generic [ref=f3e85] [cursor=pointer]:
+          - generic: Timeline
+        - generic [ref=f3e86] [cursor=pointer]:
+          - generic: Views
+          - generic [ref=f3e87]: "3"
+        - generic [ref=f3e88] [cursor=pointer]:
+          - generic: Queries
+          - generic [ref=f3e89]: "7"
+        - generic [ref=f3e90] [cursor=pointer]:
+          - generic: Models
+          - generic [ref=f3e91]: "4"
+        - generic [ref=f3e92] [cursor=pointer]:
+          - generic: Inertia
+          - generic [ref=f3e93]: "1"
+        - generic [ref=f3e94] [cursor=pointer]:
+          - generic: Gate
+          - generic [ref=f3e95]: "3"
+        - generic [ref=f3e96] [cursor=pointer]:
+          - generic: Cache
+          - generic [ref=f3e97]: "1"
+      - generic [ref=f3e98]:
+        - generic [ref=f3e106] [cursor=pointer]: GET /courses
+        - generic [ref=f3e107] [cursor=pointer]:
+          - generic: 23.05ms
+        - generic [ref=f3e109] [cursor=pointer]:
+          - generic: 2MB
+        - generic [ref=f3e111] [cursor=pointer]:
+          - generic: 13.x
+    - generic [ref=f3e115]:
+      - generic [ref=f3e116]:
+        - text: 7 statements were executed
+        - generic "Accumulated duration" [ref=f3e117]: 4.17msSort ⇅
+      - list [ref=f3e118]:
+        - listitem [ref=f3e119]:
+          - generic "/vendor/laravel/framework/src/Illuminate/Cache/CacheManager.php#200" [ref=f3e120]:
+            - text: CacheManager.php#200
+            - link [ref=f3e121] [cursor=pointer]:
+              - /url: phpstorm://open?file=%2FUsers%2Fcharles%2FProjects%2FLMSv2%2Fvendor%2Flaravel%2Fframework%2Fsrc%2FIlluminate%2FCache%2FCacheManager.php&line=200
+          - generic "Connection" [ref=f3e122]: lms_v2
+          - strong [ref=f3e123]: Connection Established
+        - listitem [ref=f3e124] [cursor=pointer]:
+          - generic "/vendor/laravel/framework/src/Illuminate/Session/DatabaseSessionHandler.php#96" [ref=f3e125]:
+            - text: DatabaseSessionHandler.php#96
+            - link [ref=f3e126]:
+              - /url: phpstorm://open?file=%2FUsers%2Fcharles%2FProjects%2FLMSv2%2Fvendor%2Flaravel%2Fframework%2Fsrc%2FIlluminate%2FSession%2FDatabaseSessionHandler.php&line=96
+          - generic "Duration" [ref=f3e127]: 1.48ms
+          - generic "Connection" [ref=f3e128]: lms_v2
+          - generic "Copy to clipboard" [ref=f3e129]
+          - code [ref=f3e130]: "select * from `sessions` where `id` = 'Okm03KaDNgQ4syPv7OXjPnm46SkqHmH5WyJ2YZiN' limit 1"
+        - listitem [ref=f3e131] [cursor=pointer]:
+          - generic "/vendor/laravel/framework/src/Illuminate/Auth/EloquentUserProvider.php#58" [ref=f3e132]:
+            - text: EloquentUserProvider.php#58
+            - link [ref=f3e133]:
+              - /url: phpstorm://open?file=%2FUsers%2Fcharles%2FProjects%2FLMSv2%2Fvendor%2Flaravel%2Fframework%2Fsrc%2FIlluminate%2FAuth%2FEloquentUserProvider.php&line=58
+          - generic "Duration" [ref=f3e134]: 280μs
+          - generic "Connection" [ref=f3e135]: lms_v2
+          - generic "Copy to clipboard" [ref=f3e136]
+          - code [ref=f3e137]: "select * from `users` where `id` = 5 limit 1"
+        - listitem [ref=f3e138] [cursor=pointer]:
+          - generic "/vendor/spatie/laravel-permission/src/Traits/HasRoles.php#456" [ref=f3e139]:
+            - text: HasRoles.php#456
+            - link [ref=f3e140]:
+              - /url: phpstorm://open?file=%2FUsers%2Fcharles%2FProjects%2FLMSv2%2Fvendor%2Fspatie%2Flaravel-permission%2Fsrc%2FTraits%2FHasRoles.php&line=456
+          - generic "Duration" [ref=f3e141]: 380μs
+          - generic "Connection" [ref=f3e142]: lms_v2
+          - generic "Copy to clipboard" [ref=f3e143]
+          - code [ref=f3e144]: "select `roles`.*, `model_has_roles`.`model_id` as `pivot_model_id`, `model_has_roles`.`role_id` as `pivot_role_id`, `model_has_roles`.`model_type` as `pivot_model_type` from `roles` inner join `model_has_roles` on `roles`.`id` = `model_has_roles`.`role_id` where `model_has_roles`.`model_id` in (5) and `model_has_roles`.`model_type` = 'App\\\\Models\\\\User'"
+        - listitem [ref=f3e145] [cursor=pointer]:
+          - generic "/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php#142" [ref=f3e146]:
+            - text: DatabaseStore.php#142
+            - link [ref=f3e147]:
+              - /url: phpstorm://open?file=%2FUsers%2Fcharles%2FProjects%2FLMSv2%2Fvendor%2Flaravel%2Fframework%2Fsrc%2FIlluminate%2FCache%2FDatabaseStore.php&line=142
+          - generic "Duration" [ref=f3e148]: 250μs
+          - generic "Connection" [ref=f3e149]: lms_v2
+          - generic "Copy to clipboard" [ref=f3e150]
+          - code [ref=f3e151]: "select * from `cache` where `key` in ('laravel-cache-spatie.permission.cache')"
+        - listitem [ref=f3e152] [cursor=pointer]:
+          - generic "/vendor/spatie/laravel-permission/src/Traits/HasPermissions.php#320" [ref=f3e153]:
+            - text: HasPermissions.php#320
+            - link [ref=f3e154]:
+              - /url: phpstorm://open?file=%2FUsers%2Fcharles%2FProjects%2FLMSv2%2Fvendor%2Fspatie%2Flaravel-permission%2Fsrc%2FTraits%2FHasPermissions.php&line=320
+          - generic "Duration" [ref=f3e155]: 320μs
+          - generic "Connection" [ref=f3e156]: lms_v2
+          - generic "Copy to clipboard" [ref=f3e157]
+          - code [ref=f3e158]: "select `permissions`.*, `model_has_permissions`.`model_id` as `pivot_model_id`, `model_has_permissions`.`permission_id` as `pivot_permission_id`, `model_has_permissions`.`model_type` as `pivot_model_type` from `permissions` inner join `model_has_permissions` on `permissions`.`id` = `model_has_permissions`.`permission_id` where `model_has_permissions`.`model_id` in (5) and `model_has_permissions`.`model_type` = 'App\\\\Models\\\\User'"
+        - listitem [ref=f3e159] [cursor=pointer]:
+          - generic "/app/Http/Controllers/CourseController.php#31" [ref=f3e160]:
+            - text: CourseController.php#31
+            - link [ref=f3e161]:
+              - /url: phpstorm://open?file=%2FUsers%2Fcharles%2FProjects%2FLMSv2%2Fapp%2FHttp%2FControllers%2FCourseController.php&line=31
+          - generic "Duration" [ref=f3e162]: 320μs
+          - generic "Connection" [ref=f3e163]: lms_v2
+          - generic "Copy to clipboard" [ref=f3e164]
+          - code [ref=f3e165]: "select `id`, `title`, `slug`, `status`, `level` from `courses` where `instructor_id` = 5 and `courses`.`deleted_at` is null order by `created_at` desc"
+        - listitem [ref=f3e166] [cursor=pointer]:
+          - generic "/vendor/laravel/framework/src/Illuminate/Session/DatabaseSessionHandler.php#172" [ref=f3e167]:
+            - text: DatabaseSessionHandler.php#172
+            - link [ref=f3e168]:
+              - /url: phpstorm://open?file=%2FUsers%2Fcharles%2FProjects%2FLMSv2%2Fvendor%2Flaravel%2Fframework%2Fsrc%2FIlluminate%2FSession%2FDatabaseSessionHandler.php&line=172
+          - generic "Duration" [ref=f3e169]: 1.14ms
+          - generic "Connection" [ref=f3e170]: lms_v2
+          - generic "Copy to clipboard" [ref=f3e171]
+          - code [ref=f3e172]: "update `sessions` set `payload` = 'eyJfdG9rZW4iOiJpUWkyeVFRNzFmTk40dzNHZkxpTDdJTXNzRXEzcjlwWnJ1N3FWYXpkIiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cLzEyNy4wLjAuMTo4MTIzXC9jb3Vyc2VzIiwicm91dGUiOiJjb3Vyc2VzLmluZGV4In0sIl9mbGFzaCI6eyJvbGQiOltdLCJuZXciOltdfSwibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiOjV9', `last_activity` = 1783110340, `user_id` = 5, `ip_address` = '127.0.0.1', `user_agent` = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36' where `id` = 'Okm03KaDNgQ4syPv7OXjPnm46SkqHmH5WyJ2YZiN'"

@@ -1,0 +1,566 @@
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e3]:
+    - navigation [ref=f2e4]:
+      - generic [ref=f2e5]:
+        - generic [ref=f2e6]:
+          - link "L LMS" [ref=f2e7] [cursor=pointer]:
+            - /url: http://127.0.0.1:8123/dashboard
+            - generic [ref=f2e8]: L
+            - generic [ref=f2e9]: LMS
+          - generic [ref=f2e10]:
+            - link "Dashboard" [ref=f2e11] [cursor=pointer]:
+              - /url: http://127.0.0.1:8123/dashboard
+              - img [ref=f2e12]
+              - generic [ref=f2e17]: Dashboard
+            - link "Browse" [ref=f2e18] [cursor=pointer]:
+              - /url: http://127.0.0.1:8123/catalog
+              - img [ref=f2e19]
+              - generic [ref=f2e22]: Browse
+            - link "My Courses" [ref=f2e23] [cursor=pointer]:
+              - /url: http://127.0.0.1:8123/my-courses
+              - img [ref=f2e24]
+              - generic [ref=f2e27]: My Courses
+            - link "Courses" [ref=f2e28] [cursor=pointer]:
+              - /url: http://127.0.0.1:8123/courses
+              - img [ref=f2e29]
+              - generic [ref=f2e32]: Courses
+        - button "RR Redhead Rick" [ref=f2e33]:
+          - generic [ref=f2e35]: RR
+          - generic [ref=f2e36]: Redhead Rick
+          - img [ref=f2e37]
+    - main [ref=f2e40]:
+      - generic [ref=f2e43]:
+        - paragraph [ref=f2e44]: Browse
+        - heading "Browse courses" [level=1] [ref=f2e45]
+        - paragraph [ref=f2e46]: Discover published courses and enroll in your next skill.
+      - generic [ref=f2e47]:
+        - link "Beginner Enrolled Profound intangible matrix Aperiam quia omnis nulla aut. Mr. Nimbus" [ref=f2e48] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/profound-intangible-matrix-57611
+          - generic [ref=f2e49]:
+            - generic [ref=f2e50]: Beginner
+            - generic [ref=f2e52]:
+              - img [ref=f2e53]
+              - text: Enrolled
+          - heading "Profound intangible matrix" [level=2] [ref=f2e56]
+          - paragraph [ref=f2e57]: Aperiam quia omnis nulla aut.
+          - generic [ref=f2e58]:
+            - generic [ref=f2e59]: Mr. Nimbus
+            - img [ref=f2e60]
+        - link "Intermediate Open-architected interactive definition Praesentium non ullam itaque praesentium temporibus dolor. Mr. Nimbus" [ref=f2e63] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/open-architected-interactive-definition-67125
+          - generic [ref=f2e65]: Intermediate
+          - heading "Open-architected interactive definition" [level=2] [ref=f2e67]
+          - paragraph [ref=f2e68]: Praesentium non ullam itaque praesentium temporibus dolor.
+          - generic [ref=f2e69]:
+            - generic [ref=f2e70]: Mr. Nimbus
+            - img [ref=f2e71]
+        - link "Intermediate Managed clear-thinking adapter Consequatur id ab quaerat perspiciatis et ut. Ron Benson" [ref=f2e74] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/managed-clear-thinking-adapter-66942
+          - generic [ref=f2e76]: Intermediate
+          - heading "Managed clear-thinking adapter" [level=2] [ref=f2e78]
+          - paragraph [ref=f2e79]: Consequatur id ab quaerat perspiciatis et ut.
+          - generic [ref=f2e80]:
+            - generic [ref=f2e81]: Ron Benson
+            - img [ref=f2e82]
+        - link "Advanced Robust intangible access Quae voluptatem deserunt laborum odit voluptates molestiae. Ron Benson" [ref=f2e85] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/robust-intangible-access-98868
+          - generic [ref=f2e87]: Advanced
+          - heading "Robust intangible access" [level=2] [ref=f2e89]
+          - paragraph [ref=f2e90]: Quae voluptatem deserunt laborum odit voluptates molestiae.
+          - generic [ref=f2e91]:
+            - generic [ref=f2e92]: Ron Benson
+            - img [ref=f2e93]
+        - link "Advanced Visionary encompassing access Et nesciunt qui velit fugit ab esse doloribus. Two Crows" [ref=f2e96] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/visionary-encompassing-access-95850
+          - generic [ref=f2e98]: Advanced
+          - heading "Visionary encompassing access" [level=2] [ref=f2e100]
+          - paragraph [ref=f2e101]: Et nesciunt qui velit fugit ab esse doloribus.
+          - generic [ref=f2e102]:
+            - generic [ref=f2e103]: Two Crows
+            - img [ref=f2e104]
+        - link "Advanced Advanced upward-trending blockchain Ipsum mollitia nihil provident quod ullam beatae expedita voluptatem. Two Crows" [ref=f2e107] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/advanced-upward-trending-blockchain-93483
+          - generic [ref=f2e109]: Advanced
+          - heading "Advanced upward-trending blockchain" [level=2] [ref=f2e111]
+          - paragraph [ref=f2e112]: Ipsum mollitia nihil provident quod ullam beatae expedita voluptatem.
+          - generic [ref=f2e113]:
+            - generic [ref=f2e114]: Two Crows
+            - img [ref=f2e115]
+        - link "Advanced Optional intermediate adapter Neque vel odio recusandae voluptate nihil et. Train Cops Instructor" [ref=f2e118] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/optional-intermediate-adapter-30028
+          - generic [ref=f2e120]: Advanced
+          - heading "Optional intermediate adapter" [level=2] [ref=f2e122]
+          - paragraph [ref=f2e123]: Neque vel odio recusandae voluptate nihil et.
+          - generic [ref=f2e124]:
+            - generic [ref=f2e125]: Train Cops Instructor
+            - img [ref=f2e126]
+        - link "Beginner Devolved systemic methodology Id officia impedit quas adipisci perspiciatis. Train Cops Instructor" [ref=f2e129] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/devolved-systemic-methodology-70596
+          - generic [ref=f2e131]: Beginner
+          - heading "Devolved systemic methodology" [level=2] [ref=f2e133]
+          - paragraph [ref=f2e134]: Id officia impedit quas adipisci perspiciatis.
+          - generic [ref=f2e135]:
+            - generic [ref=f2e136]: Train Cops Instructor
+            - img [ref=f2e137]
+        - link "Advanced Reactive asynchronous encoding Et voluptate cum rerum nihil aut quis vero. Campaign Manager Morty" [ref=f2e140] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/reactive-asynchronous-encoding-91326
+          - generic [ref=f2e142]: Advanced
+          - heading "Reactive asynchronous encoding" [level=2] [ref=f2e144]
+          - paragraph [ref=f2e145]: Et voluptate cum rerum nihil aut quis vero.
+          - generic [ref=f2e146]:
+            - generic [ref=f2e147]: Campaign Manager Morty
+            - img [ref=f2e148]
+        - link "Beginner Right-sized contextually-based success Asperiores distinctio rem aut dolorum dolores necessitatibus. Campaign Manager Morty" [ref=f2e151] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/right-sized-contextually-based-success-6853
+          - generic [ref=f2e153]: Beginner
+          - heading "Right-sized contextually-based success" [level=2] [ref=f2e155]
+          - paragraph [ref=f2e156]: Asperiores distinctio rem aut dolorum dolores necessitatibus.
+          - generic [ref=f2e157]:
+            - generic [ref=f2e158]: Campaign Manager Morty
+            - img [ref=f2e159]
+        - link "Beginner Organized 6thgeneration forecast Dolorem aliquid sapiente ea sit quis voluptatem ea. Pink Polo Shirt Jerry" [ref=f2e162] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/organized-6thgeneration-forecast-30564
+          - generic [ref=f2e164]: Beginner
+          - heading "Organized 6thgeneration forecast" [level=2] [ref=f2e166]
+          - paragraph [ref=f2e167]: Dolorem aliquid sapiente ea sit quis voluptatem ea.
+          - generic [ref=f2e168]:
+            - generic [ref=f2e169]: Pink Polo Shirt Jerry
+            - img [ref=f2e170]
+        - link "Intermediate Monitored background function Accusamus porro aut excepturi placeat deleniti corrupti fugit. Pink Polo Shirt Jerry" [ref=f2e173] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/monitored-background-function-62721
+          - generic [ref=f2e175]: Intermediate
+          - heading "Monitored background function" [level=2] [ref=f2e177]
+          - paragraph [ref=f2e178]: Accusamus porro aut excepturi placeat deleniti corrupti fugit.
+          - generic [ref=f2e179]:
+            - generic [ref=f2e180]: Pink Polo Shirt Jerry
+            - img [ref=f2e181]
+        - link "Intermediate Total analyzing instructionset Sed ut odit laborum facilis soluta. Rick’s Disguise" [ref=f2e184] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/total-analyzing-instructionset-73323
+          - generic [ref=f2e186]: Intermediate
+          - heading "Total analyzing instructionset" [level=2] [ref=f2e188]
+          - paragraph [ref=f2e189]: Sed ut odit laborum facilis soluta.
+          - generic [ref=f2e190]:
+            - generic [ref=f2e191]: Rick’s Disguise
+            - img [ref=f2e192]
+        - link "Beginner Universal cohesive synergy Quo quia omnis minima amet id et. Rick’s Disguise" [ref=f2e195] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/universal-cohesive-synergy-41928
+          - generic [ref=f2e197]: Beginner
+          - heading "Universal cohesive synergy" [level=2] [ref=f2e199]
+          - paragraph [ref=f2e200]: Quo quia omnis minima amet id et.
+          - generic [ref=f2e201]:
+            - generic [ref=f2e202]: Rick’s Disguise
+            - img [ref=f2e203]
+        - link "Advanced Organized hybrid core Dolor sed nesciunt non voluptas est recusandae. Big Fat rick" [ref=f2e206] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/organized-hybrid-core-2410
+          - generic [ref=f2e208]: Advanced
+          - heading "Organized hybrid core" [level=2] [ref=f2e210]
+          - paragraph [ref=f2e211]: Dolor sed nesciunt non voluptas est recusandae.
+          - generic [ref=f2e212]:
+            - generic [ref=f2e213]: Big Fat rick
+            - img [ref=f2e214]
+        - link "Advanced Adaptive modular budgetarymanagement Maiores quo natus a quibusdam et. Big Fat rick" [ref=f2e217] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/adaptive-modular-budgetarymanagement-35297
+          - generic [ref=f2e219]: Advanced
+          - heading "Adaptive modular budgetarymanagement" [level=2] [ref=f2e221]
+          - paragraph [ref=f2e222]: Maiores quo natus a quibusdam et.
+          - generic [ref=f2e223]:
+            - generic [ref=f2e224]: Big Fat rick
+            - img [ref=f2e225]
+        - link "Advanced Balanced non-volatile monitoring Maxime est alias vero voluptate animi velit sit. Shmlangela Shmlobinson-Shmlower" [ref=f2e228] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/balanced-non-volatile-monitoring-42389
+          - generic [ref=f2e230]: Advanced
+          - heading "Balanced non-volatile monitoring" [level=2] [ref=f2e232]
+          - paragraph [ref=f2e233]: Maxime est alias vero voluptate animi velit sit.
+          - generic [ref=f2e234]:
+            - generic [ref=f2e235]: Shmlangela Shmlobinson-Shmlower
+            - img [ref=f2e236]
+        - link "Advanced Horizontal transitional localareanetwork Possimus eveniet veritatis et. Shmlangela Shmlobinson-Shmlower" [ref=f2e239] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/horizontal-transitional-localareanetwork-35666
+          - generic [ref=f2e241]: Advanced
+          - heading "Horizontal transitional localareanetwork" [level=2] [ref=f2e243]
+          - paragraph [ref=f2e244]: Possimus eveniet veritatis et.
+          - generic [ref=f2e245]:
+            - generic [ref=f2e246]: Shmlangela Shmlobinson-Shmlower
+            - img [ref=f2e247]
+        - link "Intermediate Balanced systemic time-frame Optio quasi quo quia dolorum delectus vel adipisci nostrum. Mousetrap Nipples" [ref=f2e250] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/balanced-systemic-time-frame-26382
+          - generic [ref=f2e252]: Intermediate
+          - heading "Balanced systemic time-frame" [level=2] [ref=f2e254]
+          - paragraph [ref=f2e255]: Optio quasi quo quia dolorum delectus vel adipisci nostrum.
+          - generic [ref=f2e256]:
+            - generic [ref=f2e257]: Mousetrap Nipples
+            - img [ref=f2e258]
+        - link "Advanced Multi-tiered incremental collaboration Rerum aspernatur est quaerat doloremque eos tempore minima. Mousetrap Nipples" [ref=f2e261] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/multi-tiered-incremental-collaboration-96516
+          - generic [ref=f2e263]: Advanced
+          - heading "Multi-tiered incremental collaboration" [level=2] [ref=f2e265]
+          - paragraph [ref=f2e266]: Rerum aspernatur est quaerat doloremque eos tempore minima.
+          - generic [ref=f2e267]:
+            - generic [ref=f2e268]: Mousetrap Nipples
+            - img [ref=f2e269]
+        - link "Beginner Adaptive real-time middleware Ut doloribus itaque ea perspiciatis. Snake Soldier" [ref=f2e272] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/adaptive-real-time-middleware-80520
+          - generic [ref=f2e274]: Beginner
+          - heading "Adaptive real-time middleware" [level=2] [ref=f2e276]
+          - paragraph [ref=f2e277]: Ut doloribus itaque ea perspiciatis.
+          - generic [ref=f2e278]:
+            - generic [ref=f2e279]: Snake Soldier
+            - img [ref=f2e280]
+        - link "Beginner Object-based 24/7 capability Repudiandae ipsa natus autem laudantium enim et. Snake Soldier" [ref=f2e283] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/object-based-247-capability-1645
+          - generic [ref=f2e285]: Beginner
+          - heading "Object-based 24/7 capability" [level=2] [ref=f2e287]
+          - paragraph [ref=f2e288]: Repudiandae ipsa natus autem laudantium enim et.
+          - generic [ref=f2e289]:
+            - generic [ref=f2e290]: Snake Soldier
+            - img [ref=f2e291]
+        - link "Beginner Proactive 4thgeneration workforce Consequatur recusandae perspiciatis praesentium consequuntur et ut. Fascist Shrimp SS" [ref=f2e294] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/proactive-4thgeneration-workforce-43281
+          - generic [ref=f2e296]: Beginner
+          - heading "Proactive 4thgeneration workforce" [level=2] [ref=f2e298]
+          - paragraph [ref=f2e299]: Consequatur recusandae perspiciatis praesentium consequuntur et ut.
+          - generic [ref=f2e300]:
+            - generic [ref=f2e301]: Fascist Shrimp SS
+            - img [ref=f2e302]
+        - link "Beginner Integrated 24/7 project Doloremque sunt voluptates consequuntur commodi omnis doloribus. Fascist Shrimp SS" [ref=f2e305] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/integrated-247-project-32962
+          - generic [ref=f2e307]: Beginner
+          - heading "Integrated 24/7 project" [level=2] [ref=f2e309]
+          - paragraph [ref=f2e310]: Doloremque sunt voluptates consequuntur commodi omnis doloribus.
+          - generic [ref=f2e311]:
+            - generic [ref=f2e312]: Fascist Shrimp SS
+            - img [ref=f2e313]
+        - link "Beginner Adaptive solution-oriented throughput Doloribus quidem nisi minima eum. Squid Costume Jerry" [ref=f2e316] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/adaptive-solution-oriented-throughput-92082
+          - generic [ref=f2e318]: Beginner
+          - heading "Adaptive solution-oriented throughput" [level=2] [ref=f2e320]
+          - paragraph [ref=f2e321]: Doloribus quidem nisi minima eum.
+          - generic [ref=f2e322]:
+            - generic [ref=f2e323]: Squid Costume Jerry
+            - img [ref=f2e324]
+        - link "Advanced Ameliorated fresh-thinking service-desk Minima earum ab perferendis vero. Squid Costume Jerry" [ref=f2e327] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/ameliorated-fresh-thinking-service-desk-63401
+          - generic [ref=f2e329]: Advanced
+          - heading "Ameliorated fresh-thinking service-desk" [level=2] [ref=f2e331]
+          - paragraph [ref=f2e332]: Minima earum ab perferendis vero.
+          - generic [ref=f2e333]:
+            - generic [ref=f2e334]: Squid Costume Jerry
+            - img [ref=f2e335]
+        - link "Intermediate Balanced systematic conglomeration Placeat et et accusamus ipsum eveniet quia. Pickle Rick" [ref=f2e338] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/balanced-systematic-conglomeration-37581
+          - generic [ref=f2e340]: Intermediate
+          - heading "Balanced systematic conglomeration" [level=2] [ref=f2e342]
+          - paragraph [ref=f2e343]: Placeat et et accusamus ipsum eveniet quia.
+          - generic [ref=f2e344]:
+            - generic [ref=f2e345]: Pickle Rick
+            - img [ref=f2e346]
+        - link "Beginner Self-enabling optimizing challenge Sapiente voluptatem voluptatem vel voluptates distinctio est dolores beatae. Pickle Rick" [ref=f2e349] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/self-enabling-optimizing-challenge-19284
+          - generic [ref=f2e351]: Beginner
+          - heading "Self-enabling optimizing challenge" [level=2] [ref=f2e353]
+          - paragraph [ref=f2e354]: Sapiente voluptatem voluptatem vel voluptates distinctio est dolores beatae.
+          - generic [ref=f2e355]:
+            - generic [ref=f2e356]: Pickle Rick
+            - img [ref=f2e357]
+        - link "Intermediate Stand-alone secondary time-frame Velit asperiores consequatur suscipit voluptatem sit est. Hole in the Wall Where the Men Can See it All" [ref=f2e360] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/stand-alone-secondary-time-frame-91646
+          - generic [ref=f2e362]: Intermediate
+          - heading "Stand-alone secondary time-frame" [level=2] [ref=f2e364]
+          - paragraph [ref=f2e365]: Velit asperiores consequatur suscipit voluptatem sit est.
+          - generic [ref=f2e366]:
+            - generic [ref=f2e367]: Hole in the Wall Where the Men Can See it All
+            - img [ref=f2e368]
+        - link "Intermediate Up-sized 24/7 frame Molestiae aliquam cupiditate velit nihil delectus at. Hole in the Wall Where the Men Can See it All" [ref=f2e371] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/up-sized-247-frame-9806
+          - generic [ref=f2e373]: Intermediate
+          - heading "Up-sized 24/7 frame" [level=2] [ref=f2e375]
+          - paragraph [ref=f2e376]: Molestiae aliquam cupiditate velit nihil delectus at.
+          - generic [ref=f2e377]:
+            - generic [ref=f2e378]: Hole in the Wall Where the Men Can See it All
+            - img [ref=f2e379]
+        - link "Intermediate Self-enabling 3rdgeneration utilisation Porro quasi qui et consequatur est sint dignissimos perspiciatis. Alien Spa Employee" [ref=f2e382] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/self-enabling-3rdgeneration-utilisation-25873
+          - generic [ref=f2e384]: Intermediate
+          - heading "Self-enabling 3rdgeneration utilisation" [level=2] [ref=f2e386]
+          - paragraph [ref=f2e387]: Porro quasi qui et consequatur est sint dignissimos perspiciatis.
+          - generic [ref=f2e388]:
+            - generic [ref=f2e389]: Alien Spa Employee
+            - img [ref=f2e390]
+        - link "Advanced Digitized bottom-line core Sequi saepe delectus tenetur doloribus eos quo. Alien Spa Employee" [ref=f2e393] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/digitized-bottom-line-core-86560
+          - generic [ref=f2e395]: Advanced
+          - heading "Digitized bottom-line core" [level=2] [ref=f2e397]
+          - paragraph [ref=f2e398]: Sequi saepe delectus tenetur doloribus eos quo.
+          - generic [ref=f2e399]:
+            - generic [ref=f2e400]: Alien Spa Employee
+            - img [ref=f2e401]
+        - link "Beginner Decentralized incremental collaboration Aspernatur voluptas nihil aut est blanditiis quos odio sit. Floaty Bloody Man" [ref=f2e404] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/decentralized-incremental-collaboration-49761
+          - generic [ref=f2e406]: Beginner
+          - heading "Decentralized incremental collaboration" [level=2] [ref=f2e408]
+          - paragraph [ref=f2e409]: Aspernatur voluptas nihil aut est blanditiis quos odio sit.
+          - generic [ref=f2e410]:
+            - generic [ref=f2e411]: Floaty Bloody Man
+            - img [ref=f2e412]
+        - link "Advanced Triple-buffered asymmetric leverage Et quia adipisci occaecati ea et. Floaty Bloody Man" [ref=f2e415] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/triple-buffered-asymmetric-leverage-94697
+          - generic [ref=f2e417]: Advanced
+          - heading "Triple-buffered asymmetric leverage" [level=2] [ref=f2e419]
+          - paragraph [ref=f2e420]: Et quia adipisci occaecati ea et.
+          - generic [ref=f2e421]:
+            - generic [ref=f2e422]: Floaty Bloody Man
+            - img [ref=f2e423]
+        - link "Beginner Cloned optimal instructionset Recusandae adipisci vel eum sed. Mr. Beauregard" [ref=f2e426] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/cloned-optimal-instructionset-68286
+          - generic [ref=f2e428]: Beginner
+          - heading "Cloned optimal instructionset" [level=2] [ref=f2e430]
+          - paragraph [ref=f2e431]: Recusandae adipisci vel eum sed.
+          - generic [ref=f2e432]:
+            - generic [ref=f2e433]: Mr. Beauregard
+            - img [ref=f2e434]
+        - link "Advanced Virtual even-keeled adapter Adipisci enim similique itaque quasi quod debitis. Mr. Beauregard" [ref=f2e437] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/virtual-even-keeled-adapter-34660
+          - generic [ref=f2e439]: Advanced
+          - heading "Virtual even-keeled adapter" [level=2] [ref=f2e441]
+          - paragraph [ref=f2e442]: Adipisci enim similique itaque quasi quod debitis.
+          - generic [ref=f2e443]:
+            - generic [ref=f2e444]: Mr. Beauregard
+            - img [ref=f2e445]
+        - link "Beginner Pre-emptive bi-directional product Voluptatem voluptatibus debitis quia quo. Purple Morty" [ref=f2e448] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/pre-emptive-bi-directional-product-54740
+          - generic [ref=f2e450]: Beginner
+          - heading "Pre-emptive bi-directional product" [level=2] [ref=f2e452]
+          - paragraph [ref=f2e453]: Voluptatem voluptatibus debitis quia quo.
+          - generic [ref=f2e454]:
+            - generic [ref=f2e455]: Purple Morty
+            - img [ref=f2e456]
+        - link "Intermediate Digitized systemic interface Ab et laborum sed eaque. Purple Morty" [ref=f2e459] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/digitized-systemic-interface-86510
+          - generic [ref=f2e461]: Intermediate
+          - heading "Digitized systemic interface" [level=2] [ref=f2e463]
+          - paragraph [ref=f2e464]: Ab et laborum sed eaque.
+          - generic [ref=f2e465]:
+            - generic [ref=f2e466]: Purple Morty
+            - img [ref=f2e467]
+        - link "Intermediate Secured neutral alliance Et nisi sed quibusdam eos. Redhead Rick" [ref=f2e470] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/secured-neutral-alliance-1009
+          - generic [ref=f2e472]: Intermediate
+          - heading "Secured neutral alliance" [level=2] [ref=f2e474]
+          - paragraph [ref=f2e475]: Et nisi sed quibusdam eos.
+          - generic [ref=f2e476]:
+            - generic [ref=f2e477]: Redhead Rick
+            - img [ref=f2e478]
+        - link "Beginner Fully-configurable object-oriented policy Tenetur quisquam inventore sed quod ut modi. Redhead Rick" [ref=f2e481] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/fully-configurable-object-oriented-policy-80038
+          - generic [ref=f2e483]: Beginner
+          - heading "Fully-configurable object-oriented policy" [level=2] [ref=f2e485]
+          - paragraph [ref=f2e486]: Tenetur quisquam inventore sed quod ut modi.
+          - generic [ref=f2e487]:
+            - generic [ref=f2e488]: Redhead Rick
+            - img [ref=f2e489]
+        - link "Advanced Mandatory disintermediate attitude Aliquam architecto dolorum ab dolores est fugiat qui quaerat. Fascist Shrimp Rick’s Clone" [ref=f2e492] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/mandatory-disintermediate-attitude-94620
+          - generic [ref=f2e494]: Advanced
+          - heading "Mandatory disintermediate attitude" [level=2] [ref=f2e496]
+          - paragraph [ref=f2e497]: Aliquam architecto dolorum ab dolores est fugiat qui quaerat.
+          - generic [ref=f2e498]:
+            - generic [ref=f2e499]: Fascist Shrimp Rick’s Clone
+            - img [ref=f2e500]
+        - link "Advanced Profit-focused maximized monitoring Voluptatibus illo voluptas laudantium incidunt quaerat unde dolor. Fascist Shrimp Rick’s Clone" [ref=f2e503] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/profit-focused-maximized-monitoring-55810
+          - generic [ref=f2e505]: Advanced
+          - heading "Profit-focused maximized monitoring" [level=2] [ref=f2e507]
+          - paragraph [ref=f2e508]: Voluptatibus illo voluptas laudantium incidunt quaerat unde dolor.
+          - generic [ref=f2e509]:
+            - generic [ref=f2e510]: Fascist Shrimp Rick’s Clone
+            - img [ref=f2e511]
+        - link "Advanced Business-focused impactful GraphicInterface Ex quasi omnis voluptates esse. Little Voltron" [ref=f2e514] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/business-focused-impactful-graphicinterface-42116
+          - generic [ref=f2e516]: Advanced
+          - heading "Business-focused impactful GraphicInterface" [level=2] [ref=f2e518]
+          - paragraph [ref=f2e519]: Ex quasi omnis voluptates esse.
+          - generic [ref=f2e520]:
+            - generic [ref=f2e521]: Little Voltron
+            - img [ref=f2e522]
+        - link "Advanced Persevering nextgeneration architecture Occaecati nesciunt voluptatum unde debitis aut dolore harum. Little Voltron" [ref=f2e525] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/persevering-nextgeneration-architecture-32916
+          - generic [ref=f2e527]: Advanced
+          - heading "Persevering nextgeneration architecture" [level=2] [ref=f2e529]
+          - paragraph [ref=f2e530]: Occaecati nesciunt voluptatum unde debitis aut dolore harum.
+          - generic [ref=f2e531]:
+            - generic [ref=f2e532]: Little Voltron
+            - img [ref=f2e533]
+        - link "Intermediate Pre-emptive regional hub Omnis dignissimos ratione hic quidem ut. Roy's Wife" [ref=f2e536] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/pre-emptive-regional-hub-78425
+          - generic [ref=f2e538]: Intermediate
+          - heading "Pre-emptive regional hub" [level=2] [ref=f2e540]
+          - paragraph [ref=f2e541]: Omnis dignissimos ratione hic quidem ut.
+          - generic [ref=f2e542]:
+            - generic [ref=f2e543]: Roy's Wife
+            - img [ref=f2e544]
+        - link "Beginner Re-contextualized high-level framework Incidunt consectetur repellendus soluta delectus tempore possimus. Roy's Wife" [ref=f2e547] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/re-contextualized-high-level-framework-28318
+          - generic [ref=f2e549]: Beginner
+          - heading "Re-contextualized high-level framework" [level=2] [ref=f2e551]
+          - paragraph [ref=f2e552]: Incidunt consectetur repellendus soluta delectus tempore possimus.
+          - generic [ref=f2e553]:
+            - generic [ref=f2e554]: Roy's Wife
+            - img [ref=f2e555]
+        - link "Beginner De-engineered neutral interface Nisi delectus libero molestiae veritatis ipsa autem. Roy's Son" [ref=f2e558] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/de-engineered-neutral-interface-97261
+          - generic [ref=f2e560]: Beginner
+          - heading "De-engineered neutral interface" [level=2] [ref=f2e562]
+          - paragraph [ref=f2e563]: Nisi delectus libero molestiae veritatis ipsa autem.
+          - generic [ref=f2e564]:
+            - generic [ref=f2e565]: Roy's Son
+            - img [ref=f2e566]
+        - link "Beginner Adaptive mission-critical throughput Exercitationem nihil sequi exercitationem deleniti ducimus fugit. Roy's Son" [ref=f2e569] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/adaptive-mission-critical-throughput-11135
+          - generic [ref=f2e571]: Beginner
+          - heading "Adaptive mission-critical throughput" [level=2] [ref=f2e573]
+          - paragraph [ref=f2e574]: Exercitationem nihil sequi exercitationem deleniti ducimus fugit.
+          - generic [ref=f2e575]:
+            - generic [ref=f2e576]: Roy's Son
+            - img [ref=f2e577]
+        - link "Intermediate Object-based client-driven approach Dolorem minima debitis dolorem praesentium natus officia. Harold's Wife" [ref=f2e580] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/object-based-client-driven-approach-46729
+          - generic [ref=f2e582]: Intermediate
+          - heading "Object-based client-driven approach" [level=2] [ref=f2e584]
+          - paragraph [ref=f2e585]: Dolorem minima debitis dolorem praesentium natus officia.
+          - generic [ref=f2e586]:
+            - generic [ref=f2e587]: Harold's Wife
+            - img [ref=f2e588]
+        - link "Intermediate Innovative clear-thinking leverage Ut sapiente error repellendus asperiores molestiae blanditiis. Harold's Wife" [ref=f2e591] [cursor=pointer]:
+          - /url: http://127.0.0.1:8123/catalog/innovative-clear-thinking-leverage-45212
+          - generic [ref=f2e593]: Intermediate
+          - heading "Innovative clear-thinking leverage" [level=2] [ref=f2e595]
+          - paragraph [ref=f2e596]: Ut sapiente error repellendus asperiores molestiae blanditiis.
+          - generic [ref=f2e597]:
+            - generic [ref=f2e598]: Harold's Wife
+            - img [ref=f2e599]
+  - generic [ref=f2e602]:
+    - generic [ref=f2e604]:
+      - generic [ref=f2e606]:
+        - generic [ref=f2e607] [cursor=pointer]:
+          - generic: Request
+        - generic [ref=f2e608] [cursor=pointer]:
+          - generic: Timeline
+        - generic [ref=f2e609] [cursor=pointer]:
+          - generic: Views
+          - generic [ref=f2e610]: "3"
+        - generic [ref=f2e611] [cursor=pointer]:
+          - generic: Queries
+          - generic [ref=f2e612]: "9"
+        - generic [ref=f2e613] [cursor=pointer]:
+          - generic: Models
+          - generic [ref=f2e614]: "77"
+        - generic [ref=f2e615] [cursor=pointer]:
+          - generic: Inertia
+          - generic [ref=f2e616]: "1"
+        - generic [ref=f2e617] [cursor=pointer]:
+          - generic: Gate
+          - generic [ref=f2e618]: "1"
+        - generic [ref=f2e619] [cursor=pointer]:
+          - generic: Cache
+          - generic [ref=f2e620]: "1"
+      - generic [ref=f2e621]:
+        - generic [ref=f2e629] [cursor=pointer]: GET /catalog
+        - generic [ref=f2e630] [cursor=pointer]:
+          - generic: 26.99ms
+        - generic [ref=f2e632] [cursor=pointer]:
+          - generic: 2MB
+        - generic [ref=f2e634] [cursor=pointer]:
+          - generic: 13.x
+    - generic [ref=f2e638]:
+      - generic [ref=f2e639]:
+        - text: 9 statements were executed
+        - generic "Accumulated duration" [ref=f2e640]: 5.4msSort ⇅
+      - list [ref=f2e641]:
+        - listitem [ref=f2e642]:
+          - generic "/vendor/laravel/framework/src/Illuminate/Cache/CacheManager.php#200" [ref=f2e643]:
+            - text: CacheManager.php#200
+            - link [ref=f2e644] [cursor=pointer]:
+              - /url: phpstorm://open?file=%2FUsers%2Fcharles%2FProjects%2FLMSv2%2Fvendor%2Flaravel%2Fframework%2Fsrc%2FIlluminate%2FCache%2FCacheManager.php&line=200
+          - generic "Connection" [ref=f2e645]: lms_v2
+          - strong [ref=f2e646]: Connection Established
+        - listitem [ref=f2e647] [cursor=pointer]:
+          - generic "/vendor/laravel/framework/src/Illuminate/Session/DatabaseSessionHandler.php#96" [ref=f2e648]:
+            - text: DatabaseSessionHandler.php#96
+            - link [ref=f2e649]:
+              - /url: phpstorm://open?file=%2FUsers%2Fcharles%2FProjects%2FLMSv2%2Fvendor%2Flaravel%2Fframework%2Fsrc%2FIlluminate%2FSession%2FDatabaseSessionHandler.php&line=96
+          - generic "Duration" [ref=f2e650]: 1.47ms
+          - generic "Connection" [ref=f2e651]: lms_v2
+          - generic "Copy to clipboard" [ref=f2e652]
+          - code [ref=f2e653]: "select * from `sessions` where `id` = 'Okm03KaDNgQ4syPv7OXjPnm46SkqHmH5WyJ2YZiN' limit 1"
+        - listitem [ref=f2e654] [cursor=pointer]:
+          - generic "/vendor/laravel/framework/src/Illuminate/Auth/EloquentUserProvider.php#58" [ref=f2e655]:
+            - text: EloquentUserProvider.php#58
+            - link [ref=f2e656]:
+              - /url: phpstorm://open?file=%2FUsers%2Fcharles%2FProjects%2FLMSv2%2Fvendor%2Flaravel%2Fframework%2Fsrc%2FIlluminate%2FAuth%2FEloquentUserProvider.php&line=58
+          - generic "Duration" [ref=f2e657]: 290μs
+          - generic "Connection" [ref=f2e658]: lms_v2
+          - generic "Copy to clipboard" [ref=f2e659]
+          - code [ref=f2e660]: "select * from `users` where `id` = 5 limit 1"
+        - listitem [ref=f2e661] [cursor=pointer]:
+          - generic "/vendor/spatie/laravel-permission/src/Traits/HasRoles.php#456" [ref=f2e662]:
+            - text: HasRoles.php#456
+            - link [ref=f2e663]:
+              - /url: phpstorm://open?file=%2FUsers%2Fcharles%2FProjects%2FLMSv2%2Fvendor%2Fspatie%2Flaravel-permission%2Fsrc%2FTraits%2FHasRoles.php&line=456
+          - generic "Duration" [ref=f2e664]: 490μs
+          - generic "Connection" [ref=f2e665]: lms_v2
+          - generic "Copy to clipboard" [ref=f2e666]
+          - code [ref=f2e667]: "select `roles`.*, `model_has_roles`.`model_id` as `pivot_model_id`, `model_has_roles`.`role_id` as `pivot_role_id`, `model_has_roles`.`model_type` as `pivot_model_type` from `roles` inner join `model_has_roles` on `roles`.`id` = `model_has_roles`.`role_id` where `model_has_roles`.`model_id` in (5) and `model_has_roles`.`model_type` = 'App\\\\Models\\\\User'"
+        - listitem [ref=f2e668] [cursor=pointer]:
+          - generic "/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php#142" [ref=f2e669]:
+            - text: DatabaseStore.php#142
+            - link [ref=f2e670]:
+              - /url: phpstorm://open?file=%2FUsers%2Fcharles%2FProjects%2FLMSv2%2Fvendor%2Flaravel%2Fframework%2Fsrc%2FIlluminate%2FCache%2FDatabaseStore.php&line=142
+          - generic "Duration" [ref=f2e671]: 760μs
+          - generic "Connection" [ref=f2e672]: lms_v2
+          - generic "Copy to clipboard" [ref=f2e673]
+          - code [ref=f2e674]: "select * from `cache` where `key` in ('laravel-cache-spatie.permission.cache')"
+        - listitem [ref=f2e675] [cursor=pointer]:
+          - generic "/vendor/spatie/laravel-permission/src/Traits/HasPermissions.php#320" [ref=f2e676]:
+            - text: HasPermissions.php#320
+            - link [ref=f2e677]:
+              - /url: phpstorm://open?file=%2FUsers%2Fcharles%2FProjects%2FLMSv2%2Fvendor%2Fspatie%2Flaravel-permission%2Fsrc%2FTraits%2FHasPermissions.php&line=320
+          - generic "Duration" [ref=f2e678]: 460μs
+          - generic "Connection" [ref=f2e679]: lms_v2
+          - generic "Copy to clipboard" [ref=f2e680]
+          - code [ref=f2e681]: "select `permissions`.*, `model_has_permissions`.`model_id` as `pivot_model_id`, `model_has_permissions`.`permission_id` as `pivot_permission_id`, `model_has_permissions`.`model_type` as `pivot_model_type` from `permissions` inner join `model_has_permissions` on `permissions`.`id` = `model_has_permissions`.`permission_id` where `model_has_permissions`.`model_id` in (5) and `model_has_permissions`.`model_type` = 'App\\\\Models\\\\User'"
+        - listitem [ref=f2e682] [cursor=pointer]:
+          - generic "/app/Http/Controllers/CourseCatalogController.php#15" [ref=f2e683]:
+            - text: CourseCatalogController.php#15
+            - link [ref=f2e684]:
+              - /url: phpstorm://open?file=%2FUsers%2Fcharles%2FProjects%2FLMSv2%2Fapp%2FHttp%2FControllers%2FCourseCatalogController.php&line=15
+          - generic "Duration" [ref=f2e685]: 330μs
+          - generic "Connection" [ref=f2e686]: lms_v2
+          - generic "Copy to clipboard" [ref=f2e687]
+          - code [ref=f2e688]: "select `course_id` from `enrollments` where `enrollments`.`user_id` = 5 and `enrollments`.`user_id` is not null and `enrollments`.`deleted_at` is null"
+        - listitem [ref=f2e689] [cursor=pointer]:
+          - generic "/app/Http/Controllers/CourseCatalogController.php#21" [ref=f2e690]:
+            - text: CourseCatalogController.php#21
+            - link [ref=f2e691]:
+              - /url: phpstorm://open?file=%2FUsers%2Fcharles%2FProjects%2FLMSv2%2Fapp%2FHttp%2FControllers%2FCourseCatalogController.php&line=21
+          - generic "Duration" [ref=f2e692]: 520μs
+          - generic "Connection" [ref=f2e693]: lms_v2
+          - generic "Copy to clipboard" [ref=f2e694]
+          - code [ref=f2e695]: "select * from `courses` where `status` = 'Published' and `courses`.`deleted_at` is null order by `published_at` desc"
+        - listitem [ref=f2e696] [cursor=pointer]:
+          - generic "/app/Http/Controllers/CourseCatalogController.php#21" [ref=f2e697]:
+            - text: CourseCatalogController.php#21
+            - link [ref=f2e698]:
+              - /url: phpstorm://open?file=%2FUsers%2Fcharles%2FProjects%2FLMSv2%2Fapp%2FHttp%2FControllers%2FCourseCatalogController.php&line=21
+          - generic "Duration" [ref=f2e699]: 430μs
+          - generic "Connection" [ref=f2e700]: lms_v2
+          - generic "Copy to clipboard" [ref=f2e701]
+          - code [ref=f2e702]: "select `id`, `name` from `users` where `users`.`id` in (4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28)"
+        - listitem [ref=f2e703] [cursor=pointer]:
+          - generic "/vendor/laravel/framework/src/Illuminate/Session/DatabaseSessionHandler.php#172" [ref=f2e704]:
+            - text: DatabaseSessionHandler.php#172
+            - link [ref=f2e705]:
+              - /url: phpstorm://open?file=%2FUsers%2Fcharles%2FProjects%2FLMSv2%2Fvendor%2Flaravel%2Fframework%2Fsrc%2FIlluminate%2FSession%2FDatabaseSessionHandler.php&line=172
+          - generic "Duration" [ref=f2e706]: 650μs
+          - generic "Connection" [ref=f2e707]: lms_v2
+          - generic "Copy to clipboard" [ref=f2e708]
+          - code [ref=f2e709]: "update `sessions` set `payload` = 'eyJfdG9rZW4iOiJpUWkyeVFRNzFmTk40dzNHZkxpTDdJTXNzRXEzcjlwWnJ1N3FWYXpkIiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cLzEyNy4wLjAuMTo4MTIzXC9jYXRhbG9nIiwicm91dGUiOiJjYXRhbG9nLmluZGV4In0sIl9mbGFzaCI6eyJvbGQiOltdLCJuZXciOltdfSwibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiOjV9', `last_activity` = 1783110326, `user_id` = 5, `ip_address` = '127.0.0.1', `user_agent` = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36' where `id` = 'Okm03KaDNgQ4syPv7OXjPnm46SkqHmH5WyJ2YZiN'"

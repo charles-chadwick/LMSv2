@@ -1,4 +1,15 @@
 <script setup>
+import { Input } from '@/Components/ui/input';
+import { Label } from '@/Components/ui/label';
+import { Textarea } from '@/Components/ui/textarea';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/Components/ui/select';
+
 defineProps({
     form: {
         type: Object,
@@ -12,55 +23,54 @@ defineProps({
 </script>
 
 <template>
-    <div class="space-y-4">
-        <div>
-            <label for="title" class="block text-sm font-medium">Title</label>
-            <input
+    <div class="space-y-6">
+        <div class="grid gap-2">
+            <Label for="title">Title</Label>
+            <Input
                 id="title"
                 v-model="form.title"
                 type="text"
                 required
-                class="mt-1 block w-full rounded border-gray-300 shadow-sm"
+                :aria-invalid="Boolean(form.errors.title)"
             />
-            <p v-if="form.errors.title" class="mt-1 text-sm text-red-600">{{ form.errors.title }}</p>
+            <p v-if="form.errors.title" class="text-sm text-destructive">{{ form.errors.title }}</p>
         </div>
 
-        <div>
-            <label for="level" class="block text-sm font-medium">Level</label>
-            <select
-                id="level"
-                v-model="form.level"
-                required
-                class="mt-1 block w-full rounded border-gray-300 shadow-sm"
-            >
-                <option value="" disabled>Select a level</option>
-                <option v-for="level in levels" :key="level.value" :value="level.value">
-                    {{ level.label }}
-                </option>
-            </select>
-            <p v-if="form.errors.level" class="mt-1 text-sm text-red-600">{{ form.errors.level }}</p>
+        <div class="grid gap-2">
+            <Label for="level">Level</Label>
+            <Select v-model="form.level">
+                <SelectTrigger id="level" class="w-full" :aria-invalid="Boolean(form.errors.level)">
+                    <SelectValue placeholder="Select a level" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem v-for="level in levels" :key="level.value" :value="level.value">
+                        {{ level.label }}
+                    </SelectItem>
+                </SelectContent>
+            </Select>
+            <p v-if="form.errors.level" class="text-sm text-destructive">{{ form.errors.level }}</p>
         </div>
 
-        <div>
-            <label for="summary" class="block text-sm font-medium">Summary</label>
-            <input
+        <div class="grid gap-2">
+            <Label for="summary">Summary</Label>
+            <Input
                 id="summary"
                 v-model="form.summary"
                 type="text"
-                class="mt-1 block w-full rounded border-gray-300 shadow-sm"
+                :aria-invalid="Boolean(form.errors.summary)"
             />
-            <p v-if="form.errors.summary" class="mt-1 text-sm text-red-600">{{ form.errors.summary }}</p>
+            <p v-if="form.errors.summary" class="text-sm text-destructive">{{ form.errors.summary }}</p>
         </div>
 
-        <div>
-            <label for="description" class="block text-sm font-medium">Description</label>
-            <textarea
+        <div class="grid gap-2">
+            <Label for="description">Description</Label>
+            <Textarea
                 id="description"
                 v-model="form.description"
                 rows="6"
-                class="mt-1 block w-full rounded border-gray-300 shadow-sm"
+                :aria-invalid="Boolean(form.errors.description)"
             />
-            <p v-if="form.errors.description" class="mt-1 text-sm text-red-600">{{ form.errors.description }}</p>
+            <p v-if="form.errors.description" class="text-sm text-destructive">{{ form.errors.description }}</p>
         </div>
     </div>
 </template>

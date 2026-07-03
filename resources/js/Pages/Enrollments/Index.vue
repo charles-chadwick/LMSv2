@@ -1,6 +1,12 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import PageHeader from '@/Components/PageHeader.vue';
+import StatusBadge from '@/Components/StatusBadge.vue';
+import ProgressBar from '@/Components/ProgressBar.vue';
+import { Button } from '@/Components/ui/button';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import { Head, Link, router } from '@inertiajs/vue3';
+import { BookMarked } from 'lucide-vue-next';
 
 defineProps({
     enrollments: {
@@ -21,44 +27,66 @@ const drop = (enrollment) => {
     <AuthenticatedLayout>
         <Head title="My courses" />
 
-        <h1 class="mb-6 text-2xl font-semibold">My courses</h1>
+        <PageHeader
+            title="My courses"
+            subtitle="Track your progress and jump back into learning."
+        />
 
-        <div v-if="enrollments.length === 0" class="rounded border border-dashed p-8 text-center text-gray-500">
-            You haven't enrolled in any courses yet.
+        <div
+            v-if="enrollments.length === 0"
+            class="rounded-2xl border border-dashed bg-card p-12 text-center"
+        >
+            <div class="mx-auto flex size-12 items-center justify-center rounded-xl bg-sky-500/15 text-sky-600">
+                <BookMarked class="size-6" />
+            </div>
+            <p class="mt-4 font-medium text-foreground">You haven't enrolled in any courses yet</p>
+            <p class="mt-1 text-sm text-muted-foreground">Browse the catalog to find your first course.</p>
+            <Button as-child class="mt-5 bg-sky-600 text-white hover:bg-sky-700">
+                <Link :href="route('catalog.index')">Browse courses</Link>
+            </Button>
         </div>
 
-        <table v-else class="w-full border-collapse text-left text-sm">
-            <thead>
-                <tr class="border-b text-gray-500">
-                    <th class="py-2">Course</th>
-                    <th class="py-2">Status</th>
-                    <th class="py-2">Progress</th>
-                    <th class="py-2 text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="enrollment in enrollments" :key="enrollment.id" class="border-b">
-                    <td class="py-3 font-medium">
-                        <Link :href="route('catalog.show', enrollment.course_slug)" class="text-blue-600 hover:underline">
-                            {{ enrollment.course_title }}
-                        </Link>
-                    </td>
-                    <td class="py-3">
-                        <span class="rounded-full bg-gray-100 px-2 py-1 text-xs">{{ enrollment.status }}</span>
-                    </td>
-                    <td class="py-3">{{ enrollment.progress_percentage }}%</td>
-                    <td class="py-3 text-right">
-                        <button
-                            v-if="enrollment.status === 'Active'"
-                            type="button"
-                            class="text-red-600 hover:underline"
-                            @click="drop(enrollment)"
-                        >
-                            Drop
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div v-else class="overflow-hidden rounded-2xl border bg-card shadow-sm">
+            <Table>
+                <TableHeader>
+                    <TableRow class="bg-muted/40 hover:bg-muted/40">
+                        <TableHead>Course</TableHead>
+                        <TableHead class="w-32">Status</TableHead>
+                        <TableHead class="w-56">Progress</TableHead>
+                        <TableHead class="w-24 text-right">Actions</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    <TableRow v-for="enrollment in enrollments" :key="enrollment.id">
+                        <TableCell>
+                            <Link
+                                :href="route('catalog.show', enrollment.course_slug)"
+                                class="font-semibold text-foreground hover:text-sky-600 hover:underline"
+                            >
+                                {{ enrollment.course_title }}
+                            </Link>
+                        </TableCell>
+                        <TableCell>
+                            <StatusBadge :status="enrollment.status" />
+                        </TableCell>
+                        <TableCell>
+                            <ProgressBar :value="enrollment.progress_percentage" />
+                        </TableCell>
+                        <TableCell class="text-right">
+                            <Button
+                                v-if="enrollment.status === 'Active'"
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                class="text-rose-600 hover:bg-rose-50 hover:text-rose-700"
+                                @click="drop(enrollment)"
+                            >
+                                Drop
+                            </Button>
+                        </TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
+        </div>
     </AuthenticatedLayout>
 </template>
