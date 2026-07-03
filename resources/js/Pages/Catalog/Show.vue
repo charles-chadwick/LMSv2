@@ -1,17 +1,14 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, router } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
 const props = defineProps({
-    course: {
-        type: Object,
-        required: true,
-    },
-    is_enrolled: {
-        type: Boolean,
-        required: true,
-    },
+    course: { type: Object, required: true },
+    is_enrolled: { type: Boolean, required: true },
+    can_learn: { type: Boolean, default: false },
+    completed_lesson_ids: { type: Array, default: () => [] },
+    first_incomplete_lesson_slug: { type: String, default: null },
 });
 
 const enrolling = ref(false);
@@ -25,6 +22,8 @@ const enroll = () => {
         },
     });
 };
+
+const isComplete = (lesson) => props.completed_lesson_ids.includes(lesson.id);
 </script>
 
 <template>
@@ -38,18 +37,27 @@ const enroll = () => {
                     {{ course.instructor }} · <span class="capitalize">{{ course.level }}</span>
                 </p>
             </div>
-            <span v-if="is_enrolled" class="rounded bg-green-100 px-4 py-2 text-sm font-medium text-green-700">
-                Enrolled
-            </span>
-            <button
-                v-else
-                type="button"
-                :disabled="enrolling"
-                class="rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
-                @click="enroll"
-            >
-                Enroll
-            </button>
+            <div class="flex items-center gap-2">
+                <Link
+                    v-if="can_learn && first_incomplete_lesson_slug"
+                    :href="route('lessons.show', [course.slug, first_incomplete_lesson_slug])"
+                    class="rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white"
+                >
+                    Continue learning
+                </Link>
+                <span v-if="is_enrolled" class="rounded bg-green-100 px-4 py-2 text-sm font-medium text-green-700">
+                    Enrolled
+                </span>
+                <button
+                    v-else
+                    type="button"
+                    :disabled="enrolling"
+                    class="rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+                    @click="enroll"
+                >
+                    Enroll
+                </button>
+            </div>
         </div>
 
         <p v-if="course.summary" class="mb-4 text-gray-700">{{ course.summary }}</p>
@@ -62,9 +70,18 @@ const enroll = () => {
         <ol v-else class="space-y-4">
             <li v-for="(module, index) in course.modules" :key="index" class="rounded border p-4">
                 <h3 class="font-medium">{{ module.title }}</h3>
-                <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-gray-600">
-                    <li v-for="(lesson, lessonIndex) in module.lessons" :key="lessonIndex">
-                        {{ lesson.title }}
+                <ul class="mt-2 space-y-1 pl-1 text-sm text-gray-600">
+                    <li v-for="lesson in module.lessons" :key="lesson.id" class="flex items-center gap-2">
+                        <span v-if="isComplete(lesson)" class="text-green-600">&check;</span>
+                        <span v-else class="text-gray-300">&bull;</span>
+                        <Link
+                            v-if="can_learn"
+                            :href="route('lessons.show', [course.slug, lesson.slug])"
+                            class="text-blue-600 hover:underline"
+                        >
+                            {{ lesson.title }}
+                        </Link>
+                        <span v-else>{{ lesson.title }}</span>
                     </li>
                 </ul>
             </li>
