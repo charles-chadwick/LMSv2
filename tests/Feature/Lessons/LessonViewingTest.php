@@ -29,8 +29,7 @@ test('an enrolled user can view a lesson', function (): void {
         ->assertInertia(fn ($page) => $page
             ->component('Lessons/Show')
             ->where('lesson.title', 'Intro')
-            ->where('is_complete', false)
-            ->where('can_complete', true)
+            ->where('is_complete', true)
         );
 });
 
@@ -95,7 +94,7 @@ test('an instructor can preview a lesson without enrolling', function (): void {
     $this->actingAs($instructor)
         ->get(route('lessons.show', [$course, $lesson]))
         ->assertOk()
-        ->assertInertia(fn ($page) => $page->where('can_complete', false));
+        ->assertInertia(fn ($page) => $page->component('Lessons/Show'));
 });
 
 test('a dropped student cannot view a lesson', function (): void {

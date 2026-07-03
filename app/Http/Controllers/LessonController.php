@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\CompleteLesson;
+use App\Enums\EnrollmentStatus;
 use App\Models\Course;
 use App\Models\Lesson;
 use Illuminate\Http\Request;
@@ -23,7 +25,15 @@ class LessonController extends Controller
         $prev = $index > 0 ? $ordered_lessons[$index - 1] : null;
         $next = $index < $ordered_lessons->count() - 1 ? $ordered_lessons[$index + 1] : null;
 
-        $enrollment = $request->user()->enrollments()->where('course_id', $course->id)->first();
+        $enrollment = $request->user()->enrollments()
+            ->where('course_id', $course->id)
+            ->whereIn('status', [EnrollmentStatus::Active, EnrollmentStatus::Completed])
+            ->first();
+
+        if ($enrollment !== null && ! $request->isMethod('HEAD')) {
+            CompleteLesson::run($enrollment, $lesson);
+        }
+
         $completed_lesson_ids = $enrollment
             ? $enrollment->lessonCompletions()->pluck('lesson_id')->all()
             : [];
@@ -42,7 +52,6 @@ class LessonController extends Controller
             'prev' => $prev ? ['title' => $prev->title, 'slug' => $prev->slug] : null,
             'next' => $next ? ['title' => $next->title, 'slug' => $next->slug] : null,
             'is_complete' => in_array($lesson->id, $completed_lesson_ids, true),
-            'can_complete' => $enrollment !== null,
             'progress_percentage' => $enrollment ? $enrollment->progress_percentage : 0,
         ]);
     }
