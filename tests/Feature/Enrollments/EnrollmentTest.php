@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\CourseStatus;
 use App\Enums\EnrollmentStatus;
 use App\Models\Course;
 use App\Models\Enrollment;
@@ -11,79 +10,112 @@ beforeEach(function (): void {
     $this->seed(RolePermissionSeeder::class);
 });
 
-test('the enroll ability allows any user on a published course', function (): void {
-    $user = User::factory()->student()->create();
-    $course = Course::factory()->published()->create();
+test('the enrollStudents ability allows an instructor on their own course', function (): void {
+    $instructor = User::factory()->instructor()->create();
+    $course = Course::factory()->published()->create(['instructor_id' => $instructor->id]);
 
-    expect($user->can('enroll', $course))->toBeTrue();
+    expect($instructor->can('enrollStudents', $course))->toBeTrue();
 });
 
-test('the enroll ability denies a draft course', function (): void {
-    $user = User::factory()->student()->create();
-    $course = Course::factory()->create(['status' => CourseStatus::Draft]);
-
-    expect($user->can('enroll', $course))->toBeFalse();
-});
-
-test('a student can enroll in a published course', function (): void {
-    $user = User::factory()->student()->create();
+test('the enrollStudents ability denies an instructor on another instructors course', function (): void {
+    $instructor = User::factory()->instructor()->create();
     $course = Course::factory()->published()->create();
 
-    $this->actingAs($user)->post(route('courses.enroll', $course))->assertRedirect();
+    expect($instructor->can('enrollStudents', $course))->toBeFalse();
+});
 
-    $enrollment = Enrollment::where(['user_id' => $user->id, 'course_id' => $course->id])->sole();
+test('the enrollStudents ability allows an admin on any course', function (): void {
+    $admin = User::factory()->admin()->create();
+    $course = Course::factory()->published()->create();
+
+    expect($admin->can('enrollStudents', $course))->toBeTrue();
+});
+
+test('the enrollStudents ability denies a student', function (): void {
+    $student = User::factory()->student()->create();
+    $course = Course::factory()->published()->create();
+
+    expect($student->can('enrollStudents', $course))->toBeFalse();
+});
+
+test('an instructor can enroll a student into their own course', function (): void {
+    $instructor = User::factory()->instructor()->create();
+    $student = User::factory()->student()->create();
+    $course = Course::factory()->published()->create(['instructor_id' => $instructor->id]);
+
+    $this->actingAs($instructor)
+        ->post(route('courses.roster.store', $course), ['student_id' => $student->id])
+        ->assertRedirect();
+
+    $enrollment = Enrollment::where(['user_id' => $student->id, 'course_id' => $course->id])->sole();
     expect($enrollment->status)->toBe(EnrollmentStatus::Active)
         ->and($enrollment->enrolled_at)->not->toBeNull();
 });
 
-test('an instructor can self-enroll in a published course', function (): void {
-    $user = User::factory()->instructor()->create();
+test('an admin can enroll a student into any course', function (): void {
+    $admin = User::factory()->admin()->create();
+    $student = User::factory()->student()->create();
     $course = Course::factory()->published()->create();
 
-    $this->actingAs($user)->post(route('courses.enroll', $course))->assertRedirect();
+    $this->actingAs($admin)
+        ->post(route('courses.roster.store', $course), ['student_id' => $student->id])
+        ->assertRedirect();
 
-    expect(Enrollment::where(['user_id' => $user->id, 'course_id' => $course->id])->exists())->toBeTrue();
+    expect(Enrollment::where(['user_id' => $student->id, 'course_id' => $course->id])->exists())->toBeTrue();
 });
 
-test('an admin can self-enroll in a published course', function (): void {
-    $user = User::factory()->admin()->create();
+test('an instructor cannot enroll a student into another instructors course', function (): void {
+    $instructor = User::factory()->instructor()->create();
+    $student = User::factory()->student()->create();
     $course = Course::factory()->published()->create();
 
-    $this->actingAs($user)->post(route('courses.enroll', $course))->assertRedirect();
-
-    expect(Enrollment::where(['user_id' => $user->id, 'course_id' => $course->id])->exists())->toBeTrue();
-});
-
-test('enrolling twice does not create a duplicate enrollment', function (): void {
-    $user = User::factory()->student()->create();
-    $course = Course::factory()->published()->create();
-
-    $this->actingAs($user)->post(route('courses.enroll', $course));
-    $this->actingAs($user)->post(route('courses.enroll', $course));
-
-    expect(Enrollment::where(['user_id' => $user->id, 'course_id' => $course->id])->count())->toBe(1);
-});
-
-test('a user cannot enroll in a draft course', function (): void {
-    $user = User::factory()->student()->create();
-    $course = Course::factory()->create(['status' => CourseStatus::Draft]);
-
-    $this->actingAs($user)->post(route('courses.enroll', $course))->assertForbidden();
+    $this->actingAs($instructor)
+        ->post(route('courses.roster.store', $course), ['student_id' => $student->id])
+        ->assertForbidden();
 
     expect(Enrollment::where('course_id', $course->id)->exists())->toBeFalse();
 });
 
-test('a user cannot enroll in an archived course', function (): void {
-    $user = User::factory()->student()->create();
-    $course = Course::factory()->create(['status' => CourseStatus::Archived]);
-
-    $this->actingAs($user)->post(route('courses.enroll', $course))->assertForbidden();
-});
-
-test('a guest cannot enroll', function (): void {
+test('a student cannot enroll anyone, including themselves', function (): void {
+    $student = User::factory()->student()->create();
     $course = Course::factory()->published()->create();
 
-    $this->post(route('courses.enroll', $course))->assertRedirect(route('login'));
+    $this->actingAs($student)
+        ->post(route('courses.roster.store', $course), ['student_id' => $student->id])
+        ->assertForbidden();
+
+    expect(Enrollment::where('course_id', $course->id)->exists())->toBeFalse();
+});
+
+test('only users with the student role can be enrolled', function (): void {
+    $instructor = User::factory()->instructor()->create();
+    $notAStudent = User::factory()->instructor()->create();
+    $course = Course::factory()->published()->create(['instructor_id' => $instructor->id]);
+
+    $this->actingAs($instructor)
+        ->post(route('courses.roster.store', $course), ['student_id' => $notAStudent->id])
+        ->assertSessionHasErrors('student_id');
+
+    expect(Enrollment::where('course_id', $course->id)->exists())->toBeFalse();
+});
+
+test('enrolling a student twice does not create a duplicate enrollment', function (): void {
+    $instructor = User::factory()->instructor()->create();
+    $student = User::factory()->student()->create();
+    $course = Course::factory()->published()->create(['instructor_id' => $instructor->id]);
+
+    $this->actingAs($instructor)->post(route('courses.roster.store', $course), ['student_id' => $student->id]);
+    $this->actingAs($instructor)->post(route('courses.roster.store', $course), ['student_id' => $student->id]);
+
+    expect(Enrollment::where(['user_id' => $student->id, 'course_id' => $course->id])->count())->toBe(1);
+});
+
+test('a guest cannot enroll a student', function (): void {
+    $course = Course::factory()->published()->create();
+    $student = User::factory()->student()->create();
+
+    $this->post(route('courses.roster.store', $course), ['student_id' => $student->id])
+        ->assertRedirect(route('login'));
 });
 
 test('my courses lists only the current users enrollments', function (): void {
@@ -107,16 +139,4 @@ test('my courses lists only the current users enrollments', function (): void {
 
 test('a guest is redirected to login from my courses', function (): void {
     $this->get(route('enrollments.index'))->assertRedirect(route('login'));
-});
-
-test('my courses exposes the enrollment id for each row', function (): void {
-    $user = User::factory()->student()->create();
-    $course = Course::factory()->published()->create();
-    $enrollment = Enrollment::factory()->for($user, 'student')->for($course)->create();
-
-    $this->actingAs($user)
-        ->get(route('enrollments.index'))
-        ->assertInertia(fn ($page) => $page
-            ->where('enrollments.0.id', $enrollment->id)
-        );
 });

@@ -5,7 +5,7 @@ import StatusBadge from '@/Components/StatusBadge.vue';
 import ProgressBar from '@/Components/ProgressBar.vue';
 import { Button } from '@/Components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { BookMarked } from 'lucide-vue-next';
 
 defineProps({
@@ -14,13 +14,6 @@ defineProps({
         required: true,
     },
 });
-
-const drop = (enrollment) => {
-    if (! confirm(`Drop "${enrollment.course_title}"? Your progress is saved if you re-enroll.`)) {
-        return;
-    }
-    router.delete(route('enrollments.destroy', enrollment.id), { preserveScroll: true });
-};
 </script>
 
 <template>
@@ -52,8 +45,7 @@ const drop = (enrollment) => {
                     <TableRow class="bg-muted/40 hover:bg-muted/40">
                         <TableHead>Course</TableHead>
                         <TableHead class="w-32">Status</TableHead>
-                        <TableHead class="w-56">Progress</TableHead>
-                        <TableHead class="w-24 text-right">Actions</TableHead>
+                        <TableHead class="w-64">Progress</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -71,18 +63,6 @@ const drop = (enrollment) => {
                         </TableCell>
                         <TableCell>
                             <ProgressBar :value="enrollment.progress_percentage" />
-                        </TableCell>
-                        <TableCell class="text-right">
-                            <Button
-                                v-if="enrollment.status === 'Active'"
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                class="text-rose-600 hover:bg-rose-50 hover:text-rose-700"
-                                @click="drop(enrollment)"
-                            >
-                                Drop
-                            </Button>
                         </TableCell>
                     </TableRow>
                 </TableBody>

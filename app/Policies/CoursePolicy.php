@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Enums\CourseStatus;
 use App\Enums\EnrollmentStatus;
 use App\Models\Course;
 use App\Models\User;
@@ -44,9 +43,15 @@ class CoursePolicy
         return $user->can('publish courses') && $course->instructor_id === $user->id;
     }
 
-    public function enroll(User $user, Course $course): bool
+    /**
+     * Determine whether the user may enroll students into the course.
+     *
+     * Enrollment is a staff action: an instructor may enroll students into
+     * their own courses, and admins into any course (via Gate::before).
+     */
+    public function enrollStudents(User $user, Course $course): bool
     {
-        return $course->status === CourseStatus::Published;
+        return $user->can('enroll students') && $course->instructor_id === $user->id;
     }
 
     public function learn(User $user, Course $course): bool

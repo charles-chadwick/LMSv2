@@ -68,7 +68,6 @@ class CourseCatalogController extends Controller
                     ])->values(),
                 ])->values(),
             ],
-            'enrollment_id' => $enrollment?->id,
             'enrollment_status' => $enrollment?->status,
             'can_learn' => $user->can('learn', $course),
             'completed_lesson_ids' => $completed_lesson_ids,

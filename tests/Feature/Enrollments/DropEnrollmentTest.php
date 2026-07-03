@@ -10,15 +10,15 @@ beforeEach(function (): void {
     $this->seed(RolePermissionSeeder::class);
 });
 
-test('a student can drop their own active enrollment and keep progress', function (): void {
-    $student = User::factory()->student()->create();
-    $course = Course::factory()->published()->create();
-    $enrollment = Enrollment::factory()->for($student, 'student')->for($course)->create([
+test('an instructor can remove an active student from their own course and keep progress', function (): void {
+    $instructor = User::factory()->instructor()->create();
+    $course = Course::factory()->published()->create(['instructor_id' => $instructor->id]);
+    $enrollment = Enrollment::factory()->for($course)->create([
         'status' => EnrollmentStatus::Active,
         'progress_percentage' => 30,
     ]);
 
-    $this->actingAs($student)
+    $this->actingAs($instructor)
         ->delete(route('enrollments.destroy', $enrollment))
         ->assertRedirect();
 
@@ -27,12 +27,11 @@ test('a student can drop their own active enrollment and keep progress', functio
         ->and($enrollment->progress_percentage)->toBe(30);
 });
 
-test('an instructor can remove an active student from their own course', function (): void {
-    $instructor = User::factory()->instructor()->create();
-    $course = Course::factory()->published()->create(['instructor_id' => $instructor->id]);
-    $enrollment = Enrollment::factory()->for($course)->create(['status' => EnrollmentStatus::Active]);
+test('an admin can remove a student from any course', function (): void {
+    $admin = User::factory()->admin()->create();
+    $enrollment = Enrollment::factory()->create(['status' => EnrollmentStatus::Active]);
 
-    $this->actingAs($instructor)
+    $this->actingAs($admin)
         ->delete(route('enrollments.destroy', $enrollment))
         ->assertRedirect();
 
@@ -51,20 +50,26 @@ test('an instructor cannot remove a student from another instructors course', fu
     expect($enrollment->fresh()->status)->toBe(EnrollmentStatus::Active);
 });
 
-test('a student cannot drop another users enrollment', function (): void {
+test('a student cannot drop their own enrollment', function (): void {
     $student = User::factory()->student()->create();
-    $enrollment = Enrollment::factory()->create(['status' => EnrollmentStatus::Active]);
+    $course = Course::factory()->published()->create();
+    $enrollment = Enrollment::factory()->for($student, 'student')->for($course)->create([
+        'status' => EnrollmentStatus::Active,
+    ]);
 
     $this->actingAs($student)
         ->delete(route('enrollments.destroy', $enrollment))
         ->assertForbidden();
+
+    expect($enrollment->fresh()->status)->toBe(EnrollmentStatus::Active);
 });
 
 test('a completed enrollment cannot be dropped', function (): void {
-    $student = User::factory()->student()->create();
-    $enrollment = Enrollment::factory()->for($student, 'student')->completed()->create();
+    $instructor = User::factory()->instructor()->create();
+    $course = Course::factory()->published()->create(['instructor_id' => $instructor->id]);
+    $enrollment = Enrollment::factory()->for($course)->completed()->create();
 
-    $this->actingAs($student)
+    $this->actingAs($instructor)
         ->delete(route('enrollments.destroy', $enrollment))
         ->assertForbidden();
 
@@ -72,15 +77,18 @@ test('a completed enrollment cannot be dropped', function (): void {
 });
 
 test('re-enrolling after a drop reactivates the same row with progress intact', function (): void {
+    $instructor = User::factory()->instructor()->create();
     $student = User::factory()->student()->create();
-    $course = Course::factory()->published()->create();
+    $course = Course::factory()->published()->create(['instructor_id' => $instructor->id]);
     $enrollment = Enrollment::factory()->for($student, 'student')->for($course)->create([
         'status' => EnrollmentStatus::Active,
         'progress_percentage' => 50,
     ]);
 
-    $this->actingAs($student)->delete(route('enrollments.destroy', $enrollment));
-    $this->actingAs($student)->post(route('courses.enroll', $course))->assertRedirect();
+    $this->actingAs($instructor)->delete(route('enrollments.destroy', $enrollment));
+    $this->actingAs($instructor)
+        ->post(route('courses.roster.store', $course), ['student_id' => $student->id])
+        ->assertRedirect();
 
     $enrollment->refresh();
     expect($enrollment->status)->toBe(EnrollmentStatus::Active)

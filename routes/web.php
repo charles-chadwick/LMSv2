@@ -57,10 +57,11 @@ Route::middleware('auth')->group(function (): void {
         Route::resource('courses', CourseController::class)->except('show');
         Route::post('courses/{course}/publish', PublishCourseController::class)->name('courses.publish');
         Route::post('courses/{course}/archive', ArchiveCourseController::class)->name('courses.archive');
-        Route::post('courses/{course}/enroll', [EnrollmentController::class, 'store'])->name('courses.enroll');
         Route::delete('enrollments/{enrollment}', [EnrollmentController::class, 'destroy'])->name('enrollments.destroy');
         Route::get('courses/{course}/curriculum', [CurriculumController::class, 'show'])->name('curriculum.show');
         Route::get('courses/{course}/students', [RosterController::class, 'index'])->name('courses.roster');
+        Route::get('courses/{course}/students/search', [RosterController::class, 'search'])->name('courses.roster.search');
+        Route::post('courses/{course}/students', [RosterController::class, 'store'])->name('courses.roster.store');
 
         Route::post('courses/{course}/modules', [ModuleController::class, 'store'])->name('modules.store');
         Route::put('modules/{module}', [ModuleController::class, 'update'])->name('modules.update');

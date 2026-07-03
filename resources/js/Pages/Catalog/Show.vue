@@ -2,8 +2,8 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import LevelBadge from '@/Components/LevelBadge.vue';
 import { Button } from '@/Components/ui/button';
-import { Head, Link, router } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { Head, Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import { CircleCheck, Circle, Play, BookOpen } from 'lucide-vue-next';
 
 const props = defineProps({
@@ -11,34 +11,12 @@ const props = defineProps({
     can_learn: { type: Boolean, default: false },
     completed_lesson_ids: { type: Array, default: () => [] },
     first_incomplete_lesson_slug: { type: String, default: null },
-    enrollment_id: { type: Number, default: null },
     enrollment_status: { type: String, default: null },
 });
 
-const busy = ref(false);
-
-const enroll = () => {
-    busy.value = true;
-    router.post(route('courses.enroll', props.course.slug), {}, {
-        preserveScroll: true,
-        onFinish: () => {
-            busy.value = false;
-        },
-    });
-};
-
-const drop = () => {
-    if (! confirm(`Drop "${props.course.title}"? Your progress is saved if you re-enroll.`)) {
-        return;
-    }
-    busy.value = true;
-    router.delete(route('enrollments.destroy', props.enrollment_id), {
-        preserveScroll: true,
-        onFinish: () => {
-            busy.value = false;
-        },
-    });
-};
+const isEnrolled = computed(
+    () => props.enrollment_status !== null && props.enrollment_status !== 'Dropped',
+);
 
 const isComplete = (lesson) => props.completed_lesson_ids.includes(lesson.id);
 </script>
@@ -60,7 +38,7 @@ const isComplete = (lesson) => props.completed_lesson_ids.includes(lesson.id);
                             {{ course.level }}
                         </span>
                         <span
-                            v-if="enrollment_status && enrollment_status !== 'Dropped'"
+                            v-if="isEnrolled"
                             class="inline-flex items-center rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-semibold backdrop-blur"
                         >
                             Enrolled
@@ -83,25 +61,12 @@ const isComplete = (lesson) => props.completed_lesson_ids.includes(lesson.id);
                             Continue learning
                         </Link>
                     </Button>
-                    <Button
-                        v-if="enrollment_status === 'Active'"
-                        type="button"
-                        variant="outline"
-                        :disabled="busy"
-                        class="border-white/40 bg-white/10 text-white hover:bg-white/20 hover:text-white"
-                        @click="drop"
+                    <span
+                        v-else-if="! isEnrolled"
+                        class="rounded-full bg-white/15 px-3.5 py-1.5 text-sm font-medium text-white/90 backdrop-blur"
                     >
-                        Drop course
-                    </Button>
-                    <Button
-                        v-if="! enrollment_status || enrollment_status === 'Dropped'"
-                        type="button"
-                        :disabled="busy"
-                        class="bg-white text-emerald-700 shadow-sm hover:bg-white/90"
-                        @click="enroll"
-                    >
-                        {{ enrollment_status === 'Dropped' ? 'Re-enroll' : 'Enroll' }}
-                    </Button>
+                        Enrollment is managed by your instructor
+                    </span>
                 </div>
             </div>
         </section>

@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Actions\DropEnrollment;
-use App\Actions\EnrollStudent;
-use App\Models\Course;
 use App\Models\Enrollment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,15 +11,6 @@ use Inertia\Response;
 
 class EnrollmentController extends Controller
 {
-    public function store(Request $request, Course $course): RedirectResponse
-    {
-        $this->authorize('enroll', $course);
-
-        EnrollStudent::run($request->user(), $course);
-
-        return back()->with('status', 'Enrolled.');
-    }
-
     public function destroy(Enrollment $enrollment): RedirectResponse
     {
         $this->authorize('drop', $enrollment);

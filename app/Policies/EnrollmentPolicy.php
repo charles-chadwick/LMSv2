@@ -8,7 +8,11 @@ use App\Models\User;
 class EnrollmentPolicy
 {
     /**
-     * Determine whether the user may drop the enrollment (self-drop or instructor removal).
+     * Determine whether the user may drop the enrollment.
+     *
+     * Dropping is a staff action: an instructor may remove students from their
+     * own courses, and admins from any course (via Gate::before). Students can
+     * no longer drop themselves.
      */
     public function drop(User $user, Enrollment $enrollment): bool
     {
@@ -16,7 +20,6 @@ class EnrollmentPolicy
             return false;
         }
 
-        return $enrollment->user_id === $user->id
-            || $enrollment->course->instructor_id === $user->id;
+        return $user->can('enroll students') && $enrollment->course->instructor_id === $user->id;
     }
 }
