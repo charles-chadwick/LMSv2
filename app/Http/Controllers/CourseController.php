@@ -16,6 +16,11 @@ use Inertia\Response;
 
 class CourseController extends Controller
 {
+    /**
+     * Courses shown per page on the management index.
+     */
+    private const PER_PAGE = 15;
+
     public function index(Request $request): Response
     {
         $this->authorize('viewAny', Course::class);
@@ -28,7 +33,8 @@ class CourseController extends Controller
                 fn ($query) => $query->where('instructor_id', $user->id),
             )
             ->latest()
-            ->get(['id', 'title', 'slug', 'status', 'level']);
+            ->paginate(self::PER_PAGE, ['id', 'title', 'slug', 'status', 'level'])
+            ->withQueryString();
 
         return Inertia::render('Courses/Index', [
             'courses' => $courses,

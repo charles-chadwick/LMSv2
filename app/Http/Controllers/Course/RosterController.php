@@ -20,6 +20,11 @@ use Inertia\Response;
 
 class RosterController extends Controller
 {
+    /**
+     * Enrolled students shown per roster page.
+     */
+    private const PER_PAGE = 20;
+
     public function index(Course $course): Response
     {
         $this->authorize('viewRoster', $course);
@@ -28,8 +33,9 @@ class RosterController extends Controller
             ->select(['id', 'user_id', 'status', 'progress_percentage', 'enrolled_at'])
             ->with('student.roles', 'student.media')
             ->latest('enrolled_at')
-            ->get()
-            ->map(fn (Enrollment $enrollment): array => [
+            ->paginate(self::PER_PAGE)
+            ->withQueryString()
+            ->through(fn (Enrollment $enrollment): array => [
                 'id' => $enrollment->id,
                 'user' => UserSummaryResource::make($enrollment->student)->resolve(),
                 'status' => $enrollment->status,

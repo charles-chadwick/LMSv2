@@ -3,6 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import PageHeader from '@/Components/PageHeader.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
 import ProgressBar from '@/Components/ProgressBar.vue';
+import Pagination from '@/Components/Pagination.vue';
 import { Button } from '@/Components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import { Head, Link } from '@inertiajs/vue3';
@@ -10,7 +11,7 @@ import { BookMarked } from 'lucide-vue-next';
 
 defineProps({
     enrollments: {
-        type: Array,
+        type: Object,
         required: true,
     },
 });
@@ -26,7 +27,7 @@ defineProps({
         />
 
         <div
-            v-if="enrollments.length === 0"
+            v-if="enrollments.total === 0"
             class="rounded-2xl border border-dashed bg-card p-12 text-center"
         >
             <div class="mx-auto flex size-12 items-center justify-center rounded-xl bg-sky-500/15 text-sky-600">
@@ -49,7 +50,7 @@ defineProps({
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    <TableRow v-for="enrollment in enrollments" :key="enrollment.id">
+                    <TableRow v-for="enrollment in enrollments.data" :key="enrollment.id">
                         <TableCell>
                             <Link
                                 :href="route('catalog.show', enrollment.course_slug)"
@@ -68,5 +69,7 @@ defineProps({
                 </TableBody>
             </Table>
         </div>
+
+        <Pagination :paginator="enrollments" />
     </AuthenticatedLayout>
 </template>

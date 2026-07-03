@@ -20,10 +20,26 @@ test('an instructor can view the roster of their own course', function (): void 
         ->assertOk()
         ->assertInertia(fn ($page) => $page
             ->component('Courses/Roster')
-            ->has('students', 1)
-            ->where('students.0.id', $enrollment->id)
-            ->where('students.0.user.id', $enrollment->user_id)
-            ->has('students.0.user.avatar_thumb')
+            ->has('students.data', 1)
+            ->where('students.data.0.id', $enrollment->id)
+            ->where('students.data.0.user.id', $enrollment->user_id)
+            ->has('students.data.0.user.avatar_thumb')
+            ->where('students.total', 1)
+        );
+});
+
+test('the roster paginates enrolled students', function (): void {
+    $instructor = User::factory()->instructor()->create();
+    $course = Course::factory()->published()->create(['instructor_id' => $instructor->id]);
+    Enrollment::factory()->count(25)->for($course)->create();
+
+    $this->actingAs($instructor)
+        ->get(route('courses.roster', $course))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->has('students.data', 20)
+            ->where('students.total', 25)
+            ->where('students.last_page', 2)
         );
 });
 

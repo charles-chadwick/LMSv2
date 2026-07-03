@@ -132,8 +132,31 @@ test('my courses lists only the current users enrollments', function (): void {
         ->assertOk()
         ->assertInertia(fn ($page) => $page
             ->component('Enrollments/Index')
-            ->has('enrollments', 1)
-            ->where('enrollments.0.course_title', 'My Course')
+            ->has('enrollments.data', 1)
+            ->where('enrollments.data.0.course_title', 'My Course')
+            ->where('enrollments.total', 1)
+        );
+});
+
+test('my courses paginates enrollments', function (): void {
+    $user = User::factory()->student()->create();
+    $courses = Course::factory()->count(18)->published()->create();
+
+    foreach ($courses as $course) {
+        $user->enrollments()->create([
+            'course_id' => $course->id,
+            'status' => EnrollmentStatus::Active,
+            'enrolled_at' => now(),
+        ]);
+    }
+
+    $this->actingAs($user)
+        ->get(route('enrollments.index'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->has('enrollments.data', 15)
+            ->where('enrollments.total', 18)
+            ->where('enrollments.last_page', 2)
         );
 });
 

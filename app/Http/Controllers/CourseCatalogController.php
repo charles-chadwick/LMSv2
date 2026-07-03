@@ -11,6 +11,11 @@ use Inertia\Response;
 
 class CourseCatalogController extends Controller
 {
+    /**
+     * Published courses shown per catalog page (fits the 3-column grid).
+     */
+    private const PER_PAGE = 12;
+
     public function index(Request $request): Response
     {
         $enrolled_course_ids = $request->user()->enrollments()->pluck('course_id');
@@ -19,8 +24,9 @@ class CourseCatalogController extends Controller
             ->where('status', CourseStatus::Published)
             ->with('instructor.roles', 'instructor.media')
             ->latest('published_at')
-            ->get()
-            ->map(fn (Course $course): array => [
+            ->paginate(self::PER_PAGE)
+            ->withQueryString()
+            ->through(fn (Course $course): array => [
                 'id' => $course->id,
                 'title' => $course->title,
                 'slug' => $course->slug,

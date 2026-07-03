@@ -5,6 +5,7 @@ import StatusBadge from '@/Components/StatusBadge.vue';
 import ProgressBar from '@/Components/ProgressBar.vue';
 import StudentSearch from '@/Components/StudentSearch.vue';
 import UserHoverCard from '@/Components/UserHoverCard.vue';
+import Pagination from '@/Components/Pagination.vue';
 import { Button } from '@/Components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import { Head, router, useForm } from '@inertiajs/vue3';
@@ -13,7 +14,7 @@ import { Users, UserPlus } from 'lucide-vue-next';
 
 const props = defineProps({
     course: { type: Object, required: true },
-    students: { type: Array, required: true },
+    students: { type: Object, required: true },
 });
 
 const selected_student = ref(null);
@@ -52,7 +53,7 @@ const remove = (student) => {
         <PageHeader
             :title="course.title"
             eyebrow="Roster"
-            :subtitle="`${students.length} ${students.length === 1 ? 'student' : 'students'} enrolled`"
+            :subtitle="`${students.total} ${students.total === 1 ? 'student' : 'students'} enrolled`"
         />
 
         <!-- Add-student toolbar (kept out of the header so its results dropdown isn't clipped) -->
@@ -79,7 +80,7 @@ const remove = (student) => {
         </div>
 
         <div
-            v-if="students.length === 0"
+            v-if="students.total === 0"
             class="rounded-2xl border border-dashed bg-card p-12 text-center"
         >
             <div class="mx-auto flex size-12 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600">
@@ -101,7 +102,7 @@ const remove = (student) => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    <TableRow v-for="student in students" :key="student.id">
+                    <TableRow v-for="student in students.data" :key="student.id">
                         <TableCell>
                             <UserHoverCard :user="student.user" />
                         </TableCell>
@@ -128,5 +129,7 @@ const remove = (student) => {
                 </TableBody>
             </Table>
         </div>
+
+        <Pagination :paginator="students" />
     </AuthenticatedLayout>
 </template>

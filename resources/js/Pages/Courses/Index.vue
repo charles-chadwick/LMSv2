@@ -3,6 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import PageHeader from '@/Components/PageHeader.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
 import LevelBadge from '@/Components/LevelBadge.vue';
+import Pagination from '@/Components/Pagination.vue';
 import { Button } from '@/Components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import {
@@ -18,7 +19,7 @@ import { Plus, MoreHorizontal, ListTree, Users, Pencil, Send, Archive, Trash2, G
 
 defineProps({
     courses: {
-        type: Array,
+        type: Object,
         required: true,
     },
 });
@@ -59,7 +60,7 @@ const archive = (course) => {
         </PageHeader>
 
         <div
-            v-if="courses.length === 0"
+            v-if="courses.total === 0"
             class="rounded-2xl border border-dashed bg-card p-12 text-center"
         >
             <div class="mx-auto flex size-12 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600">
@@ -80,7 +81,7 @@ const archive = (course) => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    <TableRow v-for="course in courses" :key="course.id">
+                    <TableRow v-for="course in courses.data" :key="course.id">
                         <TableCell class="font-semibold text-foreground">{{ course.title }}</TableCell>
                         <TableCell>
                             <LevelBadge :level="course.level" />
@@ -136,5 +137,7 @@ const archive = (course) => {
                 </TableBody>
             </Table>
         </div>
+
+        <Pagination :paginator="courses" />
     </AuthenticatedLayout>
 </template>
