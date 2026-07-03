@@ -62,7 +62,7 @@ test('the course detail renders the syllabus in position order', function (): vo
             ->where('course.modules.0.title', 'Module A')
             ->where('course.modules.1.title', 'Module B')
             ->where('course.modules.0.lessons.0.title', 'Lesson A1')
-            ->where('is_enrolled', false)
+            ->where('enrollment_status', null)
         );
 });
 
@@ -91,7 +91,7 @@ test('the course detail reflects enrollment state after enrolling', function ():
 
     $this->actingAs($user)
         ->get(route('catalog.show', $course))
-        ->assertInertia(fn ($page) => $page->where('is_enrolled', true));
+        ->assertInertia(fn ($page) => $page->where('enrollment_status', 'Active'));
 });
 
 test('the course detail exposes learning data for an enrolled user', function (): void {

@@ -5,7 +5,6 @@ import { ref } from 'vue';
 
 const props = defineProps({
     course: { type: Object, required: true },
-    is_enrolled: { type: Boolean, required: true },
     can_learn: { type: Boolean, default: false },
     completed_lesson_ids: { type: Array, default: () => [] },
     first_incomplete_lesson_slug: { type: String, default: null },
@@ -13,29 +12,27 @@ const props = defineProps({
     enrollment_status: { type: String, default: null },
 });
 
-const enrolling = ref(false);
+const busy = ref(false);
 
 const enroll = () => {
-    enrolling.value = true;
+    busy.value = true;
     router.post(route('courses.enroll', props.course.slug), {}, {
         preserveScroll: true,
         onFinish: () => {
-            enrolling.value = false;
+            busy.value = false;
         },
     });
 };
-
-const dropping = ref(false);
 
 const drop = () => {
     if (! confirm(`Drop "${props.course.title}"? Your progress is saved if you re-enroll.`)) {
         return;
     }
-    dropping.value = true;
+    busy.value = true;
     router.delete(route('enrollments.destroy', props.enrollment_id), {
         preserveScroll: true,
         onFinish: () => {
-            dropping.value = false;
+            busy.value = false;
         },
     });
 };
@@ -62,14 +59,14 @@ const isComplete = (lesson) => props.completed_lesson_ids.includes(lesson.id);
                 >
                     Continue learning
                 </Link>
-                <template v-if="is_enrolled && enrollment_status !== 'Dropped'">
+                <template v-if="enrollment_status && enrollment_status !== 'Dropped'">
                     <span class="rounded bg-green-100 px-4 py-2 text-sm font-medium text-green-700">
                         Enrolled
                     </span>
                     <button
                         v-if="enrollment_status === 'Active'"
                         type="button"
-                        :disabled="dropping"
+                        :disabled="busy"
                         class="rounded border border-red-300 px-4 py-2 text-sm font-medium text-red-600 disabled:opacity-50"
                         @click="drop"
                     >
@@ -77,9 +74,9 @@ const isComplete = (lesson) => props.completed_lesson_ids.includes(lesson.id);
                     </button>
                 </template>
                 <button
-                    v-if="! is_enrolled || enrollment_status === 'Dropped'"
+                    v-if="! enrollment_status || enrollment_status === 'Dropped'"
                     type="button"
-                    :disabled="enrolling"
+                    :disabled="busy"
                     class="rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
                     @click="enroll"
                 >

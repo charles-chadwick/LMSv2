@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Enums\EnrollmentStatus;
 use App\Models\Enrollment;
 use App\Models\User;
 
@@ -13,7 +12,7 @@ class EnrollmentPolicy
      */
     public function drop(User $user, Enrollment $enrollment): bool
     {
-        if ($enrollment->status !== EnrollmentStatus::Active) {
+        if (! $enrollment->status->isDroppable()) {
             return false;
         }
 

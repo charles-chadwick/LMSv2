@@ -15,6 +15,7 @@ class RosterController extends Controller
         $this->authorize('viewRoster', $course);
 
         $students = $course->enrollments()
+            ->select(['id', 'user_id', 'status', 'progress_percentage', 'enrolled_at'])
             ->with('student:id,name')
             ->latest('enrolled_at')
             ->get()
