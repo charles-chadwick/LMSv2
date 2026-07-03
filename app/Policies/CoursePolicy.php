@@ -47,4 +47,10 @@ class CoursePolicy
     {
         return $course->status === CourseStatus::Published;
     }
+
+    public function learn(User $user, Course $course): bool
+    {
+        return $user->enrollments()->where('course_id', $course->id)->exists()
+            || $course->instructor_id === $user->id;
+    }
 }
