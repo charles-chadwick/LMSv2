@@ -58,5 +58,7 @@ Route::middleware('auth')->group(function (): void {
 
         Route::get('catalog', [CourseCatalogController::class, 'index'])->name('catalog.index');
         Route::get('catalog/{course}', [CourseCatalogController::class, 'show'])->name('catalog.show');
+
+        Route::get('my-courses', [EnrollmentController::class, 'index'])->name('enrollments.index');
     });
 });

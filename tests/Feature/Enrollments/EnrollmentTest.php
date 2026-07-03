@@ -85,3 +85,26 @@ test('a guest cannot enroll', function (): void {
 
     $this->post(route('courses.enroll', $course))->assertRedirect(route('login'));
 });
+
+test('my courses lists only the current users enrollments', function (): void {
+    $user = User::factory()->student()->create();
+    $other = User::factory()->student()->create();
+    $mine = Course::factory()->published()->create(['title' => 'My Course']);
+    $theirs = Course::factory()->published()->create(['title' => 'Their Course']);
+
+    $user->enrollments()->create(['course_id' => $mine->id, 'status' => EnrollmentStatus::Active, 'enrolled_at' => now()]);
+    $other->enrollments()->create(['course_id' => $theirs->id, 'status' => EnrollmentStatus::Active, 'enrolled_at' => now()]);
+
+    $this->actingAs($user)
+        ->get(route('enrollments.index'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('Enrollments/Index')
+            ->has('enrollments', 1)
+            ->where('enrollments.0.course_title', 'My Course')
+        );
+});
+
+test('a guest is redirected to login from my courses', function (): void {
+    $this->get(route('enrollments.index'))->assertRedirect(route('login'));
+});
