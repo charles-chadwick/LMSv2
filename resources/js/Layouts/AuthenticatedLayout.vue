@@ -1,9 +1,9 @@
 <script setup>
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import { LayoutDashboard, Compass, GraduationCap, BookMarked, LogOut, ChevronDown } from 'lucide-vue-next';
+import { LayoutDashboard, Compass, GraduationCap, BookMarked, LogOut, ChevronDown, UserRound } from 'lucide-vue-next';
 import { useSectionTheme, THEMES } from '@/composables/useSectionTheme';
-import { Avatar, AvatarFallback } from '@/Components/ui/avatar';
+import UserAvatar from '@/Components/UserAvatar.vue';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -16,19 +16,9 @@ import {
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 const canCreateCourses = computed(() => user.value.can?.create_courses ?? false);
-const primaryRole = computed(() => user.value.roles?.[0] ?? 'member');
+const primaryRole = computed(() => user.value.role ?? user.value.roles?.[0] ?? 'Member');
 
 const { section, theme } = useSectionTheme();
-
-const initials = computed(() => {
-    return (user.value.name || '?')
-        .split(' ')
-        .map((part) => part[0])
-        .filter(Boolean)
-        .slice(0, 2)
-        .join('')
-        .toUpperCase();
-});
 
 const navItems = computed(() => {
     const items = [
@@ -83,11 +73,7 @@ const navItems = computed(() => {
                     <DropdownMenuTrigger
                         class="flex items-center gap-2 rounded-full py-1 pl-1 pr-2 outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
                     >
-                        <Avatar class="size-8">
-                            <AvatarFallback :class="theme.soft" class="text-xs font-bold">
-                                {{ initials }}
-                            </AvatarFallback>
-                        </Avatar>
+                        <UserAvatar :user="user" size="md" />
                         <span class="hidden text-sm font-medium sm:block">{{ user.name }}</span>
                         <ChevronDown class="size-4 text-muted-foreground" />
                     </DropdownMenuTrigger>
@@ -97,6 +83,12 @@ const navItems = computed(() => {
                             <span class="text-xs font-normal capitalize text-muted-foreground">{{ primaryRole }}</span>
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
+                        <DropdownMenuItem as-child>
+                            <Link :href="route('users.show', user.id)" class="w-full cursor-pointer">
+                                <UserRound class="size-4" />
+                                Profile
+                            </Link>
+                        </DropdownMenuItem>
                         <DropdownMenuItem as-child variant="destructive">
                             <Link :href="route('logout')" method="post" as="button" class="w-full cursor-pointer">
                                 <LogOut class="size-4" />

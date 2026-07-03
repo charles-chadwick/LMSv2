@@ -2,6 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import PageHeader from '@/Components/PageHeader.vue';
 import LevelBadge from '@/Components/LevelBadge.vue';
+import UserHoverCard from '@/Components/UserHoverCard.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import { CircleCheckBig, ArrowUpRight, Compass } from 'lucide-vue-next';
 
@@ -59,7 +60,11 @@ defineProps({
                 <p class="mt-1.5 line-clamp-2 flex-1 text-sm text-muted-foreground">{{ course.summary }}</p>
 
                 <div class="mt-4 flex items-center justify-between border-t pt-3">
-                    <span class="text-xs font-medium text-muted-foreground">{{ course.instructor }}</span>
+                    <UserHoverCard
+                        :user="course.instructor"
+                        size="sm"
+                        name-class="text-xs font-medium text-muted-foreground"
+                    />
                     <ArrowUpRight class="size-4 text-emerald-600 opacity-0 transition-opacity group-hover:opacity-100" />
                 </div>
             </Link>

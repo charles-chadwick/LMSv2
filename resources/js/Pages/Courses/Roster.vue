@@ -4,7 +4,7 @@ import PageHeader from '@/Components/PageHeader.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
 import ProgressBar from '@/Components/ProgressBar.vue';
 import StudentSearch from '@/Components/StudentSearch.vue';
-import { Avatar, AvatarFallback } from '@/Components/ui/avatar';
+import UserHoverCard from '@/Components/UserHoverCard.vue';
 import { Button } from '@/Components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import { Head, router, useForm } from '@inertiajs/vue3';
@@ -38,20 +38,10 @@ const enroll = () => {
 };
 
 const remove = (student) => {
-    if (! confirm(`Remove ${student.name} from "${props.course.title}"?`)) {
+    if (! confirm(`Remove ${student.user.name} from "${props.course.title}"?`)) {
         return;
     }
     router.delete(route('enrollments.destroy', student.id), { preserveScroll: true });
-};
-
-const initialsFor = (name) => {
-    return (name || '?')
-        .split(' ')
-        .map((part) => part[0])
-        .filter(Boolean)
-        .slice(0, 2)
-        .join('')
-        .toUpperCase();
 };
 </script>
 
@@ -113,14 +103,7 @@ const initialsFor = (name) => {
                 <TableBody>
                     <TableRow v-for="student in students" :key="student.id">
                         <TableCell>
-                            <div class="flex items-center gap-3">
-                                <Avatar class="size-8">
-                                    <AvatarFallback class="bg-amber-500/15 text-xs font-bold text-amber-700">
-                                        {{ initialsFor(student.name) }}
-                                    </AvatarFallback>
-                                </Avatar>
-                                <span class="font-semibold text-foreground">{{ student.name }}</span>
-                            </div>
+                            <UserHoverCard :user="student.user" />
                         </TableCell>
                         <TableCell>
                             <StatusBadge :status="student.status" />

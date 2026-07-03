@@ -22,6 +22,8 @@ test('an instructor can view the roster of their own course', function (): void 
             ->component('Courses/Roster')
             ->has('students', 1)
             ->where('students.0.id', $enrollment->id)
+            ->where('students.0.user.id', $enrollment->user_id)
+            ->has('students.0.user.avatar_thumb')
         );
 });
 

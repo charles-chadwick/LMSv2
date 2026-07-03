@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import LevelBadge from '@/Components/LevelBadge.vue';
+import UserHoverCard from '@/Components/UserHoverCard.vue';
 import { Button } from '@/Components/ui/button';
 import { Head, Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
@@ -47,7 +48,12 @@ const isComplete = (lesson) => props.completed_lesson_ids.includes(lesson.id);
                     <h1 class="font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">
                         {{ course.title }}
                     </h1>
-                    <p class="mt-2 text-sm text-white/85">{{ course.instructor }}</p>
+                    <UserHoverCard
+                        :user="course.instructor"
+                        size="sm"
+                        name-class="text-sm text-white/85"
+                        class="mt-2"
+                    />
                 </div>
 
                 <div class="flex shrink-0 flex-wrap items-center gap-2.5">

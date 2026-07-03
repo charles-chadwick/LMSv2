@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\CourseStatus;
+use App\Http\Resources\UserSummaryResource;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -16,7 +17,7 @@ class CourseCatalogController extends Controller
 
         $courses = Course::query()
             ->where('status', CourseStatus::Published)
-            ->with('instructor:id,name')
+            ->with('instructor.roles', 'instructor.media')
             ->latest('published_at')
             ->get()
             ->map(fn (Course $course): array => [
@@ -25,7 +26,7 @@ class CourseCatalogController extends Controller
                 'slug' => $course->slug,
                 'summary' => $course->summary,
                 'level' => $course->level,
-                'instructor' => $course->instructor->name,
+                'instructor' => UserSummaryResource::make($course->instructor)->resolve(),
                 'is_enrolled' => $enrolled_course_ids->contains($course->id),
             ]);
 
@@ -38,7 +39,7 @@ class CourseCatalogController extends Controller
     {
         abort_unless($course->status === CourseStatus::Published, 404);
 
-        $course->load(['instructor:id,name', 'modules.lessons']);
+        $course->load(['instructor.roles', 'instructor.media', 'modules.lessons']);
 
         $user = $request->user();
         $enrollment = $user->enrollments()->where('course_id', $course->id)->first();
@@ -58,7 +59,7 @@ class CourseCatalogController extends Controller
                 'summary' => $course->summary,
                 'description' => $course->description,
                 'level' => $course->level,
-                'instructor' => $course->instructor->name,
+                'instructor' => UserSummaryResource::make($course->instructor)->resolve(),
                 'modules' => $course->modules->map(fn ($module): array => [
                     'title' => $module->title,
                     'lessons' => $module->lessons->map(fn ($lesson): array => [

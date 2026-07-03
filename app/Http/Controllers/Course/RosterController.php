@@ -7,6 +7,7 @@ use App\Enums\EnrollmentStatus;
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Course\EnrollStudentRequest;
+use App\Http\Resources\UserSummaryResource;
 use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\User;
@@ -25,12 +26,12 @@ class RosterController extends Controller
 
         $students = $course->enrollments()
             ->select(['id', 'user_id', 'status', 'progress_percentage', 'enrolled_at'])
-            ->with('student:id,name')
+            ->with('student.roles', 'student.media')
             ->latest('enrolled_at')
             ->get()
             ->map(fn (Enrollment $enrollment): array => [
                 'id' => $enrollment->id,
-                'name' => $enrollment->student->name,
+                'user' => UserSummaryResource::make($enrollment->student)->resolve(),
                 'status' => $enrollment->status,
                 'progress_percentage' => $enrollment->progress_percentage,
                 'enrolled_at' => $enrollment->enrolled_at?->toDateString(),
@@ -66,15 +67,13 @@ class RosterController extends Controller
             ->pluck('user_id');
 
         $students = User::role(UserRole::Student->value)
+            ->with('roles', 'media')
             ->whereNotIn('id', $unavailable_ids)
             ->where('name', 'like', '%'.$term.'%')
             ->orderBy('name')
             ->limit(20)
-            ->get(['id', 'name'])
-            ->map(fn (User $student): array => [
-                'id' => $student->id,
-                'name' => $student->name,
-            ]);
+            ->get()
+            ->map(fn (User $student): array => UserSummaryResource::make($student)->resolve($request));
 
         return response()->json($students);
     }
