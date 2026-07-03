@@ -52,3 +52,9 @@ it('ands the search with an existing constraint', function () {
 
     expect($ids)->toContain($wanted->id)->toHaveCount(1);
 });
+
+it('keeps name as the concatenation of first and last name after migrations', function () {
+    $user = User::factory()->create(['first_name' => 'Grace', 'last_name' => 'Hopper']);
+
+    expect($user->fresh()->name)->toBe('Grace Hopper');
+});
