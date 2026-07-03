@@ -32,12 +32,14 @@ class CourseController extends Controller
                 ! $user->hasRole(UserRole::Admin->value),
                 fn ($query) => $query->where('instructor_id', $user->id),
             )
+            ->withSearch($request->query('search'))
             ->latest()
             ->paginate(self::PER_PAGE, ['id', 'title', 'slug', 'status', 'level'])
             ->withQueryString();
 
         return Inertia::render('Courses/Index', [
             'courses' => $courses,
+            'filters' => ['search' => $request->query('search')],
         ]);
     }
 

@@ -2,6 +2,9 @@
 
 use App\Models\Course;
 use App\Models\User;
+use Inertia\Testing\AssertableInertia as Assert;
+
+use function Pest\Laravel\actingAs;
 
 it('matches courses on the title column', function () {
     $match = Course::factory()->create(['title' => 'Advanced Welding Techniques']);
@@ -57,4 +60,29 @@ it('keeps name as the concatenation of first and last name after migrations', fu
     $user = User::factory()->create(['first_name' => 'Grace', 'last_name' => 'Hopper']);
 
     expect($user->fresh()->name)->toBe('Grace Hopper');
+});
+
+it('filters the courses index by the search query and echoes the term', function () {
+    $admin = User::factory()->admin()->create();
+    Course::factory()->create(['title' => 'Welding Fundamentals']);
+    Course::factory()->create(['title' => 'Ceramics 101']);
+
+    actingAs($admin)
+        ->get(route('courses.index', ['search' => 'welding']))
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('Courses/Index')
+            ->where('filters.search', 'welding')
+            ->has('courses.data', 1)
+            ->where('courses.data.0.title', 'Welding Fundamentals'));
+});
+
+it('returns the full courses index when no search term is given', function () {
+    $admin = User::factory()->admin()->create();
+    Course::factory()->count(2)->create();
+
+    actingAs($admin)
+        ->get(route('courses.index'))
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('filters.search', null)
+            ->has('courses.data', 2));
 });
