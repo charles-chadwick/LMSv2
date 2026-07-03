@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\CompleteLessonController;
 use App\Http\Controllers\CourseCatalogController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\Curriculum\LessonController as CurriculumLessonController;
 use App\Http\Controllers\Curriculum\ModuleController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EnrollmentController;
@@ -63,6 +64,11 @@ Route::middleware('auth')->group(function (): void {
         Route::put('modules/{module}', [ModuleController::class, 'update'])->name('modules.update');
         Route::delete('modules/{module}', [ModuleController::class, 'destroy'])->name('modules.destroy');
         Route::post('courses/{course}/modules/reorder', [ModuleController::class, 'reorder'])->name('modules.reorder');
+
+        Route::post('modules/{module}/lessons', [CurriculumLessonController::class, 'store'])->name('lessons.store');
+        Route::put('lessons/{lesson}', [CurriculumLessonController::class, 'update'])->name('lessons.update');
+        Route::delete('lessons/{lesson}', [CurriculumLessonController::class, 'destroy'])->name('lessons.destroy');
+        Route::post('modules/{module}/lessons/reorder', [CurriculumLessonController::class, 'reorder'])->name('lessons.reorder');
 
         Route::get('catalog', [CourseCatalogController::class, 'index'])->name('catalog.index');
         Route::get('catalog/{course}', [CourseCatalogController::class, 'show'])->name('catalog.show');
