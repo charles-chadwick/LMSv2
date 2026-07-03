@@ -65,6 +65,7 @@ const archive = (course) => {
                     <td class="py-3">
                         <div class="flex justify-end gap-3">
                             <Link :href="route('curriculum.show', course.slug)" class="text-indigo-600 hover:underline">Curriculum</Link>
+                            <Link :href="route('courses.roster', course.slug)" class="text-purple-600 hover:underline">Roster</Link>
                             <Link :href="route('courses.edit', course.slug)" class="text-blue-600 hover:underline">Edit</Link>
                             <button type="button" class="text-green-600 hover:underline" @click="publish(course)">Publish</button>
                             <button type="button" class="text-amber-600 hover:underline" @click="archive(course)">Archive</button>

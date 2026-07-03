@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\DropEnrollment;
 use App\Actions\EnrollStudent;
 use App\Models\Course;
 use App\Models\Enrollment;
@@ -21,6 +22,15 @@ class EnrollmentController extends Controller
         return back()->with('status', 'Enrolled.');
     }
 
+    public function destroy(Enrollment $enrollment): RedirectResponse
+    {
+        $this->authorize('drop', $enrollment);
+
+        DropEnrollment::run($enrollment);
+
+        return back()->with('status', 'Enrollment dropped.');
+    }
+
     public function index(Request $request): Response
     {
         $enrollments = $request->user()->enrollments()
@@ -28,6 +38,7 @@ class EnrollmentController extends Controller
             ->latest('enrolled_at')
             ->get()
             ->map(fn (Enrollment $enrollment): array => [
+                'id' => $enrollment->id,
                 'course_title' => $enrollment->course->title,
                 'course_slug' => $enrollment->course->slug,
                 'status' => $enrollment->status,

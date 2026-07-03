@@ -2,6 +2,7 @@
 
 use App\Enums\EnrollmentStatus;
 use App\Models\Course;
+use App\Models\Enrollment;
 use App\Models\Lesson;
 use App\Models\Module;
 use App\Models\User;
@@ -95,6 +96,26 @@ test('an instructor can preview a lesson without enrolling', function (): void {
         ->get(route('lessons.show', [$course, $lesson]))
         ->assertOk()
         ->assertInertia(fn ($page) => $page->where('can_complete', false));
+});
+
+test('a dropped student cannot view a lesson', function (): void {
+    $user = User::factory()->student()->create();
+    $course = Course::factory()->published()->create();
+    $module = Module::factory()->for($course)->create();
+    $lesson = Lesson::factory()->for($module)->create();
+    Enrollment::factory()->for($user, 'student')->for($course)->dropped()->create();
+
+    $this->actingAs($user)->get(route('lessons.show', [$course, $lesson]))->assertForbidden();
+});
+
+test('a completed student can still view a lesson for review', function (): void {
+    $user = User::factory()->student()->create();
+    $course = Course::factory()->published()->create();
+    $module = Module::factory()->for($course)->create();
+    $lesson = Lesson::factory()->for($module)->create();
+    Enrollment::factory()->for($user, 'student')->for($course)->completed()->create();
+
+    $this->actingAs($user)->get(route('lessons.show', [$course, $lesson]))->assertOk();
 });
 
 test('a guest is redirected to login from a lesson', function (): void {

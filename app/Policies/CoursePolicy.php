@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Enums\CourseStatus;
+use App\Enums\EnrollmentStatus;
 use App\Models\Course;
 use App\Models\User;
 
@@ -50,12 +51,20 @@ class CoursePolicy
 
     public function learn(User $user, Course $course): bool
     {
-        return $user->enrollments()->where('course_id', $course->id)->exists()
+        return $user->enrollments()
+            ->where('course_id', $course->id)
+            ->whereIn('status', [EnrollmentStatus::Active, EnrollmentStatus::Completed])
+            ->exists()
             || $course->instructor_id === $user->id;
     }
 
     public function manageContent(User $user, Course $course): bool
     {
         return $user->can('manage course content') && $course->instructor_id === $user->id;
+    }
+
+    public function viewRoster(User $user, Course $course): bool
+    {
+        return $user->can('update courses') && $course->instructor_id === $user->id;
     }
 }

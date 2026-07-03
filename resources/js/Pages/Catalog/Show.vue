@@ -9,6 +9,8 @@ const props = defineProps({
     can_learn: { type: Boolean, default: false },
     completed_lesson_ids: { type: Array, default: () => [] },
     first_incomplete_lesson_slug: { type: String, default: null },
+    enrollment_id: { type: Number, default: null },
+    enrollment_status: { type: String, default: null },
 });
 
 const enrolling = ref(false);
@@ -19,6 +21,21 @@ const enroll = () => {
         preserveScroll: true,
         onFinish: () => {
             enrolling.value = false;
+        },
+    });
+};
+
+const dropping = ref(false);
+
+const drop = () => {
+    if (! confirm(`Drop "${props.course.title}"? Your progress is saved if you re-enroll.`)) {
+        return;
+    }
+    dropping.value = true;
+    router.delete(route('enrollments.destroy', props.enrollment_id), {
+        preserveScroll: true,
+        onFinish: () => {
+            dropping.value = false;
         },
     });
 };
@@ -45,17 +62,28 @@ const isComplete = (lesson) => props.completed_lesson_ids.includes(lesson.id);
                 >
                     Continue learning
                 </Link>
-                <span v-if="is_enrolled" class="rounded bg-green-100 px-4 py-2 text-sm font-medium text-green-700">
-                    Enrolled
-                </span>
+                <template v-if="is_enrolled && enrollment_status !== 'Dropped'">
+                    <span class="rounded bg-green-100 px-4 py-2 text-sm font-medium text-green-700">
+                        Enrolled
+                    </span>
+                    <button
+                        v-if="enrollment_status === 'Active'"
+                        type="button"
+                        :disabled="dropping"
+                        class="rounded border border-red-300 px-4 py-2 text-sm font-medium text-red-600 disabled:opacity-50"
+                        @click="drop"
+                    >
+                        Drop course
+                    </button>
+                </template>
                 <button
-                    v-else
+                    v-if="! is_enrolled || enrollment_status === 'Dropped'"
                     type="button"
                     :disabled="enrolling"
                     class="rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
                     @click="enroll"
                 >
-                    Enroll
+                    {{ enrollment_status === 'Dropped' ? 'Re-enroll' : 'Enroll' }}
                 </button>
             </div>
         </div>

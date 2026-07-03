@@ -17,15 +17,20 @@ class EnrollStudent
      */
     public function handle(User $student, Course $course): Enrollment
     {
-        return Enrollment::firstOrCreate(
-            [
-                'user_id' => $student->id,
-                'course_id' => $course->id,
-            ],
-            [
-                'status' => EnrollmentStatus::Active,
-                'enrolled_at' => now(),
-            ],
-        );
+        $enrollment = Enrollment::firstOrNew([
+            'user_id' => $student->id,
+            'course_id' => $course->id,
+        ]);
+
+        if (! $enrollment->exists) {
+            $enrollment->status = EnrollmentStatus::Active;
+            $enrollment->enrolled_at = now();
+        } elseif ($enrollment->status === EnrollmentStatus::Dropped) {
+            $enrollment->status = EnrollmentStatus::Active;
+        }
+
+        $enrollment->save();
+
+        return $enrollment;
     }
 }
