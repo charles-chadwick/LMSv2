@@ -7,8 +7,10 @@ use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\CourseCatalogController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\PublishCourseController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -52,5 +54,11 @@ Route::middleware('auth')->group(function (): void {
         Route::resource('courses', CourseController::class)->except('show');
         Route::post('courses/{course}/publish', PublishCourseController::class)->name('courses.publish');
         Route::post('courses/{course}/archive', ArchiveCourseController::class)->name('courses.archive');
+        Route::post('courses/{course}/enroll', [EnrollmentController::class, 'store'])->name('courses.enroll');
+
+        Route::get('catalog', [CourseCatalogController::class, 'index'])->name('catalog.index');
+        Route::get('catalog/{course}', [CourseCatalogController::class, 'show'])->name('catalog.show');
+
+        Route::get('my-courses', [EnrollmentController::class, 'index'])->name('enrollments.index');
     });
 });
