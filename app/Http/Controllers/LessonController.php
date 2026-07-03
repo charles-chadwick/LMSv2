@@ -48,7 +48,6 @@ class LessonController extends Controller
             'prev' => $prev ? ['title' => $prev->title, 'slug' => $prev->slug] : null,
             'next' => $next ? ['title' => $next->title, 'slug' => $next->slug] : null,
             'is_complete' => in_array($lesson->id, $completed_lesson_ids, true),
-            'can_complete' => $enrollment !== null,
             'progress_percentage' => $enrollment ? $enrollment->progress_percentage : 0,
         ]);
     }
