@@ -116,6 +116,22 @@ test('viewing a lesson that belongs to another course 404s', function (): void {
     $this->actingAs($user)->get(route('lessons.show', [$course, $foreign_lesson]))->assertNotFound();
 });
 
+test('a HEAD request does not generate a completion', function (): void {
+    $user = User::factory()->student()->create();
+    $course = Course::factory()->published()->create();
+    $module = Module::factory()->for($course)->create();
+    $lesson = Lesson::factory()->for($module)->create();
+    $user->enrollments()->create([
+        'course_id' => $course->id,
+        'status' => EnrollmentStatus::Active,
+        'enrolled_at' => now(),
+    ]);
+
+    $this->actingAs($user)->head(route('lessons.show', [$course, $lesson]));
+
+    expect(LessonCompletion::count())->toBe(0);
+});
+
 test('a guest is redirected to login', function (): void {
     $course = Course::factory()->published()->create();
     $module = Module::factory()->for($course)->create();
