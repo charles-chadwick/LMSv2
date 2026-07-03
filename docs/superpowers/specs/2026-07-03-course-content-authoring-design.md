@@ -21,14 +21,14 @@ outstanding defect that lessons bind by slug globally while slugs are only uniqu
 | Reordering | **Drag-and-drop** via the `vuedraggable@next` npm package (Vue 3 SortableJS wrapper) — an approved new dependency. Drop fires a reorder POST. |
 | Authorization | New `CoursePolicy@manageContent` — `manage course content` permission (already seeded for instructors) AND course ownership; admins via `Gate::before`. |
 | Lesson slug | **Globally unique**, DB-enforced (migration swaps the per-module unique index for a global one). Auto-generated from title with a uniqueness suffix; **stable after creation**. |
-| Lesson content | Plain `<textarea>` (rendered as plain text elsewhere) — no rich-text/markdown editor. |
+| Lesson content | **Rich text (WYSIWYG → sanitized HTML).** TipTap editor in the builder; content stored as HTML, **sanitized server-side on every write** via an allow-list purifier; student view renders the sanitized HTML with `v-html`. |
 | New-item position | Appends at end (`position` = current max + 1). |
 | Delete | Soft delete (models already use `SoftDeletes`). |
 | Controller grouping | Authoring controllers live under `App\Http\Controllers\Curriculum\` to keep them separate from the student-facing `LessonController@show`. |
 
 ## Non-Goals (deferred)
 
-- Rich-text / markdown / media lesson content.
+- Media/image uploads or embeds inside lesson content (text formatting only this slice).
 - Bulk import, duplication, or move-lesson-between-modules.
 - Versioning / draft-vs-published lesson state (course-level publish already exists).
 - Assignments, tests, discussions attached to lessons/modules.
@@ -57,6 +57,24 @@ lesson's `module->course_id`).
 - **Generation:** on lesson `store`, slug = `Str::slug($title)` with a `-2`, `-3`, … suffix until
   globally unique across `lessons` (same helper shape as `CourseController::uniqueSlug`). Slug is
   **not** regenerated on update (stable; completions key on `lesson_id`).
+
+### Rich-text content + sanitization (the security-critical piece)
+
+Lesson content is authored as HTML (TipTap) and rendered to students with `v-html`, so **untrusted
+HTML must never reach the DB**. Sanitization happens on write, centralized so no write path can
+bypass it:
+
+- **PHP dependency:** `mews/purifier` (HTMLPurifier wrapper). A `lesson` config profile in
+  `config/purifier.php` allows only a safe formatting set — `p, br, strong, em, u, s, h1, h2, h3,
+  ul, ol, li, blockquote, a[href|title], code, pre` — and strips everything else (scripts, event
+  handlers, `style`, `iframe`, `on*` attributes, `javascript:` URLs).
+- **Enforcement point:** a `content` attribute mutator on `Lesson`
+  (`protected function content(): Attribute` with a `set` that returns `Purifier::clean($value, 'lesson')`
+  when non-null). Because Eloquent mutators run on assignment (not on DB hydration), every write —
+  controller, action, seeder — is sanitized once, and already-clean stored HTML loads unchanged.
+- **Rendering:** the student `Lessons/Show.vue` switches from plain-text (`whitespace-pre-line`
+  interpolation) to `v-html="lesson.content"`. This is safe only because the stored HTML is already
+  purifier-cleaned; `v-html` of DB content is acceptable under that invariant.
 
 ### Reorder actions — `app/Actions/`
 
@@ -91,7 +109,8 @@ items across courses/modules or partially reorder.
 - `StoreModuleRequest` / `UpdateModuleRequest` — `title` required string max 255; `description`
   nullable string. `authorize()` returns true (controller authorizes).
 - `StoreLessonRequest` / `UpdateLessonRequest` — `title` required string max 255; `content` nullable
-  string; `duration_minutes` nullable integer min 0.
+  string (raw HTML from the editor; sanitized by the `Lesson::content` mutator on save, not here);
+  `duration_minutes` nullable integer min 0.
 
 ### Routes — `routes/web.php` (inside `auth` → `verified`)
 
@@ -120,7 +139,13 @@ POSTs use distinct paths from the student `learn/...` routes — no collision.
   and an "Add lesson" inline form. A top-level "Add module" inline form. Dropping an item commits
   the new order with a `router.post` to the matching `*.reorder` route carrying the reordered id
   array; adds/edits/deletes use `router`/`useForm` to the CRUD routes; all reload the page props.
-- `package.json` — add `vuedraggable@next` (imported as `import draggable from 'vuedraggable'`).
+- `resources/js/Components/RichTextEditor.vue` — a reusable TipTap wrapper (StarterKit + Link):
+  a small toolbar (bold, italic, headings, lists, link) and the editable area; `v-model` binds the
+  HTML string. Used by the lesson add/edit forms in the builder.
+- `Pages/Lessons/Show.vue` (modify) — render lesson content with `v-html="lesson.content"` instead
+  of plain-text interpolation (content is server-sanitized).
+- `package.json` — add `vuedraggable@next` and TipTap (`@tiptap/vue-3`, `@tiptap/starter-kit`,
+  `@tiptap/extension-link`).
 - `resources/js/Pages/Courses/Index.vue` (modify) — add a "Curriculum" link per course row (the
   instructor already sees only their own courses there), to `curriculum.show`.
 
@@ -167,6 +192,13 @@ The instructor course **Index** gains a per-row "Curriculum" link to the builder
 - Non-owner → 403; guest → login redirect.
 - `lessons.reorder` rewrites `position`; a lesson id from another module → 422.
 
+**Content sanitization (security):**
+- Storing/updating a lesson with malicious HTML (`<script>alert(1)</script>`, `<img onerror=...>`,
+  `<a href="javascript:...">`, `<iframe>`) persists only the sanitized subset — the script/handler/
+  iframe/`javascript:` URL is stripped, allowed formatting (e.g. `<strong>`, `<p>`) is kept.
+- Allowed formatting tags survive a round-trip unchanged.
+- The student `Lessons/Show.vue` renders the stored (sanitized) HTML.
+
 **Builder page + entry point:**
 - `curriculum.show` renders `Curriculum/Show` with modules and nested lessons in position order for
   the owner; 403 for a non-owner.
@@ -180,16 +212,24 @@ The instructor course **Index** gains a per-row "Curriculum" link to the builder
 `app/Http/Controllers/Curriculum/LessonController.php`,
 `app/Http/Requests/Curriculum/{StoreModuleRequest,UpdateModuleRequest,StoreLessonRequest,UpdateLessonRequest}.php`.
 
-**New — Vue:** `resources/js/Pages/Curriculum/Show.vue`.
+**New — Vue:** `resources/js/Pages/Curriculum/Show.vue`,
+`resources/js/Components/RichTextEditor.vue`.
+
+**New — config:** `config/purifier.php` (published, with the `lesson` allow-list profile).
 
 **New — Tests:** `tests/Feature/Curriculum/ModuleAuthoringTest.php`,
 `tests/Feature/Curriculum/LessonAuthoringTest.php`,
 `tests/Feature/Curriculum/CurriculumBuilderTest.php`,
-`tests/Feature/Curriculum/LessonSlugUniquenessTest.php`.
+`tests/Feature/Curriculum/LessonSlugUniquenessTest.php`,
+`tests/Feature/Curriculum/LessonContentSanitizationTest.php`.
 
-**Modified:** `app/Policies/CoursePolicy.php` (add `manageContent`), `routes/web.php`,
-`resources/js/Pages/Courses/Index.vue` (add "Curriculum" link), `package.json` (add `vuedraggable`).
+**Modified:** `app/Models/Lesson.php` (add sanitizing `content` mutator),
+`app/Policies/CoursePolicy.php` (add `manageContent`), `routes/web.php`,
+`resources/js/Pages/Courses/Index.vue` (add "Curriculum" link),
+`resources/js/Pages/Lessons/Show.vue` (render content via `v-html`),
+`package.json` (add `vuedraggable@next`, TipTap), `composer.json` (add `mews/purifier`).
 
-**Reused unchanged:** `Module`/`Lesson` models + factories.
+**Reused unchanged:** `Module`/`Lesson` factories.
 
-**New dependency:** `vuedraggable@next` (approved).
+**New dependencies (approved):** npm — `vuedraggable@next`, `@tiptap/vue-3`, `@tiptap/starter-kit`,
+`@tiptap/extension-link`; composer — `mews/purifier`.
