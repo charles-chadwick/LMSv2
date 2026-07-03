@@ -43,6 +43,9 @@ class HandleInertiaRequests extends Middleware
                     ? [
                         ...$request->user()->only('id', 'name', 'email'),
                         'roles' => $request->user()->getRoleNames()->all(),
+                        'can' => [
+                            'create_courses' => $request->user()->can('create courses'),
+                        ],
                     ]
                     : null,
             ],

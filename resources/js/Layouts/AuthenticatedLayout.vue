@@ -3,6 +3,7 @@ import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
 const user = computed(() => usePage().props.auth.user);
+const canCreateCourses = computed(() => user.value.can?.create_courses ?? false);
 </script>
 
 <template>
@@ -10,6 +11,13 @@ const user = computed(() => usePage().props.auth.user);
         <nav class="border-b bg-white">
             <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
                 <Link :href="route('dashboard')" class="font-semibold">LMS</Link>
+                <Link
+                    v-if="canCreateCourses"
+                    :href="route('courses.index')"
+                    class="text-sm text-gray-600 hover:underline"
+                >
+                    Courses
+                </Link>
 
                 <div class="flex items-center gap-4">
                     <span class="text-sm text-gray-600">{{ user.name }}</span>
