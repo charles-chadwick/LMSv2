@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use App\Actions\Concerns\ComparesIdSets;
 use App\Models\Course;
 use App\Models\Module;
 use Illuminate\Validation\ValidationException;
@@ -9,7 +10,7 @@ use Lorisleiva\Actions\Concerns\AsAction;
 
 class ReorderModules
 {
-    use AsAction;
+    use AsAction, ComparesIdSets;
 
     /**
      * Rewrite module positions to the given order.
@@ -31,17 +32,5 @@ class ReorderModules
         foreach ($ordered_module_ids as $position => $module_id) {
             Module::whereKey($module_id)->update(['position' => $position]);
         }
-    }
-
-    /**
-     * @param  array<int, int>  $a
-     * @param  array<int, int>  $b
-     */
-    protected function isSameSet(array $a, array $b): bool
-    {
-        sort($a);
-        sort($b);
-
-        return $a === $b;
     }
 }
