@@ -7,7 +7,7 @@ import { onBeforeUnmount, ref, watch } from 'vue';
 const props = defineProps({
     modelValue: { type: String, default: '' },
 });
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'blur']);
 
 const editor = ref(
     new Editor({
@@ -15,6 +15,9 @@ const editor = ref(
         extensions: [StarterKit, Link.configure({ openOnClick: false })],
         onUpdate: ({ editor }) => {
             emit('update:modelValue', editor.getHTML());
+        },
+        onBlur: () => {
+            emit('blur');
         },
     }),
 );

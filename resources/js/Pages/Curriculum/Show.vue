@@ -132,7 +132,7 @@ const persistLessonOrder = (module) => {
                                     </button>
                                 </div>
                                 <div class="mt-2">
-                                    <RichTextEditor v-model="lesson.content" @update:model-value="updateLesson(lesson)" />
+                                    <RichTextEditor v-model="lesson.content" @blur="updateLesson(lesson)" />
                                 </div>
                             </div>
                         </template>

@@ -28,4 +28,13 @@ class Module extends Model
     {
         return $this->hasMany(Lesson::class)->orderBy('position');
     }
+
+    protected static function booted(): void
+    {
+        static::deleting(function (Module $module): void {
+            if (! $module->isForceDeleting()) {
+                $module->lessons()->delete();
+            }
+        });
+    }
 }

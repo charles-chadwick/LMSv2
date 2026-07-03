@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Course;
+use App\Models\Lesson;
 use App\Models\Module;
 use App\Models\User;
 use Database\Seeders\RolePermissionSeeder;
@@ -43,6 +44,18 @@ test('the owner can soft-delete a module', function (): void {
     $this->actingAs($instructor)->delete(route('modules.destroy', $module))->assertRedirect();
 
     expect($module->fresh()->trashed())->toBeTrue();
+});
+
+test('deleting a module soft-deletes its lessons', function (): void {
+    $instructor = User::factory()->instructor()->create();
+    $course = Course::factory()->for($instructor, 'instructor')->create();
+    $module = Module::factory()->for($course)->create();
+    $lesson = Lesson::factory()->for($module)->create();
+
+    $this->actingAs($instructor)->delete(route('modules.destroy', $module))->assertRedirect();
+
+    expect($module->fresh()->trashed())->toBeTrue()
+        ->and($lesson->fresh()->trashed())->toBeTrue();
 });
 
 test('the owner can reorder modules', function (): void {
