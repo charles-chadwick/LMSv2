@@ -48,7 +48,9 @@ Route::middleware('auth')->group(function (): void {
 
     Route::get('dashboard', [DashboardController::class, 'index'])->middleware('verified')->name('dashboard');
 
-    Route::resource('courses', CourseController::class)->except('show');
-    Route::post('courses/{course}/publish', PublishCourseController::class)->name('courses.publish');
-    Route::post('courses/{course}/archive', ArchiveCourseController::class)->name('courses.archive');
+    Route::middleware('verified')->group(function (): void {
+        Route::resource('courses', CourseController::class)->except('show');
+        Route::post('courses/{course}/publish', PublishCourseController::class)->name('courses.publish');
+        Route::post('courses/{course}/archive', ArchiveCourseController::class)->name('courses.archive');
+    });
 });
