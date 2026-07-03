@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\CourseLevel;
 use App\Enums\CourseStatus;
+use App\Models\Concerns\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,7 +19,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Course extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, LogsActivity, SoftDeletes;
+    use HasFactory, InteractsWithMedia, LogsActivity, Searchable, SoftDeletes;
 
     protected $fillable = [
         'instructor_id',
@@ -38,6 +39,22 @@ class Course extends Model implements HasMedia
             'level' => CourseLevel::class,
             'published_at' => 'datetime',
         ];
+    }
+
+    /**
+     * @return list<string>
+     */
+    protected function searchableFields(): array
+    {
+        return ['title', 'slug'];
+    }
+
+    /**
+     * @return list<string>
+     */
+    protected function fullTextSearchableFields(): array
+    {
+        return ['instructor.name'];
     }
 
     public function getRouteKeyName(): string
