@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\DropEnrollment;
 use App\Actions\EnrollStudent;
 use App\Models\Course;
 use App\Models\Enrollment;
@@ -19,6 +20,15 @@ class EnrollmentController extends Controller
         EnrollStudent::run($request->user(), $course);
 
         return back()->with('status', 'Enrolled.');
+    }
+
+    public function destroy(Enrollment $enrollment): RedirectResponse
+    {
+        $this->authorize('drop', $enrollment);
+
+        DropEnrollment::run($enrollment);
+
+        return back()->with('status', 'Enrollment dropped.');
     }
 
     public function index(Request $request): Response

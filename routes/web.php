@@ -60,6 +60,7 @@ Route::middleware('auth')->group(function (): void {
         Route::post('courses/{course}/publish', PublishCourseController::class)->name('courses.publish');
         Route::post('courses/{course}/archive', ArchiveCourseController::class)->name('courses.archive');
         Route::post('courses/{course}/enroll', [EnrollmentController::class, 'store'])->name('courses.enroll');
+        Route::delete('enrollments/{enrollment}', [EnrollmentController::class, 'destroy'])->name('enrollments.destroy');
         Route::get('courses/{course}/curriculum', [CurriculumController::class, 'show'])->name('curriculum.show');
 
         Route::post('courses/{course}/modules', [ModuleController::class, 'store'])->name('modules.store');
