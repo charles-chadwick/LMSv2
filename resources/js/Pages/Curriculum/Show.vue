@@ -1,5 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import RichTextEditor from '@/Components/RichTextEditor.vue';
 import { Head, router } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
 import draggable from 'vuedraggable';
@@ -130,13 +131,9 @@ const persistLessonOrder = (module) => {
                                         Delete
                                     </button>
                                 </div>
-                                <textarea
-                                    v-model="lesson.content"
-                                    rows="4"
-                                    class="mt-2 block w-full rounded border-gray-300 text-sm"
-                                    placeholder="Lesson content"
-                                    @blur="updateLesson(lesson)"
-                                />
+                                <div class="mt-2">
+                                    <RichTextEditor v-model="lesson.content" @update:model-value="updateLesson(lesson)" />
+                                </div>
                             </div>
                         </template>
                     </draggable>
