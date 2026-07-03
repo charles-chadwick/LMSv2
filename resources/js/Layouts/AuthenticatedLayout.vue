@@ -10,7 +10,10 @@ const canCreateCourses = computed(() => user.value.can?.create_courses ?? false)
     <div class="min-h-screen bg-gray-50 text-gray-900">
         <nav class="border-b bg-white">
             <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+                <div class="flex items-center gap-4">
                 <Link :href="route('dashboard')" class="font-semibold">LMS</Link>
+                <Link :href="route('catalog.index')" class="text-sm text-gray-600 hover:underline">Browse Courses</Link>
+                <Link :href="route('enrollments.index')" class="text-sm text-gray-600 hover:underline">My Courses</Link>
                 <Link
                     v-if="canCreateCourses"
                     :href="route('courses.index')"
@@ -18,6 +21,7 @@ const canCreateCourses = computed(() => user.value.can?.create_courses ?? false)
                 >
                     Courses
                 </Link>
+            </div>
 
                 <div class="flex items-center gap-4">
                     <span class="text-sm text-gray-600">{{ user.name }}</span>
