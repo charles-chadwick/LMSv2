@@ -93,3 +93,40 @@ test('the course detail reflects enrollment state after enrolling', function ():
         ->get(route('catalog.show', $course))
         ->assertInertia(fn ($page) => $page->where('is_enrolled', true));
 });
+
+test('the course detail exposes learning data for an enrolled user', function (): void {
+    $user = User::factory()->student()->create();
+    $course = Course::factory()->published()->create();
+    $module = Module::factory()->for($course)->create(['position' => 0]);
+    $lesson_a = Lesson::factory()->for($module)->create(['position' => 0]);
+    $lesson_b = Lesson::factory()->for($module)->create(['position' => 1]);
+    $enrollment = $user->enrollments()->create([
+        'course_id' => $course->id,
+        'status' => EnrollmentStatus::Active,
+        'enrolled_at' => now(),
+    ]);
+    $enrollment->lessonCompletions()->create(['lesson_id' => $lesson_a->id, 'completed_at' => now()]);
+
+    $this->actingAs($user)
+        ->get(route('catalog.show', $course))
+        ->assertInertia(fn ($page) => $page
+            ->where('can_learn', true)
+            ->where('course.modules.0.lessons.0.slug', $lesson_a->slug)
+            ->where('completed_lesson_ids', [$lesson_a->id])
+            ->where('first_incomplete_lesson_slug', $lesson_b->slug)
+        );
+});
+
+test('the course detail marks can_learn false for a non-enrolled student', function (): void {
+    $user = User::factory()->student()->create();
+    $course = Course::factory()->published()->create();
+    Module::factory()->for($course)->create();
+
+    $this->actingAs($user)
+        ->get(route('catalog.show', $course))
+        ->assertInertia(fn ($page) => $page
+            ->where('can_learn', false)
+            ->where('completed_lesson_ids', [])
+            ->where('first_incomplete_lesson_slug', null)
+        );
+});

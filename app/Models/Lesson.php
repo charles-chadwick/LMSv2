@@ -42,4 +42,9 @@ class Lesson extends Model implements HasMedia
     {
         return $this->hasMany(Test::class);
     }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 }

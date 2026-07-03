@@ -7,10 +7,12 @@ use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\CompleteLessonController;
 use App\Http\Controllers\CourseCatalogController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EnrollmentController;
+use App\Http\Controllers\LessonController;
 use App\Http\Controllers\PublishCourseController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -60,5 +62,8 @@ Route::middleware('auth')->group(function (): void {
         Route::get('catalog/{course}', [CourseCatalogController::class, 'show'])->name('catalog.show');
 
         Route::get('my-courses', [EnrollmentController::class, 'index'])->name('enrollments.index');
+
+        Route::get('learn/{course}/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
+        Route::post('learn/{course}/{lesson}/complete', CompleteLessonController::class)->name('lessons.complete');
     });
 });

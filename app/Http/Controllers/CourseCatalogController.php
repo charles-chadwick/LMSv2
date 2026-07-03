@@ -40,6 +40,17 @@ class CourseCatalogController extends Controller
 
         $course->load(['instructor:id,name', 'modules.lessons']);
 
+        $user = $request->user();
+        $enrollment = $user->enrollments()->where('course_id', $course->id)->first();
+        $completed_lesson_ids = $enrollment
+            ? $enrollment->lessonCompletions()->pluck('lesson_id')->all()
+            : [];
+
+        $ordered_lessons = $course->modules->flatMap(fn ($module) => $module->lessons)->values();
+        $first_incomplete = $ordered_lessons->first(
+            fn ($lesson): bool => ! in_array($lesson->id, $completed_lesson_ids, true),
+        );
+
         return Inertia::render('Catalog/Show', [
             'course' => [
                 'title' => $course->title,
@@ -51,11 +62,16 @@ class CourseCatalogController extends Controller
                 'modules' => $course->modules->map(fn ($module): array => [
                     'title' => $module->title,
                     'lessons' => $module->lessons->map(fn ($lesson): array => [
+                        'id' => $lesson->id,
+                        'slug' => $lesson->slug,
                         'title' => $lesson->title,
                     ])->values(),
                 ])->values(),
             ],
-            'is_enrolled' => $request->user()->enrollments()->where('course_id', $course->id)->exists(),
+            'is_enrolled' => $enrollment !== null,
+            'can_learn' => $user->can('learn', $course),
+            'completed_lesson_ids' => $completed_lesson_ids,
+            'first_incomplete_lesson_slug' => $first_incomplete?->slug,
         ]);
     }
 }
