@@ -15,6 +15,10 @@ class DropEnrollment
      */
     public function handle(Enrollment $enrollment): Enrollment
     {
+        if ($enrollment->status !== EnrollmentStatus::Active) {
+            return $enrollment;
+        }
+
         $enrollment->update(['status' => EnrollmentStatus::Dropped]);
 
         return $enrollment;

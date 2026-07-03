@@ -16,3 +16,12 @@ test('it transitions an active enrollment to dropped and preserves progress', fu
         ->and($result->progress_percentage)->toBe(40)
         ->and($enrollment->fresh()->status)->toBe(EnrollmentStatus::Dropped);
 });
+
+test('it does not overwrite a completed enrollment', function (): void {
+    $enrollment = Enrollment::factory()->completed()->create();
+
+    $result = DropEnrollment::run($enrollment);
+
+    expect($result->status)->toBe(EnrollmentStatus::Completed)
+        ->and($enrollment->fresh()->status)->toBe(EnrollmentStatus::Completed);
+});

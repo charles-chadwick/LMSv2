@@ -41,3 +41,27 @@ test('an unrelated user cannot learn a course', function (): void {
 
     expect($user->can('learn', $course))->toBeFalse();
 });
+
+test('a dropped student cannot learn a course', function (): void {
+    $user = User::factory()->student()->create();
+    $course = Course::factory()->published()->create();
+    $user->enrollments()->create([
+        'course_id' => $course->id,
+        'status' => EnrollmentStatus::Dropped,
+        'enrolled_at' => now(),
+    ]);
+
+    expect($user->can('learn', $course))->toBeFalse();
+});
+
+test('a completed student can still learn a course for review', function (): void {
+    $user = User::factory()->student()->create();
+    $course = Course::factory()->published()->create();
+    $user->enrollments()->create([
+        'course_id' => $course->id,
+        'status' => EnrollmentStatus::Completed,
+        'enrolled_at' => now(),
+    ]);
+
+    expect($user->can('learn', $course))->toBeTrue();
+});

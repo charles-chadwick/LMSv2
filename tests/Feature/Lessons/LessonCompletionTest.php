@@ -2,6 +2,7 @@
 
 use App\Enums\EnrollmentStatus;
 use App\Models\Course;
+use App\Models\Enrollment;
 use App\Models\Lesson;
 use App\Models\LessonCompletion;
 use App\Models\Module;
@@ -81,6 +82,18 @@ test('marking a lesson that belongs to another course 404s', function (): void {
     $foreign_lesson = Lesson::factory()->for($other_module)->create();
 
     $this->actingAs($user)->post(route('lessons.complete', [$course, $foreign_lesson]))->assertNotFound();
+});
+
+test('a dropped student cannot mark a lesson complete', function (): void {
+    $user = User::factory()->student()->create();
+    $course = Course::factory()->published()->create();
+    $module = Module::factory()->for($course)->create();
+    $lesson = Lesson::factory()->for($module)->create();
+    Enrollment::factory()->for($user, 'student')->for($course)->dropped()->create();
+
+    $this->actingAs($user)->post(route('lessons.complete', [$course, $lesson]))->assertForbidden();
+
+    expect(LessonCompletion::count())->toBe(0);
 });
 
 test('a guest cannot mark a lesson complete', function (): void {
