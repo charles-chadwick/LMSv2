@@ -166,3 +166,48 @@ test('an instructor cannot update another instructors course', function (): void
 test('guests are redirected from the course index to login', function (): void {
     $this->get(route('courses.index'))->assertRedirect(route('login'));
 });
+
+test('an instructor can publish their own course', function (): void {
+    $instructor = User::factory()->instructor()->create();
+    $course = Course::factory()->for($instructor, 'instructor')->create([
+        'status' => CourseStatus::Draft,
+        'published_at' => null,
+    ]);
+
+    $this->actingAs($instructor)
+        ->post(route('courses.publish', $course))
+        ->assertRedirect();
+
+    $course->refresh();
+    expect($course->status)->toBe(CourseStatus::Published)
+        ->and($course->published_at)->not->toBeNull();
+});
+
+test('an instructor can archive their own course', function (): void {
+    $instructor = User::factory()->instructor()->create();
+    $course = Course::factory()->for($instructor, 'instructor')->published()->create();
+
+    $this->actingAs($instructor)
+        ->post(route('courses.archive', $course))
+        ->assertRedirect();
+
+    expect($course->fresh()->status)->toBe(CourseStatus::Archived);
+});
+
+test('an instructor cannot publish another instructors course', function (): void {
+    $instructor = User::factory()->instructor()->create();
+    $course = Course::factory()->create();
+
+    $this->actingAs($instructor)
+        ->post(route('courses.publish', $course))
+        ->assertForbidden();
+});
+
+test('a student cannot publish a course', function (): void {
+    $student = User::factory()->student()->create();
+    $course = Course::factory()->create();
+
+    $this->actingAs($student)
+        ->post(route('courses.publish', $course))
+        ->assertForbidden();
+});
