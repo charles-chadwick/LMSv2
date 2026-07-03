@@ -7,6 +7,7 @@ use App\Actions\CompleteLesson;
 use App\Actions\EnrollStudent;
 use App\Actions\GradeAssignmentSubmission;
 use App\Actions\ScoreTestAttempt;
+use App\Enums\UserRole;
 use App\Models\Assignment;
 use App\Models\AssignmentSubmission;
 use App\Models\Course;
@@ -29,25 +30,12 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(RolePermissionSeeder::class);
+        $this->call(UserTableSeeder::class);
 
-        // Well-known accounts for signing in during development.
-        User::factory()->admin()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-        ]);
-
-        $primaryInstructor = User::factory()->instructor()->create([
-            'name' => 'Instructor User',
-            'email' => 'instructor@example.com',
-        ]);
-
-        $primaryStudent = User::factory()->student()->create([
-            'name' => 'Student User',
-            'email' => 'student@example.com',
-        ]);
-
-        $instructors = User::factory()->instructor()->count(3)->create()->push($primaryInstructor);
-        $students = User::factory()->student()->count(20)->create()->push($primaryStudent);
+        // Users are seeded from the Rick and Morty character data; pull the
+        // instructors and students back out to build course content around them.
+        $instructors = User::role(UserRole::Instructor->value)->get();
+        $students = User::role(UserRole::Student->value)->get();
 
         $instructors->each(function (User $instructor) use ($students): void {
             Course::factory()
@@ -103,17 +91,25 @@ class DatabaseSeeder extends Seeder
 
         $test->setRelation('questions', $questions);
 
-        // Discussions with a few replies each.
+        // Discussions with a few replies each, voiced with (bad-word filtered)
+        // lines lifted from the Rick and Morty scripts.
         Discussion::factory()
             ->count(2)
             ->for($course)
-            ->state(fn () => ['user_id' => $students->random()->id])
+            ->state(fn () => [
+                'user_id' => $students->random()->id,
+                'title' => RickAndMortyDialogue::next(),
+                'body' => self::dialogueLines(fake()->numberBetween(2, 4)),
+            ])
             ->create()
             ->each(function (Discussion $discussion) use ($students): void {
                 DiscussionReply::factory()
                     ->count(fake()->numberBetween(1, 4))
                     ->for($discussion)
-                    ->state(fn () => ['user_id' => $students->random()->id])
+                    ->state(fn () => [
+                        'user_id' => $students->random()->id,
+                        'body' => self::dialogueLines(fake()->numberBetween(1, 3)),
+                    ])
                     ->create();
             });
 
@@ -200,5 +196,16 @@ class DatabaseSeeder extends Seeder
     protected function positionSequence(): Closure
     {
         return fn ($sequence) => ['position' => $sequence->index];
+    }
+
+    /**
+     * Join the given number of clean Rick and Morty dialogue lines into a
+     * paragraph-style block of body text.
+     */
+    protected static function dialogueLines(int $count): string
+    {
+        return collect(range(1, $count))
+            ->map(fn (): string => RickAndMortyDialogue::next())
+            ->implode("\n\n");
     }
 }
