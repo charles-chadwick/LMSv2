@@ -29,7 +29,7 @@ test('an enrolled user can view a lesson', function (): void {
         ->assertInertia(fn ($page) => $page
             ->component('Lessons/Show')
             ->where('lesson.title', 'Intro')
-            ->where('is_complete', false)
+            ->where('is_complete', true)
             ->where('can_complete', true)
         );
 });

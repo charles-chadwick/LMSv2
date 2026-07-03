@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\CompleteLesson;
 use App\Models\Course;
 use App\Models\Lesson;
 use Illuminate\Http\Request;
@@ -24,6 +25,11 @@ class LessonController extends Controller
         $next = $index < $ordered_lessons->count() - 1 ? $ordered_lessons[$index + 1] : null;
 
         $enrollment = $request->user()->enrollments()->where('course_id', $course->id)->first();
+
+        if ($enrollment !== null) {
+            CompleteLesson::run($enrollment, $lesson);
+        }
+
         $completed_lesson_ids = $enrollment
             ? $enrollment->lessonCompletions()->pluck('lesson_id')->all()
             : [];

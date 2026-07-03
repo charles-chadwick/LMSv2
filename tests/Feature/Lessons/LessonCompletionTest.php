@@ -13,7 +13,7 @@ beforeEach(function (): void {
     $this->seed(RolePermissionSeeder::class);
 });
 
-test('an enrolled user can mark a lesson complete and progress updates', function (): void {
+test('viewing a lesson marks it complete and updates progress', function (): void {
     $user = User::factory()->student()->create();
     $course = Course::factory()->published()->create();
     $module = Module::factory()->for($course)->create(['position' => 0]);
@@ -25,13 +25,13 @@ test('an enrolled user can mark a lesson complete and progress updates', functio
         'enrolled_at' => now(),
     ]);
 
-    $this->actingAs($user)->post(route('lessons.complete', [$course, $lesson_a]))->assertRedirect();
+    $this->actingAs($user)->get(route('lessons.show', [$course, $lesson_a]))->assertOk();
 
     expect(LessonCompletion::where(['enrollment_id' => $enrollment->id, 'lesson_id' => $lesson_a->id])->exists())->toBeTrue()
         ->and($enrollment->fresh()->progress_percentage)->toBe(50);
 });
 
-test('marking a lesson complete twice is idempotent', function (): void {
+test('viewing a lesson twice is idempotent', function (): void {
     $user = User::factory()->student()->create();
     $course = Course::factory()->published()->create();
     $module = Module::factory()->for($course)->create();
@@ -42,34 +42,66 @@ test('marking a lesson complete twice is idempotent', function (): void {
         'enrolled_at' => now(),
     ]);
 
-    $this->actingAs($user)->post(route('lessons.complete', [$course, $lesson]));
-    $this->actingAs($user)->post(route('lessons.complete', [$course, $lesson]));
+    $this->actingAs($user)->get(route('lessons.show', [$course, $lesson]));
+    $this->actingAs($user)->get(route('lessons.show', [$course, $lesson]));
 
     expect(LessonCompletion::where(['enrollment_id' => $enrollment->id, 'lesson_id' => $lesson->id])->count())->toBe(1)
         ->and($enrollment->fresh()->progress_percentage)->toBe(100);
 });
 
-test('a previewing instructor cannot mark a lesson complete', function (): void {
+test('viewing every lesson drives progress to 100 percent', function (): void {
+    $user = User::factory()->student()->create();
+    $course = Course::factory()->published()->create();
+    $module = Module::factory()->for($course)->create(['position' => 0]);
+    $lesson_a = Lesson::factory()->for($module)->create(['position' => 0]);
+    $lesson_b = Lesson::factory()->for($module)->create(['position' => 1]);
+    $enrollment = $user->enrollments()->create([
+        'course_id' => $course->id,
+        'status' => EnrollmentStatus::Active,
+        'enrolled_at' => now(),
+    ]);
+
+    $this->actingAs($user)->get(route('lessons.show', [$course, $lesson_a]));
+    $this->actingAs($user)->get(route('lessons.show', [$course, $lesson_b]));
+
+    expect($enrollment->fresh()->progress_percentage)->toBe(100);
+});
+
+test('a previewing instructor does not generate a completion', function (): void {
     $instructor = User::factory()->instructor()->create();
     $course = Course::factory()->for($instructor, 'instructor')->create();
     $module = Module::factory()->for($course)->create();
     $lesson = Lesson::factory()->for($module)->create();
 
-    $this->actingAs($instructor)->post(route('lessons.complete', [$course, $lesson]))->assertForbidden();
+    $this->actingAs($instructor)->get(route('lessons.show', [$course, $lesson]))->assertOk();
 
     expect(LessonCompletion::count())->toBe(0);
 });
 
-test('an unrelated user cannot mark a lesson complete', function (): void {
+test('an unrelated user cannot view a lesson and creates no completion', function (): void {
     $user = User::factory()->student()->create();
     $course = Course::factory()->published()->create();
     $module = Module::factory()->for($course)->create();
     $lesson = Lesson::factory()->for($module)->create();
 
-    $this->actingAs($user)->post(route('lessons.complete', [$course, $lesson]))->assertForbidden();
+    $this->actingAs($user)->get(route('lessons.show', [$course, $lesson]))->assertForbidden();
+
+    expect(LessonCompletion::count())->toBe(0);
 });
 
-test('marking a lesson that belongs to another course 404s', function (): void {
+test('a dropped student cannot view a lesson and creates no completion', function (): void {
+    $user = User::factory()->student()->create();
+    $course = Course::factory()->published()->create();
+    $module = Module::factory()->for($course)->create();
+    $lesson = Lesson::factory()->for($module)->create();
+    Enrollment::factory()->for($user, 'student')->for($course)->dropped()->create();
+
+    $this->actingAs($user)->get(route('lessons.show', [$course, $lesson]))->assertForbidden();
+
+    expect(LessonCompletion::count())->toBe(0);
+});
+
+test('viewing a lesson that belongs to another course 404s', function (): void {
     $user = User::factory()->student()->create();
     $course = Course::factory()->published()->create();
     $user->enrollments()->create([
@@ -81,25 +113,13 @@ test('marking a lesson that belongs to another course 404s', function (): void {
     $other_module = Module::factory()->for($other_course)->create();
     $foreign_lesson = Lesson::factory()->for($other_module)->create();
 
-    $this->actingAs($user)->post(route('lessons.complete', [$course, $foreign_lesson]))->assertNotFound();
+    $this->actingAs($user)->get(route('lessons.show', [$course, $foreign_lesson]))->assertNotFound();
 });
 
-test('a dropped student cannot mark a lesson complete', function (): void {
-    $user = User::factory()->student()->create();
-    $course = Course::factory()->published()->create();
-    $module = Module::factory()->for($course)->create();
-    $lesson = Lesson::factory()->for($module)->create();
-    Enrollment::factory()->for($user, 'student')->for($course)->dropped()->create();
-
-    $this->actingAs($user)->post(route('lessons.complete', [$course, $lesson]))->assertForbidden();
-
-    expect(LessonCompletion::count())->toBe(0);
-});
-
-test('a guest cannot mark a lesson complete', function (): void {
+test('a guest is redirected to login', function (): void {
     $course = Course::factory()->published()->create();
     $module = Module::factory()->for($course)->create();
     $lesson = Lesson::factory()->for($module)->create();
 
-    $this->post(route('lessons.complete', [$course, $lesson]))->assertRedirect(route('login'));
+    $this->get(route('lessons.show', [$course, $lesson]))->assertRedirect(route('login'));
 });
