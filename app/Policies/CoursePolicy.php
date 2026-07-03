@@ -53,4 +53,9 @@ class CoursePolicy
         return $user->enrollments()->where('course_id', $course->id)->exists()
             || $course->instructor_id === $user->id;
     }
+
+    public function manageContent(User $user, Course $course): bool
+    {
+        return $user->can('manage course content') && $course->instructor_id === $user->id;
+    }
 }

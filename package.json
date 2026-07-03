@@ -17,6 +17,10 @@
     "dependencies": {
         "@inertiajs/vite": "^3.6.0",
         "@inertiajs/vue3": "^3.6.0",
-        "vue": "^3.5.39"
+        "@tiptap/extension-link": "^3.27.1",
+        "@tiptap/starter-kit": "^3.27.1",
+        "@tiptap/vue-3": "^3.27.1",
+        "vue": "^3.5.39",
+        "vuedraggable": "^4.1.0"
     }
 }

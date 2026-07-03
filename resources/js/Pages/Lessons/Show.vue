@@ -48,7 +48,7 @@ const markComplete = () => {
 
         <h1 class="mb-4 text-2xl font-semibold">{{ lesson.title }}</h1>
 
-        <div class="mb-8 whitespace-pre-line text-gray-700">{{ lesson.content }}</div>
+        <div class="prose mb-8 max-w-none text-gray-700" v-html="lesson.content" />
 
         <div v-if="can_complete" class="mb-8">
             <span v-if="is_complete" class="rounded bg-green-100 px-4 py-2 text-sm font-medium text-green-700">
