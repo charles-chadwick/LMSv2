@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 
 defineProps({
     enrollments: {
@@ -8,6 +8,13 @@ defineProps({
         required: true,
     },
 });
+
+const drop = (enrollment) => {
+    if (! confirm(`Drop "${enrollment.course_title}"? Your progress is saved if you re-enroll.`)) {
+        return;
+    }
+    router.delete(route('enrollments.destroy', enrollment.id), { preserveScroll: true });
+};
 </script>
 
 <template>
@@ -26,10 +33,11 @@ defineProps({
                     <th class="py-2">Course</th>
                     <th class="py-2">Status</th>
                     <th class="py-2">Progress</th>
+                    <th class="py-2 text-right">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="enrollment in enrollments" :key="enrollment.course_slug" class="border-b">
+                <tr v-for="enrollment in enrollments" :key="enrollment.id" class="border-b">
                     <td class="py-3 font-medium">
                         <Link :href="route('catalog.show', enrollment.course_slug)" class="text-blue-600 hover:underline">
                             {{ enrollment.course_title }}
@@ -39,6 +47,16 @@ defineProps({
                         <span class="rounded-full bg-gray-100 px-2 py-1 text-xs">{{ enrollment.status }}</span>
                     </td>
                     <td class="py-3">{{ enrollment.progress_percentage }}%</td>
+                    <td class="py-3 text-right">
+                        <button
+                            v-if="enrollment.status === 'Active'"
+                            type="button"
+                            class="text-red-600 hover:underline"
+                            @click="drop(enrollment)"
+                        >
+                            Drop
+                        </button>
+                    </td>
                 </tr>
             </tbody>
         </table>

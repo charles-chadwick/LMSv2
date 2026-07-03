@@ -108,3 +108,15 @@ test('my courses lists only the current users enrollments', function (): void {
 test('a guest is redirected to login from my courses', function (): void {
     $this->get(route('enrollments.index'))->assertRedirect(route('login'));
 });
+
+test('my courses exposes the enrollment id for each row', function (): void {
+    $user = User::factory()->student()->create();
+    $course = Course::factory()->published()->create();
+    $enrollment = Enrollment::factory()->for($user, 'student')->for($course)->create();
+
+    $this->actingAs($user)
+        ->get(route('enrollments.index'))
+        ->assertInertia(fn ($page) => $page
+            ->where('enrollments.0.id', $enrollment->id)
+        );
+});

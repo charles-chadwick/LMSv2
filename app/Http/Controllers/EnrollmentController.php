@@ -38,6 +38,7 @@ class EnrollmentController extends Controller
             ->latest('enrolled_at')
             ->get()
             ->map(fn (Enrollment $enrollment): array => [
+                'id' => $enrollment->id,
                 'course_title' => $enrollment->course->title,
                 'course_slug' => $enrollment->course->slug,
                 'status' => $enrollment->status,
