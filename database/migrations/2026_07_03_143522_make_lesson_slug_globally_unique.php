@@ -9,6 +9,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('lessons', function (Blueprint $table): void {
+            // Preserve an index on module_id so the foreign key stays backed
+            // once the composite unique that currently covers it is dropped.
+            $table->index('module_id');
             $table->dropUnique(['module_id', 'slug']);
             $table->unique('slug');
         });
@@ -19,6 +22,7 @@ return new class extends Migration
         Schema::table('lessons', function (Blueprint $table): void {
             $table->dropUnique(['slug']);
             $table->unique(['module_id', 'slug']);
+            $table->dropIndex(['module_id']);
         });
     }
 };
