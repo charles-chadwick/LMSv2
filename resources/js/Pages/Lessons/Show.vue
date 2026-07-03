@@ -1,29 +1,15 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link, router } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { Head, Link } from '@inertiajs/vue3';
 
-const props = defineProps({
+defineProps({
     course: { type: Object, required: true },
     lesson: { type: Object, required: true },
     prev: { type: Object, default: null },
     next: { type: Object, default: null },
     is_complete: { type: Boolean, required: true },
-    can_complete: { type: Boolean, required: true },
     progress_percentage: { type: Number, required: true },
 });
-
-const completing = ref(false);
-
-const markComplete = () => {
-    completing.value = true;
-    router.post(route('lessons.complete', [props.course.slug, props.lesson.slug]), {}, {
-        preserveScroll: true,
-        onFinish: () => {
-            completing.value = false;
-        },
-    });
-};
 </script>
 
 <template>
@@ -50,19 +36,10 @@ const markComplete = () => {
 
         <div class="prose mb-8 max-w-none text-gray-700" v-html="lesson.content" />
 
-        <div v-if="can_complete" class="mb-8">
-            <span v-if="is_complete" class="rounded bg-green-100 px-4 py-2 text-sm font-medium text-green-700">
+        <div v-if="is_complete" class="mb-8">
+            <span class="rounded bg-green-100 px-4 py-2 text-sm font-medium text-green-700">
                 Completed &check;
             </span>
-            <button
-                v-else
-                type="button"
-                :disabled="completing"
-                class="rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
-                @click="markComplete"
-            >
-                Mark as complete
-            </button>
         </div>
 
         <div class="flex items-center justify-between border-t pt-4 text-sm">
