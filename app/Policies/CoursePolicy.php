@@ -58,4 +58,9 @@ class CoursePolicy
     {
         return $user->can('manage course content') && $course->instructor_id === $user->id;
     }
+
+    public function viewRoster(User $user, Course $course): bool
+    {
+        return $user->can('update courses') && $course->instructor_id === $user->id;
+    }
 }

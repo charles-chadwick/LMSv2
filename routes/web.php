@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\CompleteLessonController;
+use App\Http\Controllers\Course\RosterController;
 use App\Http\Controllers\CourseCatalogController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\Curriculum\CurriculumController;
@@ -62,6 +63,7 @@ Route::middleware('auth')->group(function (): void {
         Route::post('courses/{course}/enroll', [EnrollmentController::class, 'store'])->name('courses.enroll');
         Route::delete('enrollments/{enrollment}', [EnrollmentController::class, 'destroy'])->name('enrollments.destroy');
         Route::get('courses/{course}/curriculum', [CurriculumController::class, 'show'])->name('curriculum.show');
+        Route::get('courses/{course}/students', [RosterController::class, 'index'])->name('courses.roster');
 
         Route::post('courses/{course}/modules', [ModuleController::class, 'store'])->name('modules.store');
         Route::put('modules/{module}', [ModuleController::class, 'update'])->name('modules.update');
