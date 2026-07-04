@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Course\DiscussionController;
 use App\Http\Controllers\Course\RosterController;
 use App\Http\Controllers\CourseCatalogController;
 use App\Http\Controllers\CourseController;
@@ -84,5 +85,9 @@ Route::middleware('auth')->group(function (): void {
         Route::patch('users/{user}', [UserProfileController::class, 'update'])->name('users.update');
         Route::post('users/{user}/avatar', [UserProfileController::class, 'storeAvatar'])->name('users.avatar.store');
         Route::delete('users/{user}/avatar', [UserProfileController::class, 'destroyAvatar'])->name('users.avatar.destroy');
+
+        Route::get('courses/{course}/discussions', [DiscussionController::class, 'index'])->name('discussions.index');
+        Route::post('courses/{course}/discussions', [DiscussionController::class, 'store'])->name('discussions.store');
+        Route::get('discussions/{discussion}', [DiscussionController::class, 'show'])->name('discussions.show');
     });
 });
