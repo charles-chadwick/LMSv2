@@ -1,7 +1,7 @@
+import './echo';
+
 import { createInertiaApp } from '@inertiajs/vue3';
 import { route, ZiggyVue } from 'ziggy-js';
-
-import './echo';
 
 createInertiaApp({
     withApp(app, { page }) {
