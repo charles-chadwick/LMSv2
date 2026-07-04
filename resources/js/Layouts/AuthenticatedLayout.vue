@@ -4,6 +4,7 @@ import { computed } from 'vue';
 import { LayoutDashboard, Compass, GraduationCap, BookMarked, LogOut, ChevronDown, UserRound } from 'lucide-vue-next';
 import { useSectionTheme, THEMES } from '@/composables/useSectionTheme';
 import UserAvatar from '@/Components/UserAvatar.vue';
+import NotificationBell from '@/Components/NotificationBell.vue';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -69,34 +70,38 @@ const navItems = computed(() => {
                 </div>
 
                 <!-- User menu -->
-                <DropdownMenu>
-                    <DropdownMenuTrigger
-                        class="flex items-center gap-2 rounded-full py-1 pl-1 pr-2 outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
-                    >
-                        <UserAvatar :user="user" size="md" />
-                        <span class="hidden text-sm font-medium sm:block">{{ user.name }}</span>
-                        <ChevronDown class="size-4 text-muted-foreground" />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" class="w-56">
-                        <DropdownMenuLabel class="flex flex-col gap-0.5">
-                            <span class="font-semibold">{{ user.name }}</span>
-                            <span class="text-xs font-normal capitalize text-muted-foreground">{{ primaryRole }}</span>
-                        </DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem as-child>
-                            <Link :href="route('users.show', user.id)" class="w-full cursor-pointer">
-                                <UserRound class="size-4" />
-                                Profile
-                            </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem as-child variant="destructive">
-                            <Link :href="route('logout')" method="post" as="button" class="w-full cursor-pointer">
-                                <LogOut class="size-4" />
-                                Log out
-                            </Link>
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <div class="flex items-center gap-3">
+                    <NotificationBell />
+
+                    <DropdownMenu>
+                        <DropdownMenuTrigger
+                            class="flex items-center gap-2 rounded-full py-1 pl-1 pr-2 outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
+                        >
+                            <UserAvatar :user="user" size="md" />
+                            <span class="hidden text-sm font-medium sm:block">{{ user.name }}</span>
+                            <ChevronDown class="size-4 text-muted-foreground" />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" class="w-56">
+                            <DropdownMenuLabel class="flex flex-col gap-0.5">
+                                <span class="font-semibold">{{ user.name }}</span>
+                                <span class="text-xs font-normal capitalize text-muted-foreground">{{ primaryRole }}</span>
+                            </DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem as-child>
+                                <Link :href="route('users.show', user.id)" class="w-full cursor-pointer">
+                                    <UserRound class="size-4" />
+                                    Profile
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem as-child variant="destructive">
+                                <Link :href="route('logout')" method="post" as="button" class="w-full cursor-pointer">
+                                    <LogOut class="size-4" />
+                                    Log out
+                                </Link>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
             </div>
 
             <!-- Section accent line -->
