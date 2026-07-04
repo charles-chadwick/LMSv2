@@ -39,6 +39,20 @@ it('shows a conversation to a participant and marks their unread messages read',
     expect($conversation->messages()->whereNull('read_at')->count())->toBe(0);
 });
 
+it('lets an admin view a conversation for moderation without marking messages read', function () {
+    $admin = User::factory()->admin()->create();
+    $student = User::factory()->student()->create();
+    $instructor = User::factory()->instructor()->create();
+    $conversation = Conversation::factory()->create(['student_id' => $student->id, 'instructor_id' => $instructor->id]);
+    Message::factory()->for($conversation)->create(['sender_id' => $instructor->id, 'read_at' => null]);
+
+    $this->actingAs($admin)
+        ->get(route('conversations.show', $conversation))
+        ->assertInertia(fn (Assert $page) => $page->component('Messages/Show')->where('conversation.id', $conversation->id));
+
+    expect($conversation->messages()->whereNull('read_at')->count())->toBe(1);
+});
+
 it('forbids a non-participant from viewing a conversation', function () {
     $conversation = Conversation::factory()->create();
     $outsider = User::factory()->student()->create();

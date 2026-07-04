@@ -60,16 +60,18 @@ class MessageController extends Controller
 
         $user = $request->user();
 
-        $conversation->messages()
-            ->where('sender_id', '!=', $user->id)
-            ->whereNull('read_at')
-            ->update(['read_at' => now()]);
+        if ($conversation->hasParticipant($user)) {
+            $conversation->messages()
+                ->where('sender_id', '!=', $user->id)
+                ->whereNull('read_at')
+                ->update(['read_at' => now()]);
 
-        $user->unreadNotifications()
-            ->where('data->type', 'new_message')
-            ->where('data->conversation_id', $conversation->id)
-            ->get()
-            ->each->markAsRead();
+            $user->unreadNotifications()
+                ->where('data->type', 'new_message')
+                ->where('data->conversation_id', $conversation->id)
+                ->get()
+                ->each->markAsRead();
+        }
 
         $conversation->load(['messages' => fn ($query) => $query->with('sender')->oldest()]);
 
