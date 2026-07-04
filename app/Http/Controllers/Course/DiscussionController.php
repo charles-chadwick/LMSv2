@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Course;
 use App\Actions\CreateDiscussion;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Discussion\StoreDiscussionRequest;
+use App\Http\Requests\Discussion\UpdateDiscussionRequest;
 use App\Http\Resources\DiscussionResource;
 use App\Models\Course;
 use App\Models\Discussion;
@@ -58,5 +59,41 @@ class DiscussionController extends Controller
         return Inertia::render('Discussions/Show', [
             'discussion' => DiscussionResource::make($discussion)->resolve(),
         ]);
+    }
+
+    public function update(UpdateDiscussionRequest $request, Discussion $discussion): RedirectResponse
+    {
+        $this->authorize('update', $discussion);
+
+        $discussion->update($request->validated());
+
+        return redirect()->route('discussions.show', $discussion)->with('status', 'Discussion updated.');
+    }
+
+    public function destroy(Discussion $discussion): RedirectResponse
+    {
+        $this->authorize('delete', $discussion);
+
+        $discussion->delete();
+
+        return redirect()->route('discussions.index', $discussion->course)->with('status', 'Discussion deleted.');
+    }
+
+    public function pin(Discussion $discussion): RedirectResponse
+    {
+        $this->authorize('pin', $discussion);
+
+        $discussion->update(['is_pinned' => ! $discussion->is_pinned]);
+
+        return back();
+    }
+
+    public function lock(Discussion $discussion): RedirectResponse
+    {
+        $this->authorize('lock', $discussion);
+
+        $discussion->update(['is_locked' => ! $discussion->is_locked]);
+
+        return back();
     }
 }
