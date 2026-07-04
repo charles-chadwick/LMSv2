@@ -30,6 +30,18 @@ const messageForm = useForm({
     user_id: props.profile.id,
 });
 
+const passwordForm = useForm({
+    password: '',
+    password_confirmation: '',
+});
+
+const submitPassword = () => {
+    passwordForm.put(route('users.password.update', props.profile.id), {
+        preserveScroll: true,
+        onSuccess: () => passwordForm.reset(),
+    });
+};
+
 const startConversation = () => messageForm.post(route('conversations.store'));
 
 const file_input = ref(null);
@@ -165,6 +177,37 @@ const hasAvatar = () => Boolean(props.profile.avatar_preview || props.profile.av
                             leave-to-class="opacity-0"
                         >
                             <p v-if="profileForm.recentlySuccessful" class="text-sm text-emerald-600">Saved.</p>
+                        </transition>
+                    </div>
+                </form>
+
+                <form class="mt-6 rounded-2xl border bg-card p-6 shadow-sm" @submit.prevent="submitPassword">
+                    <h2 class="font-display text-base font-bold tracking-tight">Password</h2>
+                    <p class="mt-1 text-sm text-muted-foreground">Choose a new password for your account.</p>
+
+                    <div class="mt-5 grid gap-5 sm:grid-cols-2">
+                        <div class="flex flex-col gap-1.5">
+                            <Label for="password">New password</Label>
+                            <Input id="password" v-model="passwordForm.password" type="password" autocomplete="new-password" />
+                            <p v-if="passwordForm.errors.password" class="text-sm text-destructive">
+                                {{ passwordForm.errors.password }}
+                            </p>
+                        </div>
+                        <div class="flex flex-col gap-1.5">
+                            <Label for="password_confirmation">Confirm new password</Label>
+                            <Input id="password_confirmation" v-model="passwordForm.password_confirmation" type="password" autocomplete="new-password" />
+                        </div>
+                    </div>
+
+                    <div class="mt-6 flex items-center gap-3">
+                        <Button type="submit" :disabled="passwordForm.processing">Update password</Button>
+                        <transition
+                            enter-active-class="transition ease-out duration-300"
+                            enter-from-class="opacity-0"
+                            leave-active-class="transition ease-in duration-200"
+                            leave-to-class="opacity-0"
+                        >
+                            <p v-if="passwordForm.recentlySuccessful" class="text-sm text-emerald-600">Password updated.</p>
                         </transition>
                     </div>
                 </form>
