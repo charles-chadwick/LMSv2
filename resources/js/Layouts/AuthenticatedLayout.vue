@@ -5,6 +5,7 @@ import { LayoutDashboard, Compass, GraduationCap, BookMarked, LogOut, ChevronDow
 import { useSectionTheme, THEMES } from '@/composables/useSectionTheme';
 import UserAvatar from '@/Components/UserAvatar.vue';
 import NotificationBell from '@/Components/NotificationBell.vue';
+import MessagesBadge from '@/Components/MessagesBadge.vue';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -71,6 +72,7 @@ const navItems = computed(() => {
 
                 <!-- User menu -->
                 <div class="flex items-center gap-3">
+                    <MessagesBadge />
                     <NotificationBell />
 
                     <DropdownMenu>

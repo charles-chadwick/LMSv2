@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRole;
 use App\Http\Requests\Profile\StoreAvatarRequest;
 use App\Http\Requests\Profile\UpdateProfileRequest;
 use App\Http\Resources\UserSummaryResource;
@@ -21,9 +22,16 @@ class UserProfileController extends Controller
     {
         $is_own_profile = $request->user()->is($user);
 
+        $viewer = $request->user();
+        $can_message = ! $is_own_profile && (
+            ($viewer->hasRole(UserRole::Student->value) && $user->hasRole(UserRole::Instructor->value))
+            || ($viewer->hasRole(UserRole::Instructor->value) && $user->hasRole(UserRole::Student->value))
+        );
+
         return Inertia::render('Profile/Show', [
             'profile' => UserSummaryResource::make($user)->resolve(),
             'can_edit' => $is_own_profile,
+            'can_message' => $can_message,
             'form' => $is_own_profile
                 ? [
                     'first_name' => $user->first_name,

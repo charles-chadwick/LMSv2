@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Http\Resources\UserSummaryResource;
+use App\Models\Message;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
@@ -49,6 +50,13 @@ class HandleInertiaRequests extends Middleware
                             'create_courses' => $request->user()->can('create courses'),
                         ],
                         'unread_notifications_count' => $request->user()->unreadNotifications()->count(),
+                        'unread_messages_count' => Message::query()
+                            ->whereHas('conversation', fn ($query) => $query
+                                ->where('student_id', $request->user()->id)
+                                ->orWhere('instructor_id', $request->user()->id))
+                            ->where('sender_id', '!=', $request->user()->id)
+                            ->whereNull('read_at')
+                            ->count(),
                     ]
                     : null,
             ],
