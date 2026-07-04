@@ -1,11 +1,10 @@
 <script setup>
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import { LayoutDashboard, Compass, GraduationCap, BookMarked, LogOut, ChevronDown, UserRound } from 'lucide-vue-next';
+import { LayoutDashboard, Compass, GraduationCap, BookMarked, LogOut, ChevronDown, UserRound, Mail } from 'lucide-vue-next';
 import { useSectionTheme, THEMES } from '@/composables/useSectionTheme';
 import UserAvatar from '@/Components/UserAvatar.vue';
 import NotificationBell from '@/Components/NotificationBell.vue';
-import MessagesBadge from '@/Components/MessagesBadge.vue';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -19,6 +18,7 @@ const page = usePage();
 const user = computed(() => page.props.auth.user);
 const canCreateCourses = computed(() => user.value.can?.create_courses ?? false);
 const primaryRole = computed(() => user.value.role ?? user.value.roles?.[0] ?? 'Member');
+const unreadMessagesCount = computed(() => user.value.unread_messages_count ?? 0);
 
 const { section, theme } = useSectionTheme();
 
@@ -72,7 +72,6 @@ const navItems = computed(() => {
 
                 <!-- User menu -->
                 <div class="flex items-center gap-3">
-                    <MessagesBadge />
                     <NotificationBell />
 
                     <DropdownMenu>
@@ -93,6 +92,16 @@ const navItems = computed(() => {
                                 <Link :href="route('users.show', user.id)" class="w-full cursor-pointer">
                                     <UserRound class="size-4" />
                                     Profile
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem as-child>
+                                <Link :href="route('conversations.index')" class="w-full cursor-pointer">
+                                    <Mail class="size-4" />
+                                    Messages
+                                    <span
+                                        v-if="unreadMessagesCount > 0"
+                                        class="ml-auto rounded-full bg-red-500 px-1.5 text-xs text-white"
+                                    >{{ unreadMessagesCount }}</span>
                                 </Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem as-child variant="destructive">
