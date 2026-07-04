@@ -18,6 +18,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DiscussionReplyController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\LessonController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PublishCourseController;
 use App\Http\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Route;
@@ -97,5 +98,9 @@ Route::middleware('auth')->group(function (): void {
         Route::post('discussions/{discussion}/replies', [DiscussionReplyController::class, 'store'])->name('discussion-replies.store');
         Route::patch('discussion-replies/{reply}', [DiscussionReplyController::class, 'update'])->name('discussion-replies.update');
         Route::delete('discussion-replies/{reply}', [DiscussionReplyController::class, 'destroy'])->name('discussion-replies.destroy');
+
+        Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+        Route::post('notifications/{notification}/read', [NotificationController::class, 'read'])->name('notifications.read');
+        Route::post('notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.read-all');
     });
 });

@@ -48,6 +48,7 @@ class HandleInertiaRequests extends Middleware
                         'can' => [
                             'create_courses' => $request->user()->can('create courses'),
                         ],
+                        'unread_notifications_count' => $request->user()->unreadNotifications()->count(),
                     ]
                     : null,
             ],
