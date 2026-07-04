@@ -30,3 +30,22 @@ it('rate limits discussion reply posting to 30 per minute per user', function ()
         ->post(route('discussion-replies.store', $discussion), ['body' => 'r31'])
         ->assertStatus(429);
 });
+
+it('rate limits discussion posting to 30 per minute per user', function () {
+    Event::fake([DiscussionReplyPosted::class]);
+    Notification::fake();
+
+    $course = Course::factory()->create();
+    $member = User::factory()->student()->create();
+    Enrollment::factory()->for($member, 'student')->for($course)->create();
+
+    for ($i = 1; $i <= 30; $i++) {
+        $this->actingAs($member)
+            ->post(route('discussions.store', $course), ['title' => "t$i", 'body' => "d$i"])
+            ->assertRedirect();
+    }
+
+    $this->actingAs($member)
+        ->post(route('discussions.store', $course), ['title' => 't31', 'body' => 'd31'])
+        ->assertStatus(429);
+});
