@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\UserRole;
 use App\Http\Requests\Profile\StoreAvatarRequest;
+use App\Http\Requests\Profile\UpdatePasswordRequest;
 use App\Http\Requests\Profile\UpdateProfileRequest;
 use App\Http\Resources\UserSummaryResource;
 use App\Models\User;
@@ -50,6 +51,16 @@ class UserProfileController extends Controller
         $user->update($request->validated());
 
         return back()->with('status', 'Profile updated.');
+    }
+
+    /**
+     * Change the owner's password. The 'hashed' cast hashes the value on save.
+     */
+    public function updatePassword(UpdatePasswordRequest $request, User $user): RedirectResponse
+    {
+        $user->update($request->validated());
+
+        return back()->with('status', 'password-updated');
     }
 
     /**

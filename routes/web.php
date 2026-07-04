@@ -86,6 +86,7 @@ Route::middleware('auth')->group(function (): void {
 
         Route::get('users/{user}', [UserProfileController::class, 'show'])->name('users.show');
         Route::patch('users/{user}', [UserProfileController::class, 'update'])->name('users.update');
+        Route::put('users/{user}/password', [UserProfileController::class, 'updatePassword'])->name('users.password.update');
         Route::post('users/{user}/avatar', [UserProfileController::class, 'storeAvatar'])->name('users.avatar.store');
         Route::delete('users/{user}/avatar', [UserProfileController::class, 'destroyAvatar'])->name('users.avatar.destroy');
 
