@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import PageHeader from '@/Components/PageHeader.vue';
+import SearchInput from '@/Components/SearchInput.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
 import LevelBadge from '@/Components/LevelBadge.vue';
 import Pagination from '@/Components/Pagination.vue';
@@ -21,6 +22,10 @@ defineProps({
     courses: {
         type: Object,
         required: true,
+    },
+    filters: {
+        type: Object,
+        default: () => ({ search: '' }),
     },
 });
 
@@ -58,6 +63,10 @@ const archive = (course) => {
                 </Button>
             </template>
         </PageHeader>
+
+        <div class="mb-4">
+            <SearchInput :initial="filters.search ?? ''" placeholder="Search courses…" />
+        </div>
 
         <div
             v-if="courses.total === 0"
