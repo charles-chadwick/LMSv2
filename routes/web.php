@@ -15,6 +15,7 @@ use App\Http\Controllers\Curriculum\CurriculumController;
 use App\Http\Controllers\Curriculum\LessonController as CurriculumLessonController;
 use App\Http\Controllers\Curriculum\ModuleController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DiscussionReplyController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\PublishCourseController;
@@ -93,5 +94,8 @@ Route::middleware('auth')->group(function (): void {
         Route::delete('discussions/{discussion}', [DiscussionController::class, 'destroy'])->name('discussions.destroy');
         Route::post('discussions/{discussion}/pin', [DiscussionController::class, 'pin'])->name('discussions.pin');
         Route::post('discussions/{discussion}/lock', [DiscussionController::class, 'lock'])->name('discussions.lock');
+        Route::post('discussions/{discussion}/replies', [DiscussionReplyController::class, 'store'])->name('discussion-replies.store');
+        Route::patch('discussion-replies/{reply}', [DiscussionReplyController::class, 'update'])->name('discussion-replies.update');
+        Route::delete('discussion-replies/{reply}', [DiscussionReplyController::class, 'destroy'])->name('discussion-replies.destroy');
     });
 });
