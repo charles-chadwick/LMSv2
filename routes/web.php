@@ -89,13 +89,13 @@ Route::middleware('auth')->group(function (): void {
         Route::delete('users/{user}/avatar', [UserProfileController::class, 'destroyAvatar'])->name('users.avatar.destroy');
 
         Route::get('courses/{course}/discussions', [DiscussionController::class, 'index'])->name('discussions.index');
-        Route::post('courses/{course}/discussions', [DiscussionController::class, 'store'])->name('discussions.store');
+        Route::post('courses/{course}/discussions', [DiscussionController::class, 'store'])->middleware('throttle:30,1')->name('discussions.store');
         Route::get('discussions/{discussion}', [DiscussionController::class, 'show'])->name('discussions.show');
         Route::patch('discussions/{discussion}', [DiscussionController::class, 'update'])->name('discussions.update');
         Route::delete('discussions/{discussion}', [DiscussionController::class, 'destroy'])->name('discussions.destroy');
         Route::post('discussions/{discussion}/pin', [DiscussionController::class, 'pin'])->name('discussions.pin');
         Route::post('discussions/{discussion}/lock', [DiscussionController::class, 'lock'])->name('discussions.lock');
-        Route::post('discussions/{discussion}/replies', [DiscussionReplyController::class, 'store'])->name('discussion-replies.store');
+        Route::post('discussions/{discussion}/replies', [DiscussionReplyController::class, 'store'])->middleware('throttle:30,1')->name('discussion-replies.store');
         Route::patch('discussion-replies/{reply}', [DiscussionReplyController::class, 'update'])->name('discussion-replies.update');
         Route::delete('discussion-replies/{reply}', [DiscussionReplyController::class, 'destroy'])->name('discussion-replies.destroy');
 

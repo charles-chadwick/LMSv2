@@ -17,6 +17,8 @@ class DiscussionController extends Controller
 {
     private const PER_PAGE = 15;
 
+    private const MAX_REPLY_DEPTH = 20;
+
     public function index(Course $course): Response
     {
         $this->authorize('viewAny', [Discussion::class, $course]);
@@ -49,11 +51,21 @@ class DiscussionController extends Controller
     {
         $this->authorize('view', $discussion);
 
-        $discussion->load([
+        $load = [
             'author',
             'course:id,title,slug',
-            'replies' => fn ($query) => $query->whereNull('parent_id')->with(['author', 'childrenRecursive']),
-        ]);
+            'replies' => fn ($query) => $query->whereNull('parent_id'),
+        ];
+
+        $path = 'replies';
+        for ($level = 0; $level < self::MAX_REPLY_DEPTH; $level++) {
+            $load[] = "{$path}.author";
+            $path .= '.children';
+            $load[] = $path;
+        }
+        $load[] = "{$path}.author";
+
+        $discussion->load($load);
 
         return Inertia::render('Discussions/Show', [
             'discussion' => DiscussionResource::make($discussion)->resolve(),

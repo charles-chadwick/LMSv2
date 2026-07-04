@@ -27,8 +27,8 @@ class DiscussionReplyResource extends JsonResource
             // Inertia's props resolver doesn't treat it as Responsable and wrap it in a
             // "data" key when it serializes the response.
             'children' => $this->whenLoaded(
-                'childrenRecursive',
-                fn () => DiscussionReplyResource::collection($this->childrenRecursive)->resolve($request)
+                'children',
+                fn () => DiscussionReplyResource::collection($this->children)->resolve($request)
             ),
         ];
     }
