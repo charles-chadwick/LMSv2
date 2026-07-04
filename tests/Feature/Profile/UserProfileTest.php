@@ -3,6 +3,7 @@
 use App\Models\User;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 beforeEach(function (): void {
@@ -118,4 +119,61 @@ test('a user can remove their own avatar', function (): void {
         ->assertRedirect();
 
     expect($user->refresh()->avatar_thumb_url)->toBeNull();
+});
+
+test('a user can change their own password', function (): void {
+    $user = User::factory()->student()->create();
+
+    $this->actingAs($user)
+        ->put(route('users.password.update', $user), [
+            'password' => 'new-secure-password',
+            'password_confirmation' => 'new-secure-password',
+        ])
+        ->assertRedirect()
+        ->assertSessionHas('status', 'password-updated');
+
+    expect(Hash::check('new-secure-password', $user->refresh()->password))->toBeTrue();
+});
+
+test('changing password requires a matching confirmation', function (): void {
+    $user = User::factory()->student()->create();
+    $original = $user->password;
+
+    $this->actingAs($user)
+        ->put(route('users.password.update', $user), [
+            'password' => 'new-secure-password',
+            'password_confirmation' => 'does-not-match',
+        ])
+        ->assertSessionHasErrors('password');
+
+    expect($user->refresh()->password)->toBe($original);
+});
+
+test('changing password rejects a weak password', function (): void {
+    $user = User::factory()->student()->create();
+    $original = $user->password;
+
+    $this->actingAs($user)
+        ->put(route('users.password.update', $user), [
+            'password' => 'short',
+            'password_confirmation' => 'short',
+        ])
+        ->assertSessionHasErrors('password');
+
+    expect($user->refresh()->password)->toBe($original);
+});
+
+test('a user cannot change another users password', function (): void {
+    $user = User::factory()->student()->create();
+    $other = User::factory()->student()->create();
+    $original = $other->password;
+
+    $this->actingAs($user)
+        ->put(route('users.password.update', $other), [
+            'password' => 'new-secure-password',
+            'password_confirmation' => 'new-secure-password',
+        ])
+        ->assertForbidden();
+
+    expect($other->refresh()->password)->toBe($original);
 });
