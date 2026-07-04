@@ -18,6 +18,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DiscussionReplyController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\LessonController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PublishCourseController;
 use App\Http\Controllers\UserProfileController;
@@ -102,5 +103,9 @@ Route::middleware('auth')->group(function (): void {
         Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
         Route::post('notifications/{notification}/read', [NotificationController::class, 'read'])->name('notifications.read');
         Route::post('notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.read-all');
+
+        Route::get('conversations', [MessageController::class, 'index'])->name('conversations.index');
+        Route::post('conversations', [MessageController::class, 'store'])->name('conversations.store');
+        Route::get('conversations/{conversation}', [MessageController::class, 'show'])->name('conversations.show');
     });
 });
