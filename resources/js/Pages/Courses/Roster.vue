@@ -4,7 +4,8 @@ import PageHeader from '@/Components/PageHeader.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
 import ProgressBar from '@/Components/ProgressBar.vue';
 import StudentSearch from '@/Components/StudentSearch.vue';
-import { Avatar, AvatarFallback } from '@/Components/ui/avatar';
+import UserHoverCard from '@/Components/UserHoverCard.vue';
+import Pagination from '@/Components/Pagination.vue';
 import { Button } from '@/Components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import { Head, router, useForm } from '@inertiajs/vue3';
@@ -13,7 +14,7 @@ import { Users, UserPlus } from 'lucide-vue-next';
 
 const props = defineProps({
     course: { type: Object, required: true },
-    students: { type: Array, required: true },
+    students: { type: Object, required: true },
 });
 
 const selected_student = ref(null);
@@ -38,20 +39,10 @@ const enroll = () => {
 };
 
 const remove = (student) => {
-    if (! confirm(`Remove ${student.name} from "${props.course.title}"?`)) {
+    if (! confirm(`Remove ${student.user.name} from "${props.course.title}"?`)) {
         return;
     }
     router.delete(route('enrollments.destroy', student.id), { preserveScroll: true });
-};
-
-const initialsFor = (name) => {
-    return (name || '?')
-        .split(' ')
-        .map((part) => part[0])
-        .filter(Boolean)
-        .slice(0, 2)
-        .join('')
-        .toUpperCase();
 };
 </script>
 
@@ -62,7 +53,7 @@ const initialsFor = (name) => {
         <PageHeader
             :title="course.title"
             eyebrow="Roster"
-            :subtitle="`${students.length} ${students.length === 1 ? 'student' : 'students'} enrolled`"
+            :subtitle="`${students.total} ${students.total === 1 ? 'student' : 'students'} enrolled`"
         />
 
         <!-- Add-student toolbar (kept out of the header so its results dropdown isn't clipped) -->
@@ -89,7 +80,7 @@ const initialsFor = (name) => {
         </div>
 
         <div
-            v-if="students.length === 0"
+            v-if="students.total === 0"
             class="rounded-2xl border border-dashed bg-card p-12 text-center"
         >
             <div class="mx-auto flex size-12 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600">
@@ -111,16 +102,9 @@ const initialsFor = (name) => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    <TableRow v-for="student in students" :key="student.id">
+                    <TableRow v-for="student in students.data" :key="student.id">
                         <TableCell>
-                            <div class="flex items-center gap-3">
-                                <Avatar class="size-8">
-                                    <AvatarFallback class="bg-amber-500/15 text-xs font-bold text-amber-700">
-                                        {{ initialsFor(student.name) }}
-                                    </AvatarFallback>
-                                </Avatar>
-                                <span class="font-semibold text-foreground">{{ student.name }}</span>
-                            </div>
+                            <UserHoverCard :user="student.user" />
                         </TableCell>
                         <TableCell>
                             <StatusBadge :status="student.status" />
@@ -145,5 +129,7 @@ const initialsFor = (name) => {
                 </TableBody>
             </Table>
         </div>
+
+        <Pagination :paginator="students" />
     </AuthenticatedLayout>
 </template>

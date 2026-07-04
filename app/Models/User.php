@@ -6,6 +6,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -14,8 +15,10 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Activitylog\Models\Concerns\CausesActivity;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
+use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Permission\Traits\HasRoles;
 
 #[Fillable(['first_name', 'last_name', 'email', 'password'])]
@@ -36,6 +39,58 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Register the single-file avatar collection with display conversions.
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('avatars')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
+    }
+
+    /**
+     * Generate the inline (thumb) and popover/profile (preview) avatar sizes.
+     */
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->fit(Fit::Crop, 64, 64)
+            ->nonQueued()
+            ->performOnCollections('avatars');
+
+        $this->addMediaConversion('preview')
+            ->fit(Fit::Crop, 160, 160)
+            ->nonQueued()
+            ->performOnCollections('avatars');
+    }
+
+    /**
+     * URL of the small inline avatar, or null when none uploaded.
+     */
+    protected function avatarThumbUrl(): Attribute
+    {
+        return Attribute::get(fn (): ?string => $this->avatarUrlForConversion('thumb'));
+    }
+
+    /**
+     * URL of the larger popover/profile avatar, or null when none uploaded.
+     */
+    protected function avatarPreviewUrl(): Attribute
+    {
+        return Attribute::get(fn (): ?string => $this->avatarUrlForConversion('preview'));
+    }
+
+    /**
+     * Resolve a conversion URL for the avatar, or null when no avatar exists.
+     */
+    private function avatarUrlForConversion(string $conversion): ?string
+    {
+        $url = $this->getFirstMediaUrl('avatars', $conversion);
+
+        return $url === '' ? null : $url;
     }
 
     /**

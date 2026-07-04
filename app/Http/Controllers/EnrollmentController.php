@@ -11,6 +11,11 @@ use Inertia\Response;
 
 class EnrollmentController extends Controller
 {
+    /**
+     * Enrollments shown per page on the My Courses list.
+     */
+    private const PER_PAGE = 15;
+
     public function destroy(Enrollment $enrollment): RedirectResponse
     {
         $this->authorize('drop', $enrollment);
@@ -25,8 +30,9 @@ class EnrollmentController extends Controller
         $enrollments = $request->user()->enrollments()
             ->with('course:id,title,slug')
             ->latest('enrolled_at')
-            ->get()
-            ->map(fn (Enrollment $enrollment): array => [
+            ->paginate(self::PER_PAGE)
+            ->withQueryString()
+            ->through(fn (Enrollment $enrollment): array => [
                 'id' => $enrollment->id,
                 'course_title' => $enrollment->course->title,
                 'course_slug' => $enrollment->course->slug,

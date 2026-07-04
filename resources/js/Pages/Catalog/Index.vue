@@ -2,12 +2,14 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import PageHeader from '@/Components/PageHeader.vue';
 import LevelBadge from '@/Components/LevelBadge.vue';
+import UserHoverCard from '@/Components/UserHoverCard.vue';
+import Pagination from '@/Components/Pagination.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import { CircleCheckBig, ArrowUpRight, Compass } from 'lucide-vue-next';
 
 defineProps({
     courses: {
-        type: Array,
+        type: Object,
         required: true,
     },
 });
@@ -23,7 +25,7 @@ defineProps({
         />
 
         <div
-            v-if="courses.length === 0"
+            v-if="courses.total === 0"
             class="rounded-2xl border border-dashed bg-card p-12 text-center"
         >
             <div class="mx-auto flex size-12 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600">
@@ -35,7 +37,7 @@ defineProps({
 
         <div v-else class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             <Link
-                v-for="course in courses"
+                v-for="course in courses.data"
                 :key="course.id"
                 :href="route('catalog.show', course.slug)"
                 class="group relative flex flex-col overflow-hidden rounded-2xl border bg-card p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-md"
@@ -59,10 +61,16 @@ defineProps({
                 <p class="mt-1.5 line-clamp-2 flex-1 text-sm text-muted-foreground">{{ course.summary }}</p>
 
                 <div class="mt-4 flex items-center justify-between border-t pt-3">
-                    <span class="text-xs font-medium text-muted-foreground">{{ course.instructor }}</span>
+                    <UserHoverCard
+                        :user="course.instructor"
+                        size="sm"
+                        name-class="text-xs font-medium text-muted-foreground"
+                    />
                     <ArrowUpRight class="size-4 text-emerald-600 opacity-0 transition-opacity group-hover:opacity-100" />
                 </div>
             </Link>
         </div>
+
+        <Pagination :paginator="courses" />
     </AuthenticatedLayout>
 </template>

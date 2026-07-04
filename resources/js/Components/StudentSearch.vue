@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch, onBeforeUnmount } from 'vue';
 import { Input } from '@/Components/ui/input';
+import UserAvatar from '@/Components/UserAvatar.vue';
 import { Search, Loader2 } from 'lucide-vue-next';
 
 const props = defineProps({
@@ -139,9 +140,10 @@ onBeforeUnmount(() => {
                 v-for="student in results"
                 :key="student.id"
                 type="button"
-                class="flex w-full items-center rounded-md px-2.5 py-1.5 text-left text-sm hover:bg-accent hover:text-accent-foreground"
+                class="flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-left text-sm hover:bg-accent hover:text-accent-foreground"
                 @mousedown.prevent="choose(student)"
             >
+                <UserAvatar :user="student" size="sm" />
                 {{ student.name }}
             </button>
             <p v-if="! loading && results.length === 0" class="px-2.5 py-1.5 text-sm text-muted-foreground">

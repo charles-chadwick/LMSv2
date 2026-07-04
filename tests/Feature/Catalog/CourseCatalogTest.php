@@ -23,8 +23,32 @@ test('the catalog lists only published courses', function (): void {
         ->assertOk()
         ->assertInertia(fn ($page) => $page
             ->component('Catalog/Index')
-            ->has('courses', 1)
-            ->where('courses.0.title', 'Published One')
+            ->has('courses.data', 1)
+            ->where('courses.data.0.title', 'Published One')
+            ->where('courses.total', 1)
+        );
+});
+
+test('the catalog paginates published courses', function (): void {
+    $user = User::factory()->student()->create();
+    Course::factory()->count(15)->published()->create();
+
+    $this->actingAs($user)
+        ->get(route('catalog.index'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->has('courses.data', 12)
+            ->where('courses.total', 15)
+            ->where('courses.per_page', 12)
+            ->where('courses.last_page', 2)
+            ->has('courses.links')
+        );
+
+    $this->actingAs($user)
+        ->get(route('catalog.index', ['page' => 2]))
+        ->assertInertia(fn ($page) => $page
+            ->has('courses.data', 3)
+            ->where('courses.current_page', 2)
         );
 });
 
@@ -39,7 +63,7 @@ test('the catalog marks courses the user is already enrolled in', function (): v
 
     $this->actingAs($user)
         ->get(route('catalog.index'))
-        ->assertInertia(fn ($page) => $page->where('courses.0.is_enrolled', true));
+        ->assertInertia(fn ($page) => $page->where('courses.data.0.is_enrolled', true));
 });
 
 test('a guest is redirected to login from the catalog', function (): void {

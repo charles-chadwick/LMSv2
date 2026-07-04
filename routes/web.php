@@ -17,6 +17,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\PublishCourseController;
+use App\Http\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -78,5 +79,10 @@ Route::middleware('auth')->group(function (): void {
         Route::get('my-courses', [EnrollmentController::class, 'index'])->name('enrollments.index');
 
         Route::get('learn/{course}/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
+
+        Route::get('users/{user}', [UserProfileController::class, 'show'])->name('users.show');
+        Route::patch('users/{user}', [UserProfileController::class, 'update'])->name('users.update');
+        Route::post('users/{user}/avatar', [UserProfileController::class, 'storeAvatar'])->name('users.avatar.store');
+        Route::delete('users/{user}/avatar', [UserProfileController::class, 'destroyAvatar'])->name('users.avatar.destroy');
     });
 });

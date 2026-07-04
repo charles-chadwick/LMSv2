@@ -54,8 +54,8 @@ test('an instructor sees only their own courses on the index', function (): void
         ->assertOk()
         ->assertInertia(fn ($page) => $page
             ->component('Courses/Index')
-            ->has('courses', 1)
-            ->where('courses.0.title', 'Mine')
+            ->has('courses.data', 1)
+            ->where('courses.data.0.title', 'Mine')
         );
 });
 
@@ -66,7 +66,21 @@ test('an admin sees every course on the index', function (): void {
     $this->actingAs($admin)
         ->get(route('courses.index'))
         ->assertOk()
-        ->assertInertia(fn ($page) => $page->has('courses', 3));
+        ->assertInertia(fn ($page) => $page->has('courses.data', 3));
+});
+
+test('the courses index paginates', function (): void {
+    $admin = User::factory()->admin()->create();
+    Course::factory()->count(20)->create();
+
+    $this->actingAs($admin)
+        ->get(route('courses.index'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->has('courses.data', 15)
+            ->where('courses.total', 20)
+            ->where('courses.last_page', 2)
+        );
 });
 
 test('an instructor can store a new draft course', function (): void {

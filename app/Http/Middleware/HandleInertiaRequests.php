@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Resources\UserSummaryResource;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
@@ -41,7 +42,8 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user()
                     ? [
-                        ...$request->user()->only('id', 'name', 'email'),
+                        ...UserSummaryResource::make($request->user())->resolve($request),
+                        'email' => $request->user()->email,
                         'roles' => $request->user()->getRoleNames()->all(),
                         'can' => [
                             'create_courses' => $request->user()->can('create courses'),
