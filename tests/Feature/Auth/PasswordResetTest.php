@@ -44,8 +44,8 @@ test('the password can be reset with a valid token', function (): void {
         $this->post('/reset-password', [
             'token' => $notification->token,
             'email' => $user->email,
-            'password' => 'new-password',
-            'password_confirmation' => 'new-password',
+            'password' => 'New-Passw0rd!',
+            'password_confirmation' => 'New-Passw0rd!',
         ])->assertRedirect(route('login'));
 
         return true;

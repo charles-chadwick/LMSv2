@@ -126,13 +126,13 @@ test('a user can change their own password', function (): void {
 
     $this->actingAs($user)
         ->put(route('users.password.update', $user), [
-            'password' => 'new-secure-password',
-            'password_confirmation' => 'new-secure-password',
+            'password' => 'Str0ng-Pass!',
+            'password_confirmation' => 'Str0ng-Pass!',
         ])
         ->assertRedirect()
         ->assertSessionHas('status', 'password-updated');
 
-    expect(Hash::check('new-secure-password', $user->refresh()->password))->toBeTrue();
+    expect(Hash::check('Str0ng-Pass!', $user->refresh()->password))->toBeTrue();
 });
 
 test('changing password requires a matching confirmation', function (): void {
@@ -162,6 +162,25 @@ test('changing password rejects a weak password', function (): void {
 
     expect($user->refresh()->password)->toBe($original);
 });
+
+test('changing password enforces upper, lower, number, and symbol', function (string $password): void {
+    $user = User::factory()->student()->create();
+    $original = $user->password;
+
+    $this->actingAs($user)
+        ->put(route('users.password.update', $user), [
+            'password' => $password,
+            'password_confirmation' => $password,
+        ])
+        ->assertSessionHasErrors('password');
+
+    expect($user->refresh()->password)->toBe($original);
+})->with([
+    'no uppercase' => ['str0ng-pass!'],
+    'no lowercase' => ['STR0NG-PASS!'],
+    'no number' => ['Strong-Pass!'],
+    'no symbol' => ['Str0ngPass1'],
+]);
 
 test('a user cannot change another users password', function (): void {
     $user = User::factory()->student()->create();
