@@ -1,5 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import LessonDiscussions from '@/Components/LessonDiscussions.vue';
 import { Head, Link } from '@inertiajs/vue3';
 
 defineProps({
@@ -9,6 +10,7 @@ defineProps({
     next: { type: Object, default: null },
     is_complete: { type: Boolean, required: true },
     progress_percentage: { type: Number, required: true },
+    lessonDiscussions: { type: Array, default: () => [] },
 });
 </script>
 
@@ -60,5 +62,7 @@ defineProps({
             </Link>
             <span v-else />
         </div>
+
+        <LessonDiscussions :course="course" :lesson="lesson" :discussions="lessonDiscussions" />
     </AuthenticatedLayout>
 </template>

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Actions\CompleteLesson;
 use App\Enums\EnrollmentStatus;
+use App\Http\Resources\DiscussionResource;
 use App\Models\Course;
+use App\Models\Discussion;
 use App\Models\Lesson;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -38,6 +40,15 @@ class LessonController extends Controller
             ? $enrollment->lessonCompletions()->pluck('lesson_id')->all()
             : [];
 
+        $lessonDiscussions = Discussion::query()
+            ->where('course_id', $course->id)
+            ->forLesson($lesson->id)
+            ->with('author')
+            ->withCount('replies')
+            ->latest()
+            ->get()
+            ->map(fn (Discussion $discussion) => DiscussionResource::make($discussion)->resolve());
+
         return Inertia::render('Lessons/Show', [
             'course' => [
                 'title' => $course->title,
@@ -53,6 +64,7 @@ class LessonController extends Controller
             'next' => $next ? ['title' => $next->title, 'slug' => $next->slug] : null,
             'is_complete' => in_array($lesson->id, $completed_lesson_ids, true),
             'progress_percentage' => $enrollment ? $enrollment->progress_percentage : 0,
+            'lessonDiscussions' => $lessonDiscussions,
         ]);
     }
 }

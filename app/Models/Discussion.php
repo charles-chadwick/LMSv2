@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,6 +15,7 @@ class Discussion extends Model
 
     protected $fillable = [
         'course_id',
+        'lesson_id',
         'user_id',
         'title',
         'body',
@@ -32,6 +34,21 @@ class Discussion extends Model
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);
+    }
+
+    public function lesson(): BelongsTo
+    {
+        return $this->belongsTo(Lesson::class);
+    }
+
+    public function scopeForCourseLevel(Builder $query): Builder
+    {
+        return $query->whereNull('lesson_id');
+    }
+
+    public function scopeForLesson(Builder $query, int $lesson_id): Builder
+    {
+        return $query->where('lesson_id', $lesson_id);
     }
 
     public function author(): BelongsTo
