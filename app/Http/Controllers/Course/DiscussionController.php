@@ -52,8 +52,7 @@ class DiscussionController extends Controller
         $discussion->load([
             'author',
             'course:id,title,slug',
-            'replies' => fn ($query) => $query->whereNull('parent_id')->with('author'),
-            'replies.children' => fn ($query) => $query->with('author'),
+            'replies' => fn ($query) => $query->whereNull('parent_id')->with(['author', 'childrenRecursive']),
         ]);
 
         return Inertia::render('Discussions/Show', [

@@ -38,4 +38,9 @@ class DiscussionReply extends Model
     {
         return $this->hasMany(DiscussionReply::class, 'parent_id');
     }
+
+    public function childrenRecursive(): HasMany
+    {
+        return $this->children()->with(['author', 'childrenRecursive']);
+    }
 }

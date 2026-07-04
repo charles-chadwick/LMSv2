@@ -33,7 +33,7 @@ const submit = () => form.post(route('discussion-replies.store', props.discussio
         </div>
         <div class="ml-6 border-l pl-3">
             <DiscussionReplyItem
-                v-for="child in reply.children"
+                v-for="child in reply.children ?? []"
                 :key="child.id"
                 :reply="child"
                 :discussion-id="discussionId"
