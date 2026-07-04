@@ -14,3 +14,10 @@ it('shapes the new-message notification for database + broadcast', function () {
         ->and($data['type'])->toBe('new_message')
         ->and($data['conversation_id'])->toBe($message->conversation_id);
 });
+
+it('broadcasts under the new_message type so live listeners can match it', function () {
+    $message = Message::factory()->create();
+    $notification = new NewMessage($message);
+
+    expect($notification->broadcastType())->toBe('new_message');
+});

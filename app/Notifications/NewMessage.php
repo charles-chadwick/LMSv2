@@ -40,4 +40,9 @@ class NewMessage extends Notification implements ShouldQueue
     {
         return new BroadcastMessage($this->toArray($notifiable));
     }
+
+    public function broadcastType(): string
+    {
+        return 'new_message';
+    }
 }
