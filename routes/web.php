@@ -107,5 +107,8 @@ Route::middleware('auth')->group(function (): void {
         Route::get('conversations', [MessageController::class, 'index'])->name('conversations.index');
         Route::post('conversations', [MessageController::class, 'store'])->name('conversations.store');
         Route::get('conversations/{conversation}', [MessageController::class, 'show'])->name('conversations.show');
+        Route::post('conversations/{conversation}/messages', [MessageController::class, 'sendMessage'])
+            ->middleware('throttle:30,1')
+            ->name('messages.store');
     });
 });

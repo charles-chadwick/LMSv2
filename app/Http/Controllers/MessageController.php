@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\SendMessage;
 use App\Actions\StartConversation;
 use App\Http\Requests\Message\StartConversationRequest;
+use App\Http\Requests\Message\StoreMessageRequest;
 use App\Http\Resources\MessageResource;
 use App\Http\Resources\UserSummaryResource;
 use App\Models\Conversation;
@@ -72,5 +74,14 @@ class MessageController extends Controller
                 'messages' => MessageResource::collection($conversation->messages)->resolve($request),
             ],
         ]);
+    }
+
+    public function sendMessage(StoreMessageRequest $request, Conversation $conversation): RedirectResponse
+    {
+        $this->authorize('send', $conversation);
+
+        SendMessage::run($conversation, $request->user(), $request->validated());
+
+        return back();
     }
 }
