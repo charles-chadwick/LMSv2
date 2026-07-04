@@ -12,6 +12,7 @@ import { Upload, Trash2 } from 'lucide-vue-next';
 const props = defineProps({
     profile: { type: Object, required: true },
     can_edit: { type: Boolean, default: false },
+    can_message: { type: Boolean, default: false },
     form: { type: Object, default: null },
 });
 
@@ -24,6 +25,12 @@ const profileForm = useForm({
 const avatarForm = useForm({
     avatar: null,
 });
+
+const messageForm = useForm({
+    user_id: props.profile.id,
+});
+
+const startConversation = () => messageForm.post(route('conversations.store'));
 
 const file_input = ref(null);
 
@@ -72,6 +79,17 @@ const hasAvatar = () => Boolean(props.profile.avatar_preview || props.profile.av
                     <UserAvatar :user="profile" size="xl" />
                     <p class="mt-4 font-display text-lg font-bold tracking-tight text-foreground">{{ profile.name }}</p>
                     <p class="mt-0.5 text-sm font-medium capitalize text-muted-foreground">{{ profile.role }}</p>
+
+                    <Button
+                        v-if="can_message"
+                        type="button"
+                        size="sm"
+                        class="mt-5 w-full"
+                        :disabled="messageForm.processing"
+                        @click="startConversation"
+                    >
+                        Message
+                    </Button>
 
                     <div v-if="can_edit" class="mt-5 flex w-full flex-col gap-2">
                         <input
