@@ -27,7 +27,13 @@ class DiscussionResource extends JsonResource
             'author' => UserSummaryResource::make($this->author)->resolve($request),
             'created_at' => $this->created_at?->toIso8601String(),
             'replies_count' => $this->whenCounted('replies'),
-            'replies' => DiscussionReplyResource::collection($this->whenLoaded('replies')),
+            // Resolved eagerly (rather than left as an unresolved ResourceCollection) so
+            // Inertia's props resolver doesn't treat it as Responsable and wrap it in a
+            // "data" key when it serializes the response.
+            'replies' => $this->whenLoaded(
+                'replies',
+                fn () => DiscussionReplyResource::collection($this->replies)->resolve($request)
+            ),
         ];
     }
 }
