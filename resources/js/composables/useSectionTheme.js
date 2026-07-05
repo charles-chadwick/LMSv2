@@ -68,6 +68,18 @@ const THEMES = {
         icon: 'bg-amber-500/15 text-amber-600',
         hoverBorder: 'hover:border-amber-300',
     },
+    users: {
+        key: 'users',
+        label: 'Users',
+        text: 'text-rose-600',
+        solid: 'bg-rose-600 text-white hover:bg-rose-700',
+        soft: 'bg-rose-500/10 text-rose-700',
+        ring: 'focus-visible:ring-rose-500',
+        accent: 'bg-rose-500',
+        gradient: 'from-rose-500 to-pink-500',
+        icon: 'bg-rose-500/15 text-rose-600',
+        hoverBorder: 'hover:border-rose-300',
+    },
 };
 
 /**
@@ -84,6 +96,9 @@ function sectionForPath(pathname) {
     }
     if (pathname.startsWith('/my-courses') || pathname.startsWith('/learn')) {
         return 'my';
+    }
+    if (pathname.startsWith('/users')) {
+        return 'users';
     }
     if (pathname.startsWith('/courses')) {
         return 'manage';

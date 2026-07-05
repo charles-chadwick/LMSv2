@@ -22,6 +22,7 @@ use App\Http\Controllers\LessonController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PublishCourseController;
+use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -90,6 +91,7 @@ Route::middleware('auth')->group(function (): void {
 
         Route::get('learn/{course}/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
 
+        Route::get('users', [UserManagementController::class, 'index'])->name('users.index');
         Route::get('users/{user}', [UserProfileController::class, 'show'])->name('users.show');
         Route::patch('users/{user}', [UserProfileController::class, 'update'])->name('users.update');
         Route::put('users/{user}/password', [UserProfileController::class, 'updatePassword'])->name('users.password.update');

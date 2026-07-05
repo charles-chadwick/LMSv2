@@ -1,7 +1,7 @@
 <script setup>
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import { LayoutDashboard, Compass, GraduationCap, BookMarked, LogOut, ChevronDown, UserRound, Mail } from 'lucide-vue-next';
+import { LayoutDashboard, Compass, GraduationCap, BookMarked, LogOut, ChevronDown, UserRound, Mail, UsersRound } from 'lucide-vue-next';
 import { useSectionTheme, THEMES } from '@/composables/useSectionTheme';
 import UserAvatar from '@/Components/UserAvatar.vue';
 import NotificationBell from '@/Components/NotificationBell.vue';
@@ -17,6 +17,7 @@ import {
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 const canCreateCourses = computed(() => user.value.can?.create_courses ?? false);
+const canManageUsers = computed(() => user.value.can?.manage_users ?? false);
 const primaryRole = computed(() => user.value.role ?? user.value.roles?.[0] ?? 'Member');
 const unreadMessagesCount = computed(() => user.value.unread_messages_count ?? 0);
 
@@ -31,6 +32,10 @@ const navItems = computed(() => {
 
     if (canCreateCourses.value) {
         items.push({ label: 'Courses', routeName: 'courses.index', icon: GraduationCap, key: 'manage' });
+    }
+
+    if (canManageUsers.value) {
+        items.push({ label: 'Users', routeName: 'users.index', icon: UsersRound, key: 'users' });
     }
 
     return items;
