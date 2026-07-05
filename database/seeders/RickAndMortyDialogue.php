@@ -18,7 +18,7 @@ class RickAndMortyDialogue
      *
      * @var Collection<int, string>
      */
-    private static Collection $allLines;
+    private static Collection $all_lines;
 
     /**
      * A random line of dialogue, suitable for use as a record title.
@@ -69,25 +69,25 @@ class RickAndMortyDialogue
     }
 
     /**
-     * A paragraph-style block of between $minLines and $maxLines random script
+     * A paragraph-style block of between $min_lines and $max_lines random script
      * lines, each with bad words censored to asterisks.
      */
-    public static function censoredBody(int $minLines, int $maxLines): string
+    public static function censoredBody(int $min_lines, int $max_lines): string
     {
-        if (! isset(self::$allLines)) {
+        if (! isset(self::$all_lines)) {
             self::loadAll();
         }
 
-        $count = random_int($minLines, min($maxLines, self::$allLines->count()));
+        $count = random_int($min_lines, min($max_lines, self::$all_lines->count()));
 
-        return self::$allLines->random($count)
+        return self::$all_lines->random($count)
             ->map(fn (string $line): string => trim(str_replace('"', '', FilterData::censor($line))))
             ->filter()
             ->implode("\n\n");
     }
 
     /**
-     * Load every non-empty script line into the {@see self::$allLines} pool.
+     * Load every non-empty script line into the {@see self::$all_lines} pool.
      */
     private static function loadAll(): void
     {
@@ -107,6 +107,6 @@ class RickAndMortyDialogue
 
         fclose($handle);
 
-        self::$allLines = $lines->values();
+        self::$all_lines = $lines->values();
     }
 }

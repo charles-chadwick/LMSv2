@@ -94,7 +94,7 @@ class ComputerScienceTitles
      *
      * @var Collection<int, string>|null
      */
-    private static ?Collection $courseQueue = null;
+    private static ?Collection $course_queue = null;
 
     /**
      * How many times the course pool has been exhausted and reused.
@@ -106,12 +106,12 @@ class ComputerScienceTitles
      */
     public static function nextCourse(): string
     {
-        if (self::$courseQueue === null) {
-            self::$courseQueue = collect(self::COURSE_TITLES)->shuffle();
+        if (self::$course_queue === null) {
+            self::$course_queue = collect(self::COURSE_TITLES)->shuffle();
         }
 
-        if (self::$courseQueue->isNotEmpty()) {
-            return self::$courseQueue->pop();
+        if (self::$course_queue->isNotEmpty()) {
+            return self::$course_queue->pop();
         }
 
         self::$overflow++;
@@ -140,7 +140,7 @@ class ComputerScienceTitles
      */
     public static function reset(): void
     {
-        self::$courseQueue = null;
+        self::$course_queue = null;
         self::$overflow = 0;
     }
 }
