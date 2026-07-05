@@ -70,7 +70,7 @@ class FilterData
     public static function censor(string $string): string
     {
         foreach (self::BAD_WORDS as $bad_word) {
-            $string = str_replace($bad_word, str_repeat('*', strlen($bad_word)), $string);
+            $string = str_ireplace($bad_word, str_repeat('*', strlen($bad_word)), $string);
         }
 
         return $string;

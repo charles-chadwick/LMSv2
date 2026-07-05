@@ -14,6 +14,13 @@ class RickAndMortyDialogue
     private static Collection $pool;
 
     /**
+     * Every script line (unfiltered), cached for censored body generation.
+     *
+     * @var Collection<int, string>
+     */
+    private static Collection $allLines;
+
+    /**
      * A random line of dialogue, suitable for use as a record title.
      */
     public static function next(): string
@@ -59,5 +66,47 @@ class RickAndMortyDialogue
         fclose($handle);
 
         self::$pool = $lines->values();
+    }
+
+    /**
+     * A paragraph-style block of between $minLines and $maxLines random script
+     * lines, each with bad words censored to asterisks.
+     */
+    public static function censoredBody(int $minLines, int $maxLines): string
+    {
+        if (! isset(self::$allLines)) {
+            self::loadAll();
+        }
+
+        $count = random_int($minLines, min($maxLines, self::$allLines->count()));
+
+        return self::$allLines->random($count)
+            ->map(fn (string $line): string => trim(str_replace('"', '', FilterData::censor($line))))
+            ->filter()
+            ->implode("\n\n");
+    }
+
+    /**
+     * Load every non-empty script line into the {@see self::$allLines} pool.
+     */
+    private static function loadAll(): void
+    {
+        $handle = fopen(database_path('rickandmorty/rickandmorty-scripts.csv'), 'r');
+
+        fgetcsv($handle, 0, ',', '"', ''); // Skip the header row.
+
+        $lines = collect();
+
+        while (($row = fgetcsv($handle, 0, ',', '"', '')) !== false) {
+            $line = trim($row[0] ?? '');
+
+            if ($line !== '') {
+                $lines->push($line);
+            }
+        }
+
+        fclose($handle);
+
+        self::$allLines = $lines->values();
     }
 }
