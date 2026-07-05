@@ -38,6 +38,7 @@ class UserManagementController extends Controller
             )
             ->with('roles', 'media')
             ->withSearch($request->query('search'))
+            ->withFilters($request->input('filters'))
             ->latest()
             ->paginate(self::PER_PAGE)
             ->withQueryString()
@@ -45,7 +46,11 @@ class UserManagementController extends Controller
 
         return Inertia::render('Users/Index', [
             'users' => $users,
-            'filters' => ['search' => $request->query('search')],
+            'filters' => [
+                'search' => $request->query('search'),
+                ...$request->input('filters', []),
+            ],
+            'filterOptions' => $this->filterOptions(),
         ]);
     }
 
@@ -144,5 +149,41 @@ class UserManagementController extends Controller
             fn (UserRole $role): array => ['value' => $role->value, 'label' => $role->value],
             $roles,
         );
+    }
+
+    /**
+     * Declarative filter controls for the user list.
+     *
+     * @return list<array<string, mixed>>
+     */
+    private function filterOptions(): array
+    {
+        return [
+            [
+                'key' => 'role',
+                'label' => 'Role',
+                'type' => 'select',
+                'multiple' => true,
+                'options' => array_map(
+                    fn (UserRole $role): array => ['value' => $role->value, 'label' => $role->value],
+                    UserRole::cases(),
+                ),
+            ],
+            [
+                'key' => 'status',
+                'label' => 'Status',
+                'type' => 'select',
+                'multiple' => true,
+                'options' => [
+                    ['value' => 'Active', 'label' => 'Active'],
+                    ['value' => 'Invited', 'label' => 'Invited'],
+                ],
+            ],
+            [
+                'key' => 'created_at',
+                'label' => 'Created',
+                'type' => 'daterange',
+            ],
+        ];
     }
 }
