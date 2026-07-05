@@ -24,7 +24,7 @@ it('shares the unread notification count and lists notifications', function () {
         ->assertInertia(fn (Assert $page) => $page
             ->component('Notifications/Index')
             ->where('auth.user.unread_notifications_count', 1)
-            ->has('notifications', 1));
+            ->where('notifications.total', 1));
 });
 
 it('marks a single notification and all notifications as read', function () {
