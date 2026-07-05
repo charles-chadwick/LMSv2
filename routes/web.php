@@ -4,6 +4,7 @@ use App\Http\Controllers\ArchiveCourseController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
+use App\Http\Controllers\Auth\InvitationController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
@@ -21,6 +22,7 @@ use App\Http\Controllers\LessonController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PublishCourseController;
+use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -40,6 +42,11 @@ Route::middleware('guest')->group(function (): void {
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->middleware('throttle:6,1')
         ->name('password.store');
+
+    Route::get('invitation/{token}', [InvitationController::class, 'create'])->name('invitation.create');
+    Route::post('invitation', [InvitationController::class, 'store'])
+        ->middleware('throttle:6,1')
+        ->name('invitation.store');
 });
 
 Route::middleware('auth')->group(function (): void {
@@ -84,8 +91,15 @@ Route::middleware('auth')->group(function (): void {
 
         Route::get('learn/{course}/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
 
-        Route::get('users/{user}', [UserProfileController::class, 'show'])->name('users.show');
-        Route::patch('users/{user}', [UserProfileController::class, 'update'])->name('users.update');
+        Route::get('users', [UserManagementController::class, 'index'])->name('users.index');
+        Route::get('users/create', [UserManagementController::class, 'create'])->name('users.create');
+        Route::post('users', [UserManagementController::class, 'store'])->name('users.store')->middleware('throttle:6,1');
+        Route::get('users/{user}/edit', [UserManagementController::class, 'edit'])->name('users.edit')->whereNumber('user');
+        Route::put('users/{user}', [UserManagementController::class, 'update'])->name('users.management.update')->whereNumber('user');
+        Route::delete('users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy')->whereNumber('user');
+        Route::post('users/{user}/resend-invite', [UserManagementController::class, 'resendInvite'])->name('users.invite.resend')->whereNumber('user')->middleware('throttle:6,1');
+        Route::get('users/{user}', [UserProfileController::class, 'show'])->name('users.show')->whereNumber('user');
+        Route::patch('users/{user}', [UserProfileController::class, 'update'])->name('users.update')->whereNumber('user');
         Route::put('users/{user}/password', [UserProfileController::class, 'updatePassword'])->name('users.password.update');
         Route::post('users/{user}/avatar', [UserProfileController::class, 'storeAvatar'])->name('users.avatar.store');
         Route::delete('users/{user}/avatar', [UserProfileController::class, 'destroyAvatar'])->name('users.avatar.destroy');

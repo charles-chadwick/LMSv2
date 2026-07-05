@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\Searchable;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Activitylog\Models\Concerns\CausesActivity;
@@ -26,7 +29,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable implements HasMedia, MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
-    use CausesActivity, HasFactory, HasRoles, InteractsWithMedia, LogsActivity, Notifiable;
+    use CausesActivity, HasFactory, HasRoles, InteractsWithMedia, LogsActivity, Notifiable, Searchable, SoftDeletes;
 
     /**
      * Get the attributes that should be cast.
@@ -102,6 +105,32 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
             ->logOnly(['name', 'email'])
             ->logOnlyDirty()
             ->dontLogEmptyChanges();
+    }
+
+    /**
+     * Fields searched with LIKE on the management user list.
+     *
+     * @return list<string>
+     */
+    protected function searchableFields(): array
+    {
+        return ['first_name', 'last_name', 'email'];
+    }
+
+    /**
+     * The user who provisioned this account (null for seeded accounts).
+     */
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Accounts this user has provisioned.
+     */
+    public function createdUsers(): HasMany
+    {
+        return $this->hasMany(User::class, 'created_by');
     }
 
     /**
