@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\InviteUser;
 use App\Enums\UserRole;
 use App\Http\Requests\User\StoreUserRequest;
+use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Resources\UserManagementResource;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -70,6 +71,34 @@ class UserManagementController extends Controller
         );
 
         return redirect()->route('users.index')->with('status', 'Invitation sent.');
+    }
+
+    /**
+     * Show the edit form for a managed user.
+     */
+    public function edit(Request $request, User $user): Response
+    {
+        $this->authorize('manage', $user);
+
+        return Inertia::render('Users/Edit', [
+            'user' => UserManagementResource::make($user->load('roles', 'media'))->resolve($request),
+            'roleOptions' => $this->roleOptions($request->user()),
+            'canEditRole' => $request->user()->hasRole(UserRole::Admin->value),
+        ]);
+    }
+
+    /**
+     * Update a managed user. Only admins may change roles.
+     */
+    public function update(UpdateUserRequest $request, User $user): RedirectResponse
+    {
+        $user->update($request->safe()->only('first_name', 'last_name', 'email'));
+
+        if ($request->user()->hasRole(UserRole::Admin->value)) {
+            $user->syncRoles([$request->enum('role', UserRole::class)->value]);
+        }
+
+        return redirect()->route('users.index')->with('status', 'User updated.');
     }
 
     /**
