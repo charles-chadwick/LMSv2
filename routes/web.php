@@ -4,6 +4,7 @@ use App\Http\Controllers\ArchiveCourseController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
+use App\Http\Controllers\Auth\InvitationController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
@@ -40,6 +41,11 @@ Route::middleware('guest')->group(function (): void {
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->middleware('throttle:6,1')
         ->name('password.store');
+
+    Route::get('invitation/{token}', [InvitationController::class, 'create'])->name('invitation.create');
+    Route::post('invitation', [InvitationController::class, 'store'])
+        ->middleware('throttle:6,1')
+        ->name('invitation.store');
 });
 
 Route::middleware('auth')->group(function (): void {
