@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Http\Resources\UserSummaryResource;
 use App\Models\Message;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
@@ -48,6 +49,7 @@ class HandleInertiaRequests extends Middleware
                         'roles' => $request->user()->getRoleNames()->all(),
                         'can' => [
                             'create_courses' => $request->user()->can('create courses'),
+                            'manage_users' => $request->user()->can('viewAny', User::class),
                         ],
                         'unread_notifications_count' => $request->user()->unreadNotifications()->count(),
                         'unread_messages_count' => Message::query()
