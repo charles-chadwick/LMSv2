@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Enums\NotificationType;
 use App\Models\Message;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -32,7 +33,7 @@ class NewMessage extends Notification implements ShouldQueue
             'conversation_id' => $this->message->conversation_id,
             'sender_name' => $this->message->sender->name,
             'excerpt' => Str::limit($this->message->body, 80),
-            'type' => 'new_message',
+            'type' => NotificationType::NewMessage->value,
         ];
     }
 
@@ -43,6 +44,6 @@ class NewMessage extends Notification implements ShouldQueue
 
     public function broadcastType(): string
     {
-        return 'new_message';
+        return NotificationType::NewMessage->value;
     }
 }
