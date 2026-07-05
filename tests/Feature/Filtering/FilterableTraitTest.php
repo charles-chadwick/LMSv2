@@ -48,9 +48,11 @@ it('ignores unknown filter keys and empty values', function () {
 });
 
 it('combines filters with search', function () {
-    $zoe = User::factory()->student()->create(['first_name' => 'Zoe', 'email' => 'zoe@example.com']);
-    User::factory()->student()->create(['first_name' => 'Amy', 'email' => 'amy@example.com']);
-    User::factory()->instructor()->create(['first_name' => 'Zane', 'email' => 'zane@example.com']);
+    // Pin every searchable field (first_name, last_name, email) so the factory's
+    // random last_name can't contain a "z" and accidentally match the 'Z' search.
+    $zoe = User::factory()->student()->create(['first_name' => 'Zoe', 'last_name' => 'Miller', 'email' => 'zoe@example.com']);
+    User::factory()->student()->create(['first_name' => 'Amy', 'last_name' => 'Miller', 'email' => 'amy@example.com']);
+    User::factory()->instructor()->create(['first_name' => 'Zane', 'last_name' => 'Miller', 'email' => 'zane@example.com']);
 
     $ids = User::query()->withSearch('Z')->withFilters(['role' => ['Student']])->pluck('id')->all();
 

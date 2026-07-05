@@ -40,10 +40,12 @@ it('exposes filter options with role and status choices', function () {
 });
 
 it('combines a role filter with search', function () {
-    $admin = User::factory()->admin()->create(['email' => 'admin@example.com']);
-    $zoe = User::factory()->student()->create(['first_name' => 'Zoe', 'email' => 'zoe@example.com']);
-    User::factory()->student()->create(['first_name' => 'Amy', 'email' => 'amy@example.com']);
-    User::factory()->instructor()->create(['first_name' => 'Zane', 'email' => 'zane@example.com']);
+    // Pin every searchable field (first_name, last_name, email) so the factory's
+    // random last_name can't contain a "z" and accidentally match the 'Z' search.
+    $admin = User::factory()->admin()->create(['first_name' => 'Ada', 'last_name' => 'Miller', 'email' => 'admin@example.com']);
+    $zoe = User::factory()->student()->create(['first_name' => 'Zoe', 'last_name' => 'Miller', 'email' => 'zoe@example.com']);
+    User::factory()->student()->create(['first_name' => 'Amy', 'last_name' => 'Miller', 'email' => 'amy@example.com']);
+    User::factory()->instructor()->create(['first_name' => 'Zane', 'last_name' => 'Miller', 'email' => 'zane@example.com']);
 
     $this->actingAs($admin)->get(route('users.index', ['search' => 'Z', 'filters' => ['role' => ['Student']]]))
         ->assertInertia(fn (Assert $page) => $page
