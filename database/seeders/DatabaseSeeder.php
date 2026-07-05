@@ -40,6 +40,7 @@ class DatabaseSeeder extends Seeder
         $instructors->each(function (User $instructor) use ($students): void {
             Course::factory()
                 ->published()
+                ->readableContent()
                 ->count(2)
                 ->for($instructor, 'instructor')
                 ->create()
@@ -58,12 +59,14 @@ class DatabaseSeeder extends Seeder
         $modules = Module::factory()
             ->count(3)
             ->for($course)
+            ->readableContent()
             ->sequence($this->positionSequence())
             ->create();
 
         $lessons = $modules->flatMap(fn (Module $module) => Lesson::factory()
             ->count(3)
             ->for($module)
+            ->readableContent()
             ->sequence($this->positionSequence())
             ->create());
 
