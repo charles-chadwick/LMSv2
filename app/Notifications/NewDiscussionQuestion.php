@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Enums\NotificationType;
 use App\Models\Discussion;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -31,7 +32,7 @@ class NewDiscussionQuestion extends Notification implements ShouldQueue
         return [
             'discussion_id' => $this->discussion->id,
             'course_slug' => $this->discussion->course->slug,
-            'type' => 'new_question',
+            'type' => NotificationType::NewQuestion->value,
             'actor_name' => $this->discussion->author->name,
             'excerpt' => Str::limit($this->discussion->title, 80),
         ];
@@ -40,5 +41,10 @@ class NewDiscussionQuestion extends Notification implements ShouldQueue
     public function toBroadcast(object $notifiable): BroadcastMessage
     {
         return new BroadcastMessage($this->toArray($notifiable));
+    }
+
+    public function broadcastType(): string
+    {
+        return NotificationType::NewQuestion->value;
     }
 }
