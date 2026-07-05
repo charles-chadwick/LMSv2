@@ -51,3 +51,19 @@ it('does not resend an invitation to an already-active user', function () {
     $this->actingAs($admin)->post(route('users.invite.resend', $active))
         ->assertStatus(422);
 });
+
+it('throttles repeated resend-invite requests', function () {
+    Notification::fake();
+    $this->app['cache']->flush();
+
+    $admin = User::factory()->admin()->create();
+    $pending = User::factory()->student()->unverified()->create();
+
+    for ($attempt = 1; $attempt <= 6; $attempt++) {
+        $this->actingAs($admin)->post(route('users.invite.resend', $pending))
+            ->assertRedirect();
+    }
+
+    $this->actingAs($admin)->post(route('users.invite.resend', $pending))
+        ->assertStatus(429);
+});

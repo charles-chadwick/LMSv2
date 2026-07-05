@@ -93,11 +93,11 @@ Route::middleware('auth')->group(function (): void {
 
         Route::get('users', [UserManagementController::class, 'index'])->name('users.index');
         Route::get('users/create', [UserManagementController::class, 'create'])->name('users.create');
-        Route::post('users', [UserManagementController::class, 'store'])->name('users.store');
+        Route::post('users', [UserManagementController::class, 'store'])->name('users.store')->middleware('throttle:6,1');
         Route::get('users/{user}/edit', [UserManagementController::class, 'edit'])->name('users.edit')->whereNumber('user');
         Route::put('users/{user}', [UserManagementController::class, 'update'])->name('users.management.update')->whereNumber('user');
         Route::delete('users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy')->whereNumber('user');
-        Route::post('users/{user}/resend-invite', [UserManagementController::class, 'resendInvite'])->name('users.invite.resend')->whereNumber('user');
+        Route::post('users/{user}/resend-invite', [UserManagementController::class, 'resendInvite'])->name('users.invite.resend')->whereNumber('user')->middleware('throttle:6,1');
         Route::get('users/{user}', [UserProfileController::class, 'show'])->name('users.show')->whereNumber('user');
         Route::patch('users/{user}', [UserProfileController::class, 'update'])->name('users.update')->whereNumber('user');
         Route::put('users/{user}/password', [UserProfileController::class, 'updatePassword'])->name('users.password.update');
