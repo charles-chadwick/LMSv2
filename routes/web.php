@@ -92,8 +92,10 @@ Route::middleware('auth')->group(function (): void {
         Route::get('learn/{course}/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
 
         Route::get('users', [UserManagementController::class, 'index'])->name('users.index');
-        Route::get('users/{user}', [UserProfileController::class, 'show'])->name('users.show');
-        Route::patch('users/{user}', [UserProfileController::class, 'update'])->name('users.update');
+        Route::get('users/create', [UserManagementController::class, 'create'])->name('users.create');
+        Route::post('users', [UserManagementController::class, 'store'])->name('users.store');
+        Route::get('users/{user}', [UserProfileController::class, 'show'])->name('users.show')->whereNumber('user');
+        Route::patch('users/{user}', [UserProfileController::class, 'update'])->name('users.update')->whereNumber('user');
         Route::put('users/{user}/password', [UserProfileController::class, 'updatePassword'])->name('users.password.update');
         Route::post('users/{user}/avatar', [UserProfileController::class, 'storeAvatar'])->name('users.avatar.store');
         Route::delete('users/{user}/avatar', [UserProfileController::class, 'destroyAvatar'])->name('users.avatar.destroy');
