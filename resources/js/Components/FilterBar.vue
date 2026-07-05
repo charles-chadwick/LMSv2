@@ -23,6 +23,10 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    searchable: {
+        type: Boolean,
+        default: true,
+    },
 });
 
 const search = ref(props.filters.search ?? '');
@@ -40,7 +44,7 @@ props.filterOptions.forEach((option) => {
 const buildQuery = () => {
     const query = {};
     const term = search.value.trim();
-    if (term !== '') {
+    if (props.searchable && term !== '') {
         query.search = term;
     }
 
@@ -128,7 +132,7 @@ const clearFilters = () => {
 
 <template>
     <div class="flex flex-wrap items-center gap-2">
-        <div class="relative w-full max-w-xs">
+        <div v-if="searchable" class="relative w-full max-w-xs">
             <Search class="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input v-model="search" type="search" placeholder="Search…" class="pl-9" />
         </div>

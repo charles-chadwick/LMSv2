@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import PageHeader from '@/Components/PageHeader.vue';
-import SearchInput from '@/Components/SearchInput.vue';
+import FilterBar from '@/Components/FilterBar.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
 import LevelBadge from '@/Components/LevelBadge.vue';
 import Pagination from '@/Components/Pagination.vue';
@@ -25,7 +25,11 @@ defineProps({
     },
     filters: {
         type: Object,
-        default: () => ({ search: '' }),
+        default: () => ({}),
+    },
+    filterOptions: {
+        type: Array,
+        default: () => [],
     },
 });
 
@@ -65,7 +69,7 @@ const archive = (course) => {
         </PageHeader>
 
         <div class="mb-4">
-            <SearchInput :initial="filters.search ?? ''" placeholder="Search courses…" />
+            <FilterBar :filters="filters" :filter-options="filterOptions" />
         </div>
 
         <div

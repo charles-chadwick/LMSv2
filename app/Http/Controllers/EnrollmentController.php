@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\DropEnrollment;
+use App\Enums\EnrollmentStatus;
 use App\Models\Enrollment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -29,6 +30,7 @@ class EnrollmentController extends Controller
     {
         $enrollments = $request->user()->enrollments()
             ->with('course:id,title,slug')
+            ->withFilters($request->input('filters'))
             ->latest('enrolled_at')
             ->paginate(self::PER_PAGE)
             ->withQueryString()
@@ -42,6 +44,26 @@ class EnrollmentController extends Controller
 
         return Inertia::render('Enrollments/Index', [
             'enrollments' => $enrollments,
+            'filters' => $request->input('filters', []),
+            'filterOptions' => $this->filterOptions(),
         ]);
+    }
+
+    /**
+     * Declarative filter controls for the enrollment list.
+     *
+     * @return list<array<string, mixed>>
+     */
+    private function filterOptions(): array
+    {
+        return [
+            [
+                'key' => 'status',
+                'label' => 'Status',
+                'type' => 'select',
+                'multiple' => true,
+                'options' => EnrollmentStatus::options(),
+            ],
+        ];
     }
 }

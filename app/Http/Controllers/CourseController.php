@@ -33,13 +33,18 @@ class CourseController extends Controller
                 fn ($query) => $query->where('instructor_id', $user->id),
             )
             ->withSearch($request->query('search'))
+            ->withFilters($request->input('filters'))
             ->latest()
             ->paginate(self::PER_PAGE, ['id', 'title', 'slug', 'status', 'level'])
             ->withQueryString();
 
         return Inertia::render('Courses/Index', [
             'courses' => $courses,
-            'filters' => ['search' => $request->query('search')],
+            'filters' => [
+                'search' => $request->query('search'),
+                ...$request->input('filters', []),
+            ],
+            'filterOptions' => $this->filterOptions(),
         ]);
     }
 
@@ -48,7 +53,7 @@ class CourseController extends Controller
         $this->authorize('create', Course::class);
 
         return Inertia::render('Courses/Create', [
-            'levels' => $this->levelOptions(),
+            'levels' => CourseLevel::options(),
         ]);
     }
 
@@ -74,7 +79,7 @@ class CourseController extends Controller
 
         return Inertia::render('Courses/Edit', [
             'course' => $course->only('title', 'slug', 'summary', 'description', 'level'),
-            'levels' => $this->levelOptions(),
+            'levels' => CourseLevel::options(),
         ]);
     }
 
@@ -114,15 +119,27 @@ class CourseController extends Controller
     }
 
     /**
-     * The selectable course levels for form dropdowns.
+     * Declarative filter controls for the course list.
      *
-     * @return array<int, array{value: string, label: string}>
+     * @return list<array<string, mixed>>
      */
-    protected function levelOptions(): array
+    private function filterOptions(): array
     {
-        return array_map(
-            fn (CourseLevel $level): array => ['value' => $level->value, 'label' => $level->name],
-            CourseLevel::cases(),
-        );
+        return [
+            [
+                'key' => 'status',
+                'label' => 'Status',
+                'type' => 'select',
+                'multiple' => true,
+                'options' => CourseStatus::options(),
+            ],
+            [
+                'key' => 'level',
+                'label' => 'Level',
+                'type' => 'select',
+                'multiple' => true,
+                'options' => CourseLevel::options(),
+            ],
+        ];
     }
 }

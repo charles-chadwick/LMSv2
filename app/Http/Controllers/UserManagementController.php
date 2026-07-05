@@ -164,10 +164,7 @@ class UserManagementController extends Controller
                 'label' => 'Role',
                 'type' => 'select',
                 'multiple' => true,
-                'options' => array_map(
-                    fn (UserRole $role): array => ['value' => $role->value, 'label' => $role->value],
-                    UserRole::cases(),
-                ),
+                'options' => UserRole::options(),
             ],
             [
                 'key' => 'status',

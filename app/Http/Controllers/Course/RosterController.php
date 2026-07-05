@@ -25,13 +25,14 @@ class RosterController extends Controller
      */
     private const PER_PAGE = 20;
 
-    public function index(Course $course): Response
+    public function index(Request $request, Course $course): Response
     {
         $this->authorize('viewRoster', $course);
 
         $students = $course->enrollments()
             ->select(['id', 'user_id', 'status', 'progress_percentage', 'enrolled_at'])
             ->with('student.roles', 'student.media')
+            ->withFilters($request->input('filters'))
             ->latest('enrolled_at')
             ->paginate(self::PER_PAGE)
             ->withQueryString()
@@ -49,7 +50,27 @@ class RosterController extends Controller
                 'slug' => $course->slug,
             ],
             'students' => $students,
+            'filters' => $request->input('filters', []),
+            'filterOptions' => $this->filterOptions(),
         ]);
+    }
+
+    /**
+     * Declarative filter controls for the roster.
+     *
+     * @return list<array<string, mixed>>
+     */
+    private function filterOptions(): array
+    {
+        return [
+            [
+                'key' => 'status',
+                'label' => 'Status',
+                'type' => 'select',
+                'multiple' => true,
+                'options' => EnrollmentStatus::options(),
+            ],
+        ];
     }
 
     /**

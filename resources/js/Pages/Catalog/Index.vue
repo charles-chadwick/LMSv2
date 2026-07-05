@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import PageHeader from '@/Components/PageHeader.vue';
+import FilterBar from '@/Components/FilterBar.vue';
 import LevelBadge from '@/Components/LevelBadge.vue';
 import UserHoverCard from '@/Components/UserHoverCard.vue';
 import Pagination from '@/Components/Pagination.vue';
@@ -11,6 +12,14 @@ defineProps({
     courses: {
         type: Object,
         required: true,
+    },
+    filters: {
+        type: Object,
+        default: () => ({}),
+    },
+    filterOptions: {
+        type: Array,
+        default: () => [],
     },
 });
 </script>
@@ -23,6 +32,10 @@ defineProps({
             title="Browse courses"
             subtitle="Discover published courses and enroll in your next skill."
         />
+
+        <div class="mb-6">
+            <FilterBar :filters="filters" :filter-options="filterOptions" />
+        </div>
 
         <div
             v-if="courses.total === 0"

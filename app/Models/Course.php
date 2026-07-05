@@ -4,6 +4,9 @@ namespace App\Models;
 
 use App\Enums\CourseLevel;
 use App\Enums\CourseStatus;
+use App\Models\Concerns\Filterable;
+use App\Models\Concerns\Filters\ExactFilter;
+use App\Models\Concerns\Filters\Filter;
 use App\Models\Concerns\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,7 +22,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Course extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, LogsActivity, Searchable, SoftDeletes;
+    use Filterable, HasFactory, InteractsWithMedia, LogsActivity, Searchable, SoftDeletes;
 
     protected $fillable = [
         'instructor_id',
@@ -55,6 +58,19 @@ class Course extends Model implements HasMedia
     protected function fullTextSearchableFields(): array
     {
         return ['instructor.name'];
+    }
+
+    /**
+     * Filterable fields for course listings.
+     *
+     * @return array<string, Filter>
+     */
+    protected function filterableFields(): array
+    {
+        return [
+            'status' => new ExactFilter('status'),
+            'level' => new ExactFilter('level'),
+        ];
     }
 
     public function getRouteKeyName(): string

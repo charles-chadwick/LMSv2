@@ -2,8 +2,12 @@
 
 namespace App\Enums;
 
+use App\Enums\Concerns\HasSelectOptions;
+
 enum EnrollmentStatus: string
 {
+    use HasSelectOptions;
+
     case Active = 'Active';
     case Completed = 'Completed';
     case Dropped = 'Dropped';

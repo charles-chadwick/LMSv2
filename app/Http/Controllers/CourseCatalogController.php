@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CourseLevel;
 use App\Enums\CourseStatus;
 use App\Http\Resources\UserSummaryResource;
 use App\Models\Course;
@@ -23,6 +24,8 @@ class CourseCatalogController extends Controller
         $courses = Course::query()
             ->where('status', CourseStatus::Published)
             ->with('instructor.roles', 'instructor.media')
+            ->withSearch($request->query('search'))
+            ->withFilters($request->input('filters'))
             ->latest('published_at')
             ->paginate(self::PER_PAGE)
             ->withQueryString()
@@ -38,7 +41,30 @@ class CourseCatalogController extends Controller
 
         return Inertia::render('Catalog/Index', [
             'courses' => $courses,
+            'filters' => [
+                'search' => $request->query('search'),
+                ...$request->input('filters', []),
+            ],
+            'filterOptions' => $this->filterOptions(),
         ]);
+    }
+
+    /**
+     * Declarative filter controls for the public catalog (status is fixed to Published).
+     *
+     * @return list<array<string, mixed>>
+     */
+    private function filterOptions(): array
+    {
+        return [
+            [
+                'key' => 'level',
+                'label' => 'Level',
+                'type' => 'select',
+                'multiple' => true,
+                'options' => CourseLevel::options(),
+            ],
+        ];
     }
 
     public function show(Request $request, Course $course): Response

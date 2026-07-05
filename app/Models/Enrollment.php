@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use App\Enums\EnrollmentStatus;
+use App\Models\Concerns\Filterable;
+use App\Models\Concerns\Filters\ExactFilter;
+use App\Models\Concerns\Filters\Filter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Enrollment extends Model
 {
-    use HasFactory, SoftDeletes;
+    use Filterable, HasFactory, SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -34,6 +37,18 @@ class Enrollment extends Model
             'final_grade' => 'decimal:2',
             'enrolled_at' => 'datetime',
             'completed_at' => 'datetime',
+        ];
+    }
+
+    /**
+     * Filterable fields for enrollment listings.
+     *
+     * @return array<string, Filter>
+     */
+    protected function filterableFields(): array
+    {
+        return [
+            'status' => new ExactFilter('status'),
         ];
     }
 

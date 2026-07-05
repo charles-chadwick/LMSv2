@@ -4,6 +4,7 @@ import PageHeader from '@/Components/PageHeader.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
 import ProgressBar from '@/Components/ProgressBar.vue';
 import StudentSearch from '@/Components/StudentSearch.vue';
+import FilterBar from '@/Components/FilterBar.vue';
 import UserHoverCard from '@/Components/UserHoverCard.vue';
 import Pagination from '@/Components/Pagination.vue';
 import { Button } from '@/Components/ui/button';
@@ -15,6 +16,8 @@ import { Users, UserPlus } from 'lucide-vue-next';
 const props = defineProps({
     course: { type: Object, required: true },
     students: { type: Object, required: true },
+    filters: { type: Object, default: () => ({}) },
+    filterOptions: { type: Array, default: () => [] },
 });
 
 const selected_student = ref(null);
@@ -77,6 +80,10 @@ const remove = (student) => {
                 </div>
                 <p v-if="form.errors.student_id" class="text-sm text-destructive">{{ form.errors.student_id }}</p>
             </div>
+        </div>
+
+        <div class="mb-4">
+            <FilterBar :filters="filters" :filter-options="filterOptions" :searchable="false" />
         </div>
 
         <div

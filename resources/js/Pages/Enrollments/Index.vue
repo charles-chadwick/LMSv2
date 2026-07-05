@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import PageHeader from '@/Components/PageHeader.vue';
+import FilterBar from '@/Components/FilterBar.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
 import ProgressBar from '@/Components/ProgressBar.vue';
 import Pagination from '@/Components/Pagination.vue';
@@ -14,6 +15,14 @@ defineProps({
         type: Object,
         required: true,
     },
+    filters: {
+        type: Object,
+        default: () => ({}),
+    },
+    filterOptions: {
+        type: Array,
+        default: () => [],
+    },
 });
 </script>
 
@@ -25,6 +34,10 @@ defineProps({
             title="My courses"
             subtitle="Track your progress and jump back into learning."
         />
+
+        <div class="mb-4">
+            <FilterBar :filters="filters" :filter-options="filterOptions" :searchable="false" />
+        </div>
 
         <div
             v-if="enrollments.total === 0"
