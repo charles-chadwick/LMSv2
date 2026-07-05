@@ -26,10 +26,16 @@ class Notification extends DatabaseNotification
             'type' => new ExactFilter('data->type'),
             'read' => new CallbackFilter(function (Builder $query, mixed $value): void {
                 $values = (array) $value;
+                $has_read = in_array('read', $values, true);
+                $has_unread = in_array('unread', $values, true);
 
-                if (in_array('read', $values, true)) {
+                if ($has_read === $has_unread) {
+                    return;
+                }
+
+                if ($has_read) {
                     $query->whereNotNull('read_at');
-                } elseif (in_array('unread', $values, true)) {
+                } else {
                     $query->whereNull('read_at');
                 }
             }),
