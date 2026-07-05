@@ -6,6 +6,8 @@ use App\Enums\CourseLevel;
 use App\Enums\CourseStatus;
 use App\Models\Course;
 use App\Models\User;
+use Database\Seeders\ComputerScienceTitles;
+use Database\Seeders\RickAndMortyDialogue;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -42,5 +44,22 @@ class CourseFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'status' => CourseStatus::Archived,
         ]);
+    }
+
+    /**
+     * Replace Faker content with a real CS title and censored dialogue body.
+     */
+    public function readableContent(): static
+    {
+        return $this->state(function (array $attributes): array {
+            $title = ComputerScienceTitles::nextCourse();
+
+            return [
+                'title' => $title,
+                'slug' => Str::slug($title).'-'.fake()->unique()->numberBetween(1, 99999),
+                'summary' => RickAndMortyDialogue::censoredBody(1, 1),
+                'description' => RickAndMortyDialogue::censoredBody(3, 6),
+            ];
+        });
     }
 }
