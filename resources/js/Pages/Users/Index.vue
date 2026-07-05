@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import PageHeader from '@/Components/PageHeader.vue';
-import SearchInput from '@/Components/SearchInput.vue';
+import FilterBar from '@/Components/FilterBar.vue';
 import Pagination from '@/Components/Pagination.vue';
 import UserAvatar from '@/Components/UserAvatar.vue';
 import { Button } from '@/Components/ui/button';
@@ -24,6 +24,10 @@ defineProps({
     filters: {
         type: Object,
         default: () => ({ search: '' }),
+    },
+    filterOptions: {
+        type: Array,
+        default: () => [],
     },
 });
 
@@ -54,7 +58,7 @@ const resendInvite = (row) => {
         </PageHeader>
 
         <div class="mb-4">
-            <SearchInput :initial="filters.search ?? ''" placeholder="Search users…" />
+            <FilterBar :filters="filters" :filter-options="filterOptions" />
         </div>
 
         <div

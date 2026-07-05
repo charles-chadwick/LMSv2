@@ -2,11 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\Filterable;
+use App\Models\Concerns\Filters\CallbackFilter;
+use App\Models\Concerns\Filters\Filter;
+use App\Models\Concerns\Filters\RangeFilter;
+use App\Models\Concerns\Filters\RelationFilter;
 use App\Models\Concerns\Searchable;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -29,7 +35,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable implements HasMedia, MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
-    use CausesActivity, HasFactory, HasRoles, InteractsWithMedia, LogsActivity, Notifiable, Searchable, SoftDeletes;
+    use CausesActivity, Filterable, HasFactory, HasRoles, InteractsWithMedia, LogsActivity, Notifiable, Searchable, SoftDeletes;
 
     /**
      * Get the attributes that should be cast.
@@ -115,6 +121,32 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     protected function searchableFields(): array
     {
         return ['first_name', 'last_name', 'email'];
+    }
+
+    /**
+     * Filterable fields for the management user list.
+     *
+     * @return array<string, Filter>
+     */
+    protected function filterableFields(): array
+    {
+        return [
+            'role' => new RelationFilter('roles', 'name'),
+            'status' => new CallbackFilter(function (Builder $query, mixed $value): void {
+                $values = (array) $value;
+
+                $query->where(function (Builder $query) use ($values): void {
+                    if (in_array('Active', $values, true)) {
+                        $query->orWhereNotNull('email_verified_at');
+                    }
+
+                    if (in_array('Invited', $values, true)) {
+                        $query->orWhereNull('email_verified_at');
+                    }
+                });
+            }),
+            'created_at' => new RangeFilter('created_at', asDate: true),
+        ];
     }
 
     /**
