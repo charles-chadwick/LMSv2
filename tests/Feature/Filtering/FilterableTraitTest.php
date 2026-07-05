@@ -48,11 +48,29 @@ it('ignores unknown filter keys and empty values', function () {
 });
 
 it('combines filters with search', function () {
-    $zoe = User::factory()->student()->create(['first_name' => 'Zoe']);
-    User::factory()->student()->create(['first_name' => 'Amy']);
-    User::factory()->instructor()->create(['first_name' => 'Zane']);
+    $zoe = User::factory()->student()->create(['first_name' => 'Zoe', 'email' => 'zoe@example.com']);
+    User::factory()->student()->create(['first_name' => 'Amy', 'email' => 'amy@example.com']);
+    User::factory()->instructor()->create(['first_name' => 'Zane', 'email' => 'zane@example.com']);
 
     $ids = User::query()->withSearch('Z')->withFilters(['role' => ['Student']])->pluck('id')->all();
 
     expect($ids)->toBe([$zoe->id]);
+});
+
+it('does not let a filter group widen results when combined with another filter', function () {
+    $activeStudent = User::factory()->student()->create(['email_verified_at' => now()]);
+    $invitedStudent = User::factory()->student()->create(['email_verified_at' => null]);
+    User::factory()->instructor()->create(['email_verified_at' => now()]);
+
+    $count = User::query()->withFilters([
+        'status' => ['Active', 'Invited'],
+        'role' => ['Student'],
+    ])->count();
+
+    expect($count)->toBe(2)
+        ->and(User::query()->withFilters([
+            'status' => ['Active', 'Invited'],
+            'role' => ['Student'],
+        ])->pluck('id')->sort()->values()->all())
+        ->toBe(collect([$activeStudent->id, $invitedStudent->id])->sort()->values()->all());
 });

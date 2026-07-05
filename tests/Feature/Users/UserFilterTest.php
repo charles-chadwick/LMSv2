@@ -40,10 +40,10 @@ it('exposes filter options with role and status choices', function () {
 });
 
 it('combines a role filter with search', function () {
-    $admin = User::factory()->admin()->create();
-    $zoe = User::factory()->student()->create(['first_name' => 'Zoe']);
-    User::factory()->student()->create(['first_name' => 'Amy']);
-    User::factory()->instructor()->create(['first_name' => 'Zane']);
+    $admin = User::factory()->admin()->create(['email' => 'admin@example.com']);
+    $zoe = User::factory()->student()->create(['first_name' => 'Zoe', 'email' => 'zoe@example.com']);
+    User::factory()->student()->create(['first_name' => 'Amy', 'email' => 'amy@example.com']);
+    User::factory()->instructor()->create(['first_name' => 'Zane', 'email' => 'zane@example.com']);
 
     $this->actingAs($admin)->get(route('users.index', ['search' => 'Z', 'filters' => ['role' => ['Student']]]))
         ->assertInertia(fn (Assert $page) => $page
