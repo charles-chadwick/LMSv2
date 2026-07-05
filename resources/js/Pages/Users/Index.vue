@@ -6,8 +6,15 @@ import Pagination from '@/Components/Pagination.vue';
 import UserAvatar from '@/Components/UserAvatar.vue';
 import { Button } from '@/Components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
-import { Head, Link } from '@inertiajs/vue3';
-import { Plus, UsersRound } from 'lucide-vue-next';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/Components/ui/dropdown-menu';
+import { Head, Link, router } from '@inertiajs/vue3';
+import { Plus, UsersRound, MoreHorizontal, Pencil, Send, Trash2 } from 'lucide-vue-next';
 
 defineProps({
     users: {
@@ -19,6 +26,16 @@ defineProps({
         default: () => ({ search: '' }),
     },
 });
+
+const destroy = (row) => {
+    if (confirm(`Remove ${row.name}? Their account will be disabled.`)) {
+        router.delete(route('users.destroy', row.id));
+    }
+};
+
+const resendInvite = (row) => {
+    router.post(route('users.invite.resend', row.id));
+};
 </script>
 
 <template>
@@ -81,9 +98,35 @@ defineProps({
                             </span>
                         </TableCell>
                         <TableCell class="text-right">
-                            <Button as-child variant="ghost" size="sm">
-                                <Link :href="route('users.edit', row.id)">Edit</Link>
-                            </Button>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger as-child>
+                                    <Button variant="ghost" size="icon" class="size-8">
+                                        <MoreHorizontal class="size-4" />
+                                        <span class="sr-only">User actions</span>
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" class="w-44">
+                                    <DropdownMenuItem as-child>
+                                        <Link :href="route('users.edit', row.id)" class="cursor-pointer">
+                                            <Pencil class="size-4" />
+                                            Edit
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        v-if="row.status === 'Invited'"
+                                        class="cursor-pointer"
+                                        @select="resendInvite(row)"
+                                    >
+                                        <Send class="size-4" />
+                                        Resend invite
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem variant="destructive" class="cursor-pointer" @select="destroy(row)">
+                                        <Trash2 class="size-4" />
+                                        Remove
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </TableCell>
                     </TableRow>
                 </TableBody>
