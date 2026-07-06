@@ -1,58 +1,124 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# LMS v2
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A Learning Management System built with Laravel 13, Inertia.js v3, and Vue 3. Instructors author courses made of modules and lessons, students enroll and work through the material, submit assignments and tests, and earn certificates on completion. It includes discussions, direct messaging, and real-time notifications.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Roles** — Admin, Instructor, and Student, backed by [spatie/laravel-permission](https://spatie.be/docs/laravel-permission).
+- **Courses** — organized into modules and lessons, with levels (Beginner / Intermediate / Advanced) and a publish/archive lifecycle.
+- **Enrollment & progress** — students enroll in courses, complete lessons, and track progress toward completion.
+- **Assessments** — assignments with submissions and grading, plus tests with questions, options, timed attempts, and automated scoring.
+- **Certificates** — issued automatically when a student completes a course.
+- **Communication** — course discussions with replies, private conversations/messaging, and real-time notifications over WebSockets.
+- **Media** — file uploads and attachments via [spatie/laravel-medialibrary](https://spatie.be/docs/laravel-medialibrary).
+- **Activity logging** — auditing via [spatie/laravel-activitylog](https://spatie.be/docs/laravel-activitylog).
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Tech Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| Layer          | Technology                                              |
+| -------------- | ------------------------------------------------------- |
+| Backend        | Laravel 13, PHP 8.4                                      |
+| Frontend       | Inertia.js v3, Vue 3, Tailwind CSS v4, Vite             |
+| Database       | MariaDB / MySQL                                          |
+| Real-time      | Laravel Reverb (WebSockets)                              |
+| Domain logic   | [lorisleiva/laravel-actions](https://laravelactions.com) (Action classes in `app/Actions`) |
+| Testing        | Pest v4                                                  |
 
-## Learning Laravel
+## Architecture Notes
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **Actions** — business logic lives in single-purpose Action classes under `app/Actions/` (e.g. `EnrollStudent`, `CompleteCourse`, `ScoreTestAttempt`), keeping controllers and models thin.
+- **Enums** — domain values are enums under `app/Enums/` (e.g. `UserRole`, `CourseStatus`, `QuestionType`) — no magic strings.
+- **Soft deletes** — models use soft deletes throughout.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Requirements
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+- PHP **8.4+** with the usual Laravel extensions
+- Composer 2
+- Node.js **20+** and npm
+- MariaDB or MySQL
 
-## Agentic Development
+## Local Installation
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Log in with any of the users that get seeded.
+
+1. **Clone and install dependencies**
+
+   ```bash
+   git clone <repository-url> LMSv2
+   cd LMSv2
+   composer install
+   npm install
+   ```
+
+2. **Set up the environment file**
+
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+
+3. **Create the database and configure `.env`**
+
+   Create a MariaDB/MySQL database, then set the connection values in `.env`:
+
+   ```dotenv
+   DB_CONNECTION=mariadb
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=_lms_v2
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
+
+4. **Configure Reverb (WebSockets)**
+
+   `BROADCAST_CONNECTION=reverb` is already set. Generate credentials and fill in the empty `REVERB_APP_*` values:
+
+   ```bash
+   php artisan reverb:install
+   ```
+
+   This populates `REVERB_APP_ID`, `REVERB_APP_KEY`, and `REVERB_APP_SECRET` (the `VITE_REVERB_*` values mirror these automatically).
+
+5. **Run migrations and seeders**
+
+   ```bash
+   php artisan migrate --seed
+   ```
+
+6. **Start the development environment**
+
+   ```bash
+   composer run dev
+   ```
+
+   This runs the app server, queue worker, Reverb WebSocket server, log tailer (Pail), and Vite dev server together. Visit **http://localhost:8000**.
+
+   Prefer separate terminals? Run them individually:
+
+   ```bash
+   php artisan serve
+   php artisan queue:listen
+   php artisan reverb:start
+   npm run dev
+   ```
+
+## Testing
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+php artisan test
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Run a subset with `--compact` and a filter:
 
-## Contributing
+```bash
+php artisan test --compact --filter=EnrollStudent
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Code Style
 
-## Code of Conduct
+Format PHP with Pint before committing:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+vendor/bin/pint
+```
