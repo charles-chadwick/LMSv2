@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\NotificationType;
+use App\Http\Filters\FilterOption;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -56,28 +57,13 @@ class NotificationController extends Controller
      */
     private function filterOptions(): array
     {
-        return [
-            [
-                'key' => 'type',
-                'label' => 'Type',
-                'type' => 'select',
-                'multiple' => true,
-                'options' => NotificationType::options(),
-            ],
-            [
-                'key' => 'read',
-                'label' => 'Status',
-                'type' => 'select',
-                'options' => [
-                    ['value' => 'unread', 'label' => 'Unread'],
-                    ['value' => 'read', 'label' => 'Read'],
-                ],
-            ],
-            [
-                'key' => 'created_at',
-                'label' => 'Received',
-                'type' => 'daterange',
-            ],
-        ];
+        return FilterOption::toArrayList([
+            FilterOption::select('type', 'Type', NotificationType::options()),
+            FilterOption::select('read', 'Status', [
+                ['value' => 'unread', 'label' => 'Unread'],
+                ['value' => 'read', 'label' => 'Read'],
+            ], multiple: false),
+            FilterOption::dateRange('created_at', 'Received'),
+        ]);
     }
 }

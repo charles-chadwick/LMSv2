@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\CourseLevel;
 use App\Enums\CourseStatus;
 use App\Enums\UserRole;
+use App\Http\Filters\FilterOption;
 use App\Http\Requests\Course\StoreCourseRequest;
 use App\Http\Requests\Course\UpdateCourseRequest;
 use App\Models\Course;
@@ -125,21 +126,9 @@ class CourseController extends Controller
      */
     private function filterOptions(): array
     {
-        return [
-            [
-                'key' => 'status',
-                'label' => 'Status',
-                'type' => 'select',
-                'multiple' => true,
-                'options' => CourseStatus::options(),
-            ],
-            [
-                'key' => 'level',
-                'label' => 'Level',
-                'type' => 'select',
-                'multiple' => true,
-                'options' => CourseLevel::options(),
-            ],
-        ];
+        return FilterOption::toArrayList([
+            FilterOption::select('status', 'Status', CourseStatus::options()),
+            FilterOption::select('level', 'Level', CourseLevel::options()),
+        ]);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\InviteUser;
 use App\Enums\UserRole;
+use App\Http\Filters\FilterOption;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Resources\UserManagementResource;
@@ -158,29 +159,13 @@ class UserManagementController extends Controller
      */
     private function filterOptions(): array
     {
-        return [
-            [
-                'key' => 'role',
-                'label' => 'Role',
-                'type' => 'select',
-                'multiple' => true,
-                'options' => UserRole::options(),
-            ],
-            [
-                'key' => 'status',
-                'label' => 'Status',
-                'type' => 'select',
-                'multiple' => true,
-                'options' => [
-                    ['value' => 'Active', 'label' => 'Active'],
-                    ['value' => 'Invited', 'label' => 'Invited'],
-                ],
-            ],
-            [
-                'key' => 'created_at',
-                'label' => 'Created',
-                'type' => 'daterange',
-            ],
-        ];
+        return FilterOption::toArrayList([
+            FilterOption::select('role', 'Role', UserRole::options()),
+            FilterOption::select('status', 'Status', [
+                ['value' => 'Active', 'label' => 'Active'],
+                ['value' => 'Invited', 'label' => 'Invited'],
+            ]),
+            FilterOption::dateRange('created_at', 'Created'),
+        ]);
     }
 }
