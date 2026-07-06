@@ -74,18 +74,20 @@ class DatabaseSeeder extends Seeder
         $assignments = Assignment::factory()->count(2)->for($course)->create();
 
         // A test with graded multiple-choice questions; keep questions and options in memory.
-        $test = Test::factory()->for($course)->create();
+        $test = Test::factory()->for($course)->readableContent()->create();
 
         $questions = Question::factory()
             ->count(5)
             ->for($test)
+            ->readableContent()
             ->sequence($this->positionSequence())
             ->create()
             ->each(function (Question $question): void {
-                $correct = QuestionOption::factory()->correct()->for($question)->create(['position' => 0]);
+                $correct = QuestionOption::factory()->correct()->readableContent()->for($question)->create(['position' => 0]);
                 $others = QuestionOption::factory()
                     ->count(3)
                     ->for($question)
+                    ->readableContent()
                     ->sequence(fn ($sequence) => ['position' => $sequence->index + 1])
                     ->create();
 

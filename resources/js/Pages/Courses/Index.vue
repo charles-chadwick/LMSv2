@@ -16,7 +16,7 @@ import {
 } from '@/Components/ui/dropdown-menu';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import { Plus, MoreHorizontal, ListTree, Users, Pencil, Send, Archive, Trash2, GraduationCap } from 'lucide-vue-next';
+import { Plus, MoreHorizontal, ListTree, ClipboardList, Users, Pencil, Send, Archive, Trash2, GraduationCap } from 'lucide-vue-next';
 
 defineProps({
     courses: {
@@ -115,6 +115,12 @@ const archive = (course) => {
                                         <Link :href="route('curriculum.show', course.slug)" class="cursor-pointer">
                                             <ListTree class="size-4" />
                                             Curriculum
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem as-child>
+                                        <Link :href="route('tests.index', course.slug)" class="cursor-pointer">
+                                            <ClipboardList class="size-4" />
+                                            Tests
                                         </Link>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem as-child>

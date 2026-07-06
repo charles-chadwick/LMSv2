@@ -22,6 +22,7 @@ use App\Http\Controllers\LessonController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PublishCourseController;
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Route;
@@ -83,6 +84,13 @@ Route::middleware('auth')->group(function (): void {
         Route::put('lessons/{lesson}', [CurriculumLessonController::class, 'update'])->name('lessons.update');
         Route::delete('lessons/{lesson}', [CurriculumLessonController::class, 'destroy'])->name('lessons.destroy');
         Route::post('modules/{module}/lessons/reorder', [CurriculumLessonController::class, 'reorder'])->name('lessons.reorder');
+
+        Route::get('courses/{course}/tests', [TestController::class, 'index'])->name('tests.index');
+        Route::get('courses/{course}/tests/create', [TestController::class, 'create'])->name('tests.create');
+        Route::post('courses/{course}/tests', [TestController::class, 'store'])->name('tests.store');
+        Route::get('tests/{test}/edit', [TestController::class, 'edit'])->name('tests.edit');
+        Route::put('tests/{test}', [TestController::class, 'update'])->name('tests.update');
+        Route::delete('tests/{test}', [TestController::class, 'destroy'])->name('tests.destroy');
 
         Route::get('catalog', [CourseCatalogController::class, 'index'])->name('catalog.index');
         Route::get('catalog/{course}', [CourseCatalogController::class, 'show'])->name('catalog.show');

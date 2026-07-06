@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Course;
 use App\Models\Test;
+use Database\Seeders\RickAndMortyDialogue;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -23,5 +24,16 @@ class TestFactory extends Factory
             'available_from' => now(),
             'due_at' => now()->addDays(fake()->numberBetween(7, 30)),
         ];
+    }
+
+    /**
+     * Replace Faker content with a Rick and Morty dialogue title and censored body.
+     */
+    public function readableContent(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'title' => RickAndMortyDialogue::next(),
+            'description' => RickAndMortyDialogue::censoredBody(1, 2),
+        ]);
     }
 }

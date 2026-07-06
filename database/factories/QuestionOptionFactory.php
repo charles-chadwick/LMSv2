@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Question;
 use App\Models\QuestionOption;
+use Database\Seeders\RickAndMortyDialogue;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,6 +20,16 @@ class QuestionOptionFactory extends Factory
             'is_correct' => false,
             'position' => fake()->numberBetween(0, 4),
         ];
+    }
+
+    /**
+     * Replace the Faker option text with a Rick and Morty dialogue line.
+     */
+    public function readableContent(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'text' => RickAndMortyDialogue::next(),
+        ]);
     }
 
     public function correct(): static

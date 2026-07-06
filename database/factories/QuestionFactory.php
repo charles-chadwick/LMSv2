@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Enums\QuestionType;
 use App\Models\Question;
 use App\Models\Test;
+use Database\Seeders\RickAndMortyDialogue;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,6 +22,16 @@ class QuestionFactory extends Factory
             'points' => fake()->numberBetween(1, 5),
             'position' => fake()->numberBetween(0, 10),
         ];
+    }
+
+    /**
+     * Replace the Faker prompt with a Rick and Morty dialogue line, phrased as a question.
+     */
+    public function readableContent(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'prompt' => rtrim(RickAndMortyDialogue::next(), '.?!').'?',
+        ]);
     }
 
     public function trueFalse(): static

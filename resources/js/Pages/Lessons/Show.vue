@@ -1,7 +1,8 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import LessonDiscussions from '@/Components/LessonDiscussions.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
+import { onMounted, onUnmounted } from 'vue';
 
 defineProps({
     course: { type: Object, required: true },
@@ -11,6 +12,24 @@ defineProps({
     is_complete: { type: Boolean, required: true },
     progress_percentage: { type: Number, required: true },
     lessonDiscussions: { type: Array, default: () => [] },
+});
+
+/**
+ * Viewing a lesson records its completion as a side effect of the GET request,
+ * so when the browser restores this page from history (Back/Forward), Inertia
+ * replays the progress value captured on the first visit — which is now stale.
+ * Re-fetch just the meter's props on history navigation to keep it accurate.
+ */
+function refreshProgressFromServer() {
+    router.reload({ only: ['is_complete', 'progress_percentage'] });
+}
+
+onMounted(() => {
+    window.addEventListener('popstate', refreshProgressFromServer);
+});
+
+onUnmounted(() => {
+    window.removeEventListener('popstate', refreshProgressFromServer);
 });
 </script>
 

@@ -39,6 +39,7 @@ A Learning Management System built with Laravel 13, Inertia.js v3, and Vue 3. In
 
 ## Local Installation
 
+
 Log in with any of the users that get seeded.
 
 1. **Clone and install dependencies**
