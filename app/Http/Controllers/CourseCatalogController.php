@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\CourseLevel;
 use App\Enums\CourseStatus;
+use App\Http\Filters\FilterOption;
 use App\Http\Resources\UserSummaryResource;
 use App\Models\Course;
 use Illuminate\Http\Request;
@@ -56,15 +57,9 @@ class CourseCatalogController extends Controller
      */
     private function filterOptions(): array
     {
-        return [
-            [
-                'key' => 'level',
-                'label' => 'Level',
-                'type' => 'select',
-                'multiple' => true,
-                'options' => CourseLevel::options(),
-            ],
-        ];
+        return FilterOption::toArrayList([
+            FilterOption::select('level', 'Level', CourseLevel::options()),
+        ]);
     }
 
     public function show(Request $request, Course $course): Response

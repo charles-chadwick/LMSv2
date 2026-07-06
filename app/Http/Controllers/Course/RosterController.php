@@ -6,6 +6,7 @@ use App\Actions\EnrollStudent;
 use App\Enums\EnrollmentStatus;
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
+use App\Http\Filters\FilterOption;
 use App\Http\Requests\Course\EnrollStudentRequest;
 use App\Http\Resources\UserSummaryResource;
 use App\Models\Course;
@@ -62,15 +63,9 @@ class RosterController extends Controller
      */
     private function filterOptions(): array
     {
-        return [
-            [
-                'key' => 'status',
-                'label' => 'Status',
-                'type' => 'select',
-                'multiple' => true,
-                'options' => EnrollmentStatus::options(),
-            ],
-        ];
+        return FilterOption::toArrayList([
+            FilterOption::select('status', 'Status', EnrollmentStatus::options()),
+        ]);
     }
 
     /**

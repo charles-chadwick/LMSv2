@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\DropEnrollment;
 use App\Enums\EnrollmentStatus;
+use App\Http\Filters\FilterOption;
 use App\Models\Enrollment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -56,14 +57,8 @@ class EnrollmentController extends Controller
      */
     private function filterOptions(): array
     {
-        return [
-            [
-                'key' => 'status',
-                'label' => 'Status',
-                'type' => 'select',
-                'multiple' => true,
-                'options' => EnrollmentStatus::options(),
-            ],
-        ];
+        return FilterOption::toArrayList([
+            FilterOption::select('status', 'Status', EnrollmentStatus::options()),
+        ]);
     }
 }
