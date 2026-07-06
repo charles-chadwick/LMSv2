@@ -22,6 +22,7 @@ use App\Http\Controllers\LessonController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PublishCourseController;
+use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\UserProfileController;
@@ -91,6 +92,13 @@ Route::middleware('auth')->group(function (): void {
         Route::get('tests/{test}/edit', [TestController::class, 'edit'])->name('tests.edit');
         Route::put('tests/{test}', [TestController::class, 'update'])->name('tests.update');
         Route::delete('tests/{test}', [TestController::class, 'destroy'])->name('tests.destroy');
+
+        Route::get('tests/{test}/questions', [QuestionController::class, 'index'])->name('questions.index');
+        Route::get('tests/{test}/questions/create', [QuestionController::class, 'create'])->name('questions.create');
+        Route::post('tests/{test}/questions', [QuestionController::class, 'store'])->name('questions.store');
+        Route::get('questions/{question}/edit', [QuestionController::class, 'edit'])->name('questions.edit');
+        Route::put('questions/{question}', [QuestionController::class, 'update'])->name('questions.update');
+        Route::delete('questions/{question}', [QuestionController::class, 'destroy'])->name('questions.destroy');
 
         Route::get('catalog', [CourseCatalogController::class, 'index'])->name('catalog.index');
         Route::get('catalog/{course}', [CourseCatalogController::class, 'show'])->name('catalog.show');

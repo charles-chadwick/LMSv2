@@ -4,7 +4,7 @@ import PageHeader from '@/Components/PageHeader.vue';
 import { Button } from '@/Components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import { Head, Link, router } from '@inertiajs/vue3';
-import { Plus, Pencil, Trash2, ClipboardList } from 'lucide-vue-next';
+import { Plus, Pencil, Trash2, ClipboardList, ListChecks } from 'lucide-vue-next';
 
 const props = defineProps({
     course: {
@@ -72,6 +72,12 @@ const formatDate = (value) =>
                         <TableCell>{{ formatDate(test.due_at) }}</TableCell>
                         <TableCell class="text-right">
                             <div class="flex justify-end gap-1">
+                                <Button as-child variant="ghost" size="icon" class="size-8">
+                                    <Link :href="route('questions.index', test.id)">
+                                        <ListChecks class="size-4" />
+                                        <span class="sr-only">Manage questions</span>
+                                    </Link>
+                                </Button>
                                 <Button as-child variant="ghost" size="icon" class="size-8">
                                     <Link :href="route('tests.edit', test.id)">
                                         <Pencil class="size-4" />
