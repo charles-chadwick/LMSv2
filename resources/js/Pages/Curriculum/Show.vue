@@ -4,6 +4,9 @@ import RichTextEditor from '@/Components/RichTextEditor.vue';
 import { Head, router } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
 import draggable from 'vuedraggable';
+import { useConfirm } from '@/composables/useConfirm';
+
+const { confirm } = useConfirm();
 
 const props = defineProps({
     course: { type: Object, required: true },
@@ -38,8 +41,15 @@ const addModule = () => {
 const updateModule = (module) => {
     router.put(route('modules.update', module.id), { title: module.title, description: module.description }, reload);
 };
-const deleteModule = (module) => {
-    if (confirm(`Delete module "${module.title}" and its lessons?`)) {
+const deleteModule = async (module) => {
+    const confirmed = await confirm({
+        title: 'Delete module',
+        description: `Delete module "${module.title}" and its lessons? This cannot be undone.`,
+        confirmText: 'Delete',
+        variant: 'destructive',
+    });
+
+    if (confirmed) {
         router.delete(route('modules.destroy', module.id), reload);
     }
 };
@@ -70,8 +80,15 @@ const updateLesson = (lesson) => {
         duration_minutes: lesson.duration_minutes,
     }, reload);
 };
-const deleteLesson = (lesson) => {
-    if (confirm(`Delete lesson "${lesson.title}"?`)) {
+const deleteLesson = async (lesson) => {
+    const confirmed = await confirm({
+        title: 'Delete lesson',
+        description: `Delete lesson "${lesson.title}"? This cannot be undone.`,
+        confirmText: 'Delete',
+        variant: 'destructive',
+    });
+
+    if (confirmed) {
         router.delete(route('lessons.destroy', lesson.slug), reload);
     }
 };

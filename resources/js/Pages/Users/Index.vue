@@ -15,6 +15,9 @@ import {
 } from '@/Components/ui/dropdown-menu';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { Plus, UsersRound, MoreHorizontal, Pencil, Send, Trash2 } from 'lucide-vue-next';
+import { useConfirm } from '@/composables/useConfirm';
+
+const { confirm } = useConfirm();
 
 defineProps({
     users: {
@@ -31,8 +34,15 @@ defineProps({
     },
 });
 
-const destroy = (row) => {
-    if (confirm(`Remove ${row.name}? Their account will be disabled.`)) {
+const destroy = async (row) => {
+    const confirmed = await confirm({
+        title: 'Remove user',
+        description: `Remove ${row.name}? Their account will be disabled.`,
+        confirmText: 'Remove',
+        variant: 'destructive',
+    });
+
+    if (confirmed) {
         router.delete(route('users.destroy', row.id));
     }
 };

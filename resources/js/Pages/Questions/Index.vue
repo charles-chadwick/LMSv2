@@ -6,6 +6,9 @@ import { Badge } from '@/Components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { Plus, Pencil, Trash2, ListChecks, ArrowLeft } from 'lucide-vue-next';
+import { useConfirm } from '@/composables/useConfirm';
+
+const { confirm } = useConfirm();
 
 const props = defineProps({
     course: {
@@ -22,8 +25,15 @@ const props = defineProps({
     },
 });
 
-const destroy = (question) => {
-    if (confirm('Delete this question?')) {
+const destroy = async (question) => {
+    const confirmed = await confirm({
+        title: 'Delete question',
+        description: 'Delete this question? This cannot be undone.',
+        confirmText: 'Delete',
+        variant: 'destructive',
+    });
+
+    if (confirmed) {
         router.delete(route('questions.destroy', question.id), { preserveScroll: true });
     }
 };

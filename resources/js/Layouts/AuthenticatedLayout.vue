@@ -5,6 +5,7 @@ import { LayoutDashboard, Compass, GraduationCap, BookMarked, LogOut, ChevronDow
 import { useSectionTheme, THEMES } from '@/composables/useSectionTheme';
 import UserAvatar from '@/Components/UserAvatar.vue';
 import NotificationBell from '@/Components/NotificationBell.vue';
+import ConfirmDialog from '@/Components/ConfirmDialog.vue';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -127,5 +128,7 @@ const navItems = computed(() => {
         <main class="mx-auto max-w-6xl px-4 py-8 sm:px-6">
             <slot />
         </main>
+
+        <ConfirmDialog />
     </div>
 </template>

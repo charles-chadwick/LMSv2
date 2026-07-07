@@ -5,6 +5,9 @@ import { Button } from '@/Components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { Plus, Pencil, Trash2, ClipboardList, ListChecks } from 'lucide-vue-next';
+import { useConfirm } from '@/composables/useConfirm';
+
+const { confirm } = useConfirm();
 
 const props = defineProps({
     course: {
@@ -17,8 +20,15 @@ const props = defineProps({
     },
 });
 
-const destroy = (test) => {
-    if (confirm(`Delete "${test.title}"?`)) {
+const destroy = async (test) => {
+    const confirmed = await confirm({
+        title: 'Delete test',
+        description: `Delete "${test.title}"? This cannot be undone.`,
+        confirmText: 'Delete',
+        variant: 'destructive',
+    });
+
+    if (confirmed) {
         router.delete(route('tests.destroy', test.id), { preserveScroll: true });
     }
 };

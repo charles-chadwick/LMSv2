@@ -12,6 +12,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Head, router, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { Users, UserPlus } from 'lucide-vue-next';
+import { useConfirm } from '@/composables/useConfirm';
+
+const { confirm } = useConfirm();
 
 const props = defineProps({
     course: { type: Object, required: true },
@@ -41,10 +44,18 @@ const enroll = () => {
     });
 };
 
-const remove = (student) => {
-    if (! confirm(`Remove ${student.user.name} from "${props.course.title}"?`)) {
+const remove = async (student) => {
+    const confirmed = await confirm({
+        title: 'Remove student',
+        description: `Remove ${student.user.name} from "${props.course.title}"?`,
+        confirmText: 'Remove',
+        variant: 'destructive',
+    });
+
+    if (! confirmed) {
         return;
     }
+
     router.delete(route('enrollments.destroy', student.id), { preserveScroll: true });
 };
 </script>

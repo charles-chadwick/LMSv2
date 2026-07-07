@@ -17,6 +17,9 @@ import {
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import { Plus, MoreHorizontal, ListTree, ClipboardList, Users, Pencil, Send, Archive, Trash2, GraduationCap } from 'lucide-vue-next';
+import { useConfirm } from '@/composables/useConfirm';
+
+const { confirm } = useConfirm();
 
 defineProps({
     courses: {
@@ -35,8 +38,15 @@ defineProps({
 
 const canCreate = computed(() => usePage().props.auth.user.can?.create_courses ?? false);
 
-const destroy = (course) => {
-    if (confirm(`Delete "${course.title}"?`)) {
+const destroy = async (course) => {
+    const confirmed = await confirm({
+        title: 'Delete course',
+        description: `Delete "${course.title}"? This cannot be undone.`,
+        confirmText: 'Delete',
+        variant: 'destructive',
+    });
+
+    if (confirmed) {
         router.delete(route('courses.destroy', course.slug));
     }
 };
