@@ -1,6 +1,9 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import RichTextEditor from '@/Components/RichTextEditor.vue';
+import { Button } from '@/Components/ui/button';
+import { Input } from '@/Components/ui/input';
+import { Label } from '@/Components/ui/label';
 import { Head, router } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
 import draggable from 'vuedraggable';
@@ -155,31 +158,51 @@ const persistLessonOrder = (module) => {
                         </template>
                     </draggable>
 
-                    <div class="mt-3 flex gap-2 pl-6">
-                        <input
-                            v-model="newLessonTitle[module.id]"
-                            class="flex-1 rounded border-gray-300 text-sm"
-                            placeholder="New lesson title"
-                            @keyup.enter="addLesson(module)"
-                        />
-                        <button type="button" class="rounded bg-gray-900 px-3 py-1 text-sm text-white" @click="addLesson(module)">
-                            Add lesson
-                        </button>
+                    <div class="mt-4 ml-6 rounded-lg border border-dashed bg-muted/40 p-4">
+                        <div class="grid gap-2">
+                            <Label :for="`new-lesson-${module.id}`" class="text-sm font-medium">
+                                Add a lesson to this module
+                            </Label>
+                            <div class="flex flex-col gap-2 sm:flex-row sm:items-end">
+                                <Input
+                                    :id="`new-lesson-${module.id}`"
+                                    v-model="newLessonTitle[module.id]"
+                                    type="text"
+                                    class="flex-1"
+                                    placeholder="e.g. Introduction to variables"
+                                    @keyup.enter="addLesson(module)"
+                                />
+                                <Button type="button" @click="addLesson(module)">
+                                    + Add lesson
+                                </Button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </template>
         </draggable>
 
-        <div class="mt-6 flex gap-2">
-            <input
-                v-model="newModuleTitle"
-                class="flex-1 rounded border-gray-300 text-sm"
-                placeholder="New module title"
-                @keyup.enter="addModule"
-            />
-            <button type="button" class="rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white" @click="addModule">
-                Add module
-            </button>
+        <div class="mt-8 rounded-lg border-2 border-dashed bg-muted/40 p-6">
+            <h2 class="mb-1 text-lg font-semibold">Add a new module</h2>
+            <p class="mb-4 text-sm text-muted-foreground">
+                Modules group related lessons together. Give it a clear title to get started.
+            </p>
+            <div class="grid gap-2">
+                <Label for="new-module-title" class="text-sm font-medium">Module title</Label>
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-end">
+                    <Input
+                        id="new-module-title"
+                        v-model="newModuleTitle"
+                        type="text"
+                        class="flex-1"
+                        placeholder="e.g. Getting Started"
+                        @keyup.enter="addModule"
+                    />
+                    <Button type="button" size="lg" @click="addModule">
+                        + Add module
+                    </Button>
+                </div>
+            </div>
         </div>
     </AuthenticatedLayout>
 </template>

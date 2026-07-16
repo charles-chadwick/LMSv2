@@ -45,7 +45,7 @@ Log in with any of the users that get seeded.
 1. **Clone and install dependencies**
 
    ```bash
-   git clone <repository-url> LMSv2
+   git clone git@github.com:charles-chadwick/LMSv2.git LMSv2
    cd LMSv2
    composer install
    npm install
